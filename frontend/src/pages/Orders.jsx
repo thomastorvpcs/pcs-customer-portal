@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Search, SlidersHorizontal, Download } from 'lucide-react'
 
 const orders = [
@@ -158,7 +159,7 @@ export default function Orders() {
                 <td className="px-5 py-4 text-sm text-blue-600">{order.facility}</td>
                 <td className="px-5 py-4 text-sm text-gray-500">{order.eta}</td>
                 <td className="px-5 py-4">
-                  <button className="text-sm text-blue-600 hover:underline">View</button>
+                  <Link to={`/orders/${order.id}`} className="text-sm text-blue-600 hover:underline">View</Link>
                 </td>
               </tr>
             ))}

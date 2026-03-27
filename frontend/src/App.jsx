@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Orders from './pages/Orders'
+import OrderDetail from './pages/OrderDetail'
 
 function AppLayout({ children }) {
   return (
@@ -35,6 +36,14 @@ export default function App() {
           element={
             <AppLayout>
               <Orders />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/orders/:id"
+          element={
+            <AppLayout>
+              <OrderDetail />
             </AppLayout>
           }
         />
