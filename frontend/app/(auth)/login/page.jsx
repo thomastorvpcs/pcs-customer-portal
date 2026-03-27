@@ -1,10 +1,9 @@
-export default function Login() {
+export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel */}
       <div className="w-80 bg-[#0b1b3a] flex flex-col justify-between p-10 text-white flex-shrink-0">
         <div>
-          {/* Logo */}
           <div className="flex items-center gap-2 mb-14">
             <div className="flex items-end gap-0.5">
               <span className="w-1.5 h-3 rounded-sm bg-blue-400 opacity-60"></span>
@@ -67,9 +66,7 @@ export default function Login() {
             <div>
               <div className="flex justify-between mb-1.5">
                 <label className="text-sm font-medium text-gray-700">Password</label>
-                <a href="#" className="text-sm text-blue-600 hover:underline">
-                  Forgot password?
-                </a>
+                <a href="#" className="text-sm text-blue-600 hover:underline">Forgot password?</a>
               </div>
               <input
                 type="password"
@@ -104,9 +101,7 @@ export default function Login() {
 
           <p className="text-center text-sm text-gray-500 mt-6">
             Don't have an account?{' '}
-            <a href="#" className="text-blue-600 hover:underline font-medium">
-              Register now
-            </a>
+            <a href="#" className="text-blue-600 hover:underline font-medium">Register now</a>
           </p>
         </div>
       </div>

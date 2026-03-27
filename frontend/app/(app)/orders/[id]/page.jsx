@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import Link from 'next/link'
 import { ArrowLeft, CheckCircle2, Circle, Truck, FileText, LayoutList, FileCheck, Download } from 'lucide-react'
 
 const statusSteps = [
@@ -19,10 +19,7 @@ const lineItems = [
 
 const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
-export default function OrderDetail() {
-  const { id } = useParams()
-  const orderId = id || 'PCS-2024-1847'
-
+export default function OrderDetailPage({ params }) {
   const totalQty = lineItems.reduce((s, i) => s + i.qty, 0)
   const totalValue = lineItems.reduce((s, i) => s + i.total, 0)
 
@@ -30,14 +27,12 @@ export default function OrderDetail() {
     <div className="flex-1 bg-gray-50 overflow-auto">
       {/* Page Header */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
-        <Link to="/orders" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        <Link href="/orders" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
           <ArrowLeft size={15} />
           Back to Orders
         </Link>
-        <h1 className="text-lg font-bold text-gray-900">Order {orderId}</h1>
-        <div className="w-8 h-8 rounded-full bg-[#0b1b3a] flex items-center justify-center text-white text-sm font-semibold">
-          J
-        </div>
+        <h1 className="text-lg font-bold text-gray-900">Order {params.id}</h1>
+        <div className="w-8 h-8 rounded-full bg-[#0b1b3a] flex items-center justify-center text-white text-sm font-semibold">J</div>
       </div>
 
       <div className="px-8 py-6 space-y-5">
@@ -51,9 +46,7 @@ export default function OrderDetail() {
               { label: 'Facility', value: 'Miami, FL' },
             ].map((item) => (
               <div key={item.label}>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
-                  {item.label}
-                </p>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">{item.label}</p>
                 <p className="text-sm font-semibold text-gray-900">{item.value}</p>
               </div>
             ))}
@@ -66,36 +59,20 @@ export default function OrderDetail() {
           <div className="flex items-start">
             {statusSteps.map((step, i) => (
               <div key={step.label} className="flex items-start flex-1">
-                {/* Step */}
                 <div className="flex flex-col items-center flex-1">
                   <div className="flex items-center w-full">
-                    {/* Left connector */}
                     {i > 0 && (
-                      <div
-                        className={`flex-1 h-0.5 -mr-1 ${
-                          statusSteps[i - 1].done ? (step.active ? 'bg-blue-400' : 'bg-green-400') : 'bg-gray-200'
-                        }`}
-                      />
+                      <div className={`flex-1 h-0.5 -mr-1 ${statusSteps[i - 1].done ? (step.active ? 'bg-blue-400' : 'bg-green-400') : 'bg-gray-200'}`} />
                     )}
-                    {/* Icon */}
                     <div className="flex-shrink-0 z-10">
                       {step.done ? (
-                        <CheckCircle2
-                          size={22}
-                          className={step.active ? 'text-blue-500' : 'text-green-500'}
-                          fill={step.active ? '#eff6ff' : '#f0fdf4'}
-                        />
+                        <CheckCircle2 size={22} className={step.active ? 'text-blue-500' : 'text-green-500'} fill={step.active ? '#eff6ff' : '#f0fdf4'} />
                       ) : (
                         <Circle size={22} className="text-gray-300" />
                       )}
                     </div>
-                    {/* Right connector */}
                     {i < statusSteps.length - 1 && (
-                      <div
-                        className={`flex-1 h-0.5 -ml-1 ${
-                          step.done && !step.active ? 'bg-green-400' : step.active ? 'bg-gray-200' : 'bg-gray-200'
-                        }`}
-                      />
+                      <div className={`flex-1 h-0.5 -ml-1 ${step.done && !step.active ? 'bg-green-400' : 'bg-gray-200'}`} />
                     )}
                   </div>
                   <p className={`text-xs font-medium mt-2 text-center ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700' : 'text-gray-400'}`}>
@@ -117,10 +94,7 @@ export default function OrderDetail() {
             <thead>
               <tr className="border-t border-b border-gray-100">
                 {['Product', 'SKU', 'Grade', 'Storage', 'Qty', 'Unit Price', 'Total'].map((col) => (
-                  <th
-                    key={col}
-                    className="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide"
-                  >
+                  <th key={col} className="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">
                     {col}
                   </th>
                 ))}
@@ -158,10 +132,7 @@ export default function OrderDetail() {
               { label: 'Device Manifest', icon: LayoutList },
               { label: 'Original Quote', icon: FileCheck },
             ].map(({ label, icon: Icon }) => (
-              <button
-                key={label}
-                className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 transition-colors"
-              >
+              <button key={label} className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 transition-colors">
                 <Icon size={14} />
                 {label}
               </button>

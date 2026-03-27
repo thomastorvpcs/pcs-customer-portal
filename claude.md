@@ -1,9 +1,13 @@
 # Project Description
 
-## Frontend
-- React
+## Frontend & Backend
+- Next.js 14 (App Router)
 - Tailwind CSS
+- API routes for backend logic
 
-## Backend
-- Node.js
+## Database
 - PostgreSQL
+
+## Infrastructure
+- GitHub: thomastorvpcs/pcs-customer-portal
+- Hosting: Render (Node.js web service)

@@ -1,23 +1,21 @@
-import { NavLink } from 'react-router-dom'
-import {
-  LayoutDashboard,
-  ShoppingCart,
-  Truck,
-  BarChart2,
-  Headphones,
-  Settings,
-} from 'lucide-react'
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { LayoutDashboard, ShoppingCart, Truck, BarChart2, Headphones, Settings } from 'lucide-react'
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/orders', label: 'Orders', icon: ShoppingCart },
-  { to: '/shipments', label: 'Shipments', icon: Truck },
-  { to: '/financial', label: 'Financial', icon: BarChart2 },
-  { to: '/support', label: 'Support', icon: Headphones },
-  { to: '/settings', label: 'Settings', icon: Settings },
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/shipments', label: 'Shipments', icon: Truck },
+  { href: '/financial', label: 'Financial', icon: BarChart2 },
+  { href: '/support', label: 'Support', icon: Headphones },
+  { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
 export default function Sidebar() {
+  const pathname = usePathname()
+
   return (
     <div className="w-44 min-h-screen bg-[#0b1b3a] flex flex-col text-white flex-shrink-0">
       {/* Logo */}
@@ -36,30 +34,28 @@ export default function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 px-2 space-y-0.5">
-        {navItems.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+        {navItems.map(({ href, label, icon: Icon }) => {
+          const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                 isActive
                   ? 'bg-white/10 text-white font-medium'
                   : 'text-blue-200/60 hover:bg-white/5 hover:text-blue-100'
-              }`
-            }
-          >
-            <Icon size={15} />
-            {label}
-          </NavLink>
-        ))}
+              }`}
+            >
+              <Icon size={15} />
+              {label}
+            </Link>
+          )
+        })}
       </nav>
 
       {/* Sales Rep */}
       <div className="px-5 py-5 border-t border-white/10">
-        <p className="text-[10px] text-blue-300/50 uppercase tracking-widest mb-2">
-          Your Sales Rep
-        </p>
+        <p className="text-[10px] text-blue-300/50 uppercase tracking-widest mb-2">Your Sales Rep</p>
         <p className="text-sm font-semibold text-white">Michael Torres</p>
         <p className="text-xs text-blue-300/50 mt-0.5">m.torres@pcsww.com</p>
         <button className="mt-2 text-xs text-yellow-400 hover:text-yellow-300 transition-colors">

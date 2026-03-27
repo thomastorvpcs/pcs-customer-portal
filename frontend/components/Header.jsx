@@ -10,7 +10,7 @@ export default function Header() {
           className="pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-lg w-52 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <button className="p-2 text-gray-500 hover:text-gray-700 relative">
+      <button className="p-2 text-gray-500 hover:text-gray-700">
         <Bell size={18} />
       </button>
       <div className="w-8 h-8 rounded-full bg-[#0b1b3a] flex items-center justify-center text-white text-sm font-semibold">
