@@ -40,7 +40,7 @@ export default function OrderDetail() {
         </div>
       </div>
 
-      <div className="px-8 py-6 max-w-5xl mx-auto space-y-5">
+      <div className="px-8 py-6 space-y-5">
         {/* Order Summary */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-5">
           <div className="grid grid-cols-4 gap-8">
