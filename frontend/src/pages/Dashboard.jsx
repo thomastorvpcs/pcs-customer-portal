@@ -1,4 +1,4 @@
-import { AlertTriangle, ShoppingBag, Truck, DollarSign, TicketCheck, ChevronRight } from 'lucide-react'
+import { AlertTriangle, ShoppingBag, Truck, DollarSign, TicketCheck, ChevronRight, FileText, RotateCcw, Headphones, Smartphone } from 'lucide-react'
 
 const stats = [
   {
@@ -37,10 +37,10 @@ const stats = [
 ]
 
 const quickActions = [
-  { label: 'Request Quote', desc: 'Get pricing for bulk orders' },
-  { label: 'Create RMA', desc: 'Return defective devices' },
-  { label: 'Contact Support', desc: 'Get help from our team' },
-  { label: 'Device Lookup', desc: 'Check device availability' },
+  { label: 'Request Quote', desc: 'Get pricing for bulk orders', icon: FileText, bg: 'bg-blue-50', color: 'text-blue-500' },
+  { label: 'Create RMA', desc: 'Return defective devices', icon: RotateCcw, bg: 'bg-rose-50', color: 'text-rose-500' },
+  { label: 'Contact Support', desc: 'Get help from our team', icon: Headphones, bg: 'bg-orange-50', color: 'text-orange-500' },
+  { label: 'Device Lookup', desc: 'Check device availability', icon: Smartphone, bg: 'bg-green-50', color: 'text-green-500' },
 ]
 
 const recentActivity = [
@@ -127,9 +127,14 @@ export default function Dashboard() {
                 key={a.label}
                 className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors text-left"
               >
-                <div>
-                  <p className="text-sm font-medium text-gray-800">{a.label}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{a.desc}</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-lg ${a.bg} flex items-center justify-center flex-shrink-0`}>
+                    <a.icon size={16} className={a.color} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">{a.label}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{a.desc}</p>
+                  </div>
                 </div>
                 <ChevronRight size={16} className="text-gray-400" />
               </button>
