@@ -345,7 +345,7 @@ export default function SettingsPage() {
 
         {/* Integrations Panel */}
         {active === 'integrations' && (
-          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 min-w-0 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
             <div>
               <h2 className="text-xl font-bold text-gray-900">Integrations</h2>
               <p className="text-sm text-gray-400 mt-1">Manage API keys, webhooks, and third-party connections</p>
@@ -361,8 +361,8 @@ export default function SettingsPage() {
                   { name: 'Test / Sandbox', key: 'pk_test_********************', created: 'Jan 15, 2024', active: false, label: 'Test Mode' },
                 ].map((k) => (
                   <div key={k.name} className="border border-gray-200 rounded-xl px-5 py-4">
-                    <div className="grid grid-cols-[180px_1fr_160px_120px] items-center gap-4">
-                      <div>
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="w-36 flex-shrink-0">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Key Name</p>
                         <p className="text-sm font-semibold text-gray-900">{k.name}</p>
                         <div className="flex items-center gap-1 mt-1">
@@ -370,19 +370,19 @@ export default function SettingsPage() {
                           <span className={`text-xs font-medium ${k.active ? 'text-green-600' : 'text-orange-500'}`}>{k.label}</span>
                         </div>
                       </div>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">API Key</p>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-mono text-gray-700">{k.key}</span>
-                          <button className="text-gray-400 hover:text-gray-600"><Eye size={14} /></button>
-                          <button className="text-gray-400 hover:text-gray-600"><Copy size={14} /></button>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-sm font-mono text-gray-700 truncate">{k.key}</span>
+                          <button className="text-gray-400 hover:text-gray-600 flex-shrink-0"><Eye size={14} /></button>
+                          <button className="text-gray-400 hover:text-gray-600 flex-shrink-0"><Copy size={14} /></button>
                         </div>
                       </div>
-                      <div>
+                      <div className="w-32 flex-shrink-0">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Created</p>
                         <p className="text-sm text-gray-700">{k.created}</p>
                       </div>
-                      <div className="flex justify-end">
+                      <div className="flex-shrink-0">
                         <button className="px-4 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">Regenerate</button>
                       </div>
                     </div>
