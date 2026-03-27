@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText, Mail, Truck, CreditCard, Headphones, Package } from 'lucide-react'
+import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText, Mail, Truck, CreditCard, Headphones, Package, Eye, Copy, Trash2, Pencil, Plus } from 'lucide-react'
 
 const navItems = [
   { key: 'company', label: 'Company', sub: 'Business details', icon: Building2 },
@@ -341,7 +341,119 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {active !== 'company' && active !== 'users' && active !== 'preferences' && (
+        {/* Integrations Panel */}
+        {active === 'integrations' && (
+          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Integrations</h2>
+              <p className="text-sm text-gray-400 mt-1">Manage API keys, webhooks, and third-party connections</p>
+            </div>
+
+            {/* API Keys */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">API Keys</h3>
+              <p className="text-xs text-gray-400 mb-4">Use API keys to authenticate requests to the PCS Wireless API</p>
+              <div className="space-y-3">
+                {[
+                  { name: 'Production', key: 'pk_live_********************', created: 'Jan 15, 2024', active: true, label: 'Active' },
+                  { name: 'Test / Sandbox', key: 'pk_test_********************', created: 'Jan 15, 2024', active: false, label: 'Test Mode' },
+                ].map((k) => (
+                  <div key={k.name} className="border border-gray-200 rounded-xl px-5 py-4">
+                    <div className="grid grid-cols-[180px_1fr_160px_120px] items-center gap-4">
+                      <div>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Key Name</p>
+                        <p className="text-sm font-semibold text-gray-900">{k.name}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <span className={`w-1.5 h-1.5 rounded-full ${k.active ? 'bg-green-500' : 'bg-orange-400'}`} />
+                          <span className={`text-xs font-medium ${k.active ? 'text-green-600' : 'text-orange-500'}`}>{k.label}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">API Key</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-mono text-gray-700">{k.key}</span>
+                          <button className="text-gray-400 hover:text-gray-600"><Eye size={14} /></button>
+                          <button className="text-gray-400 hover:text-gray-600"><Copy size={14} /></button>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Created</p>
+                        <p className="text-sm text-gray-700">{k.created}</p>
+                      </div>
+                      <div className="flex justify-end">
+                        <button className="px-4 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">Regenerate</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Webhooks */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-sm font-semibold text-gray-900">Webhooks</h3>
+                <button className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
+                  <Plus size={13} /> Add Webhook
+                </button>
+              </div>
+              <p className="text-xs text-gray-400 mb-4">Receive real-time notifications when events happen in your account</p>
+              <div className="space-y-3">
+                {[
+                  { name: 'Order Status Updates', url: 'https://api.techmobile.com/webhooks/orders', tags: ['order.created', 'order.shipped'] },
+                  { name: 'Invoice Notifications', url: 'https://api.techmobile.com/webhooks/billing', tags: ['invoice.email', 'invoice.paid'] },
+                ].map((wh) => (
+                  <div key={wh.name} className="border border-gray-200 rounded-xl px-5 py-4 flex items-center gap-4">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 mb-0.5">{wh.name}</p>
+                      <p className="text-xs text-gray-400 truncate">{wh.url}</p>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {wh.tags.map((tag) => (
+                        <span key={tag} className="px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-600">{tag}</span>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                      <span className="text-xs font-medium text-green-600">Active</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <button className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"><Pencil size={13} /> Edit</button>
+                      <button className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1"><Trash2 size={13} /> Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ERP / WMS Integration */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">ERP / WMS Integration</h3>
+              <p className="text-xs text-gray-400 mb-4">Connect your enterprise systems for automated data sync</p>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { name: 'SAP', sync: '5 minutes ago' },
+                  { name: 'NetSuite', sync: '12 minutes ago' },
+                ].map((erp) => (
+                  <div key={erp.name} className="border border-gray-200 rounded-xl px-5 py-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-bold text-gray-900">{erp.name}</p>
+                      <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-600">Connected</span>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-3">Last sync: {erp.sync}</p>
+                    <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">Configure</button>
+                  </div>
+                ))}
+                <div className="border border-dashed border-gray-200 rounded-xl px-5 py-4 flex flex-col items-center justify-center gap-2 text-center hover:bg-gray-50 cursor-pointer transition-colors">
+                  <Zap size={20} className="text-gray-300" />
+                  <p className="text-sm font-medium text-gray-500">Add Custom Integration</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {active !== 'company' && active !== 'users' && active !== 'preferences' && active !== 'integrations' && (
           <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 flex items-center justify-center">
             <p className="text-sm text-gray-400">Select a section to manage settings</p>
           </div>
