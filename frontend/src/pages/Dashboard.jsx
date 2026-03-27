@@ -117,9 +117,9 @@ export default function Dashboard() {
       </div>
 
       {/* Bottom Row */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-3 gap-6">
         {/* Quick Actions */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="col-span-1 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <h2 className="text-sm font-semibold text-gray-900 mb-4">Quick Actions</h2>
           <div className="space-y-2">
             {quickActions.map((a) => (
@@ -143,7 +143,7 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-sm font-semibold text-gray-900">Recent Activity</h2>
             <a href="#" className="text-xs text-blue-600 hover:underline">
