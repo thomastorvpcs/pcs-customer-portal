@@ -24,7 +24,7 @@ export default function OrderDetailPage({ params }) {
   const totalValue = lineItems.reduce((s, i) => s + i.total, 0)
 
   return (
-    <div className="flex-1 bg-gray-50 overflow-auto">
+    <div className="flex-1 bg-[#f1f5f9] overflow-auto">
       {/* Page Header */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
         <Link href="/orders" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">

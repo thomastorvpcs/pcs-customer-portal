@@ -67,7 +67,7 @@ export default function FinancialPage() {
   const [activeTab, setActiveTab] = useState('Invoices')
 
   return (
-    <div className="flex-1 p-8 bg-gray-50 overflow-auto">
+    <div className="flex-1 p-8 bg-[#f1f5f9] overflow-auto">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Financial</h1>
 
       {/* Account Summary */}

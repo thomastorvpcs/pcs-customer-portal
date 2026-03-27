@@ -85,7 +85,7 @@ export default function SupportPage() {
   const [reply, setReply] = useState('')
 
   return (
-    <div className="flex-1 p-8 bg-gray-50 overflow-auto">
+    <div className="flex-1 p-8 bg-[#f1f5f9] overflow-auto">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Support</h1>
 
       <div className="flex gap-4 h-[calc(100vh-180px)]">
@@ -171,7 +171,7 @@ export default function SupportPage() {
                   <div className={`w-8 h-8 rounded-full ${msg.bg} flex items-center justify-center text-white text-xs font-semibold flex-shrink-0`}>
                     {msg.initials}
                   </div>
-                  <div className="flex-1 bg-gray-50 rounded-xl px-4 py-3">
+                  <div className="flex-1 bg-[#f1f5f9] rounded-xl px-4 py-3">
                     <div className="flex items-center justify-between mb-1">
                       <div>
                         <span className="text-sm font-semibold text-gray-900">{msg.name}</span>
