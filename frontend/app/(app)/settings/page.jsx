@@ -51,9 +51,11 @@ const roleStyles = {
 
 export default function SettingsPage() {
   const [active, setActive] = useState('company')
-  const [toggles, setToggles] = useState(() =>
-    Object.fromEntries([...emailNotifications, ...smsNotifications].map((n) => [n.key, n.defaultOn]))
-  )
+  const [toggles, setToggles] = useState(() => ({
+    ...Object.fromEntries([...emailNotifications, ...smsNotifications].map((n) => [n.key, n.defaultOn])),
+    authApp: true,
+    smsVerify: false,
+  }))
 
   return (
     <div className="flex-1 p-8 bg-[#f1f5f9]">
@@ -453,7 +455,94 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {active !== 'company' && active !== 'users' && active !== 'preferences' && active !== 'integrations' && (
+        {/* Security Panel */}
+        {active === 'security' && (
+          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Security</h2>
+              <p className="text-sm text-gray-400 mt-1">Manage your password, two-factor authentication, and active sessions</p>
+            </div>
+
+            {/* Password */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-sm font-semibold text-gray-900">Password</h3>
+                <span className="text-xs text-gray-400">Last changed: 40 days ago</span>
+              </div>
+              <p className="text-xs text-gray-400 mb-4">Update your password to keep your account secure</p>
+              <div className="space-y-3 max-w-md">
+                <input type="password" placeholder="Current Password" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="password" placeholder="New Password" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="password" placeholder="Confirm New Password" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <button className="mt-4 px-5 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
+                Update Password
+              </button>
+            </div>
+
+            {/* Two-Factor Authentication */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">Two-Factor Authentication</h3>
+              <p className="text-xs text-gray-400 mb-4">Add an extra layer of security to your account</p>
+              <div className="space-y-1">
+                {[
+                  { key: 'authApp', icon: Shield, label: 'Authenticator App', sub: 'Use an app like Google Authenticator or Authy' },
+                  { key: 'smsVerify', icon: Package, label: 'SMS Verification', sub: 'Receive codes via text message' },
+                ].map(({ key, icon: Icon, label, sub }) => (
+                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50">
+                    <div className="flex items-center gap-4">
+                      <Icon size={16} className="text-gray-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">{label}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+                      </div>
+                    </div>
+                    <Toggle on={toggles[key] ?? (key === 'authApp')} onChange={(val) => setToggles((t) => ({ ...t, [key]: val }))} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Active Sessions */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">Active Sessions</h3>
+              <p className="text-xs text-gray-400 mb-4">Manage and see where you're currently logged in</p>
+              <div className="space-y-3">
+                {[
+                  { device: 'MacBook Pro - Chrome', location: 'Miami, FL, USA', current: true },
+                  { device: 'iPhone 14 - Safari', location: 'Dallas, TX, USA', current: false },
+                ].map((session) => (
+                  <div key={session.device} className="border border-gray-200 rounded-xl px-5 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                        <Shield size={14} className="text-gray-500" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-gray-900">{session.device}</p>
+                          {session.current && (
+                            <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-600">Current</span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-0.5">{session.location}</p>
+                      </div>
+                    </div>
+                    {!session.current && (
+                      <button className="px-3 py-1.5 text-xs font-medium border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition-colors">
+                        Revoke
+                      </button>
+                    )}
+                    {session.current && (
+                      <span className="text-xs text-gray-400">Active now</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {active !== 'company' && active !== 'users' && active !== 'preferences' && active !== 'integrations' && active !== 'security' && (
           <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 flex items-center justify-center">
             <p className="text-sm text-gray-400">Select a section to manage settings</p>
           </div>
