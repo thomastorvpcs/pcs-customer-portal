@@ -85,10 +85,10 @@ export default function SupportPage() {
   const [reply, setReply] = useState('')
 
   return (
-    <div className="flex-1 p-8 bg-[#f1f5f9] overflow-auto">
+    <div className="flex-1 p-8 bg-[#f1f5f9] flex flex-col">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Support</h1>
 
-      <div className="flex gap-4 h-[calc(100vh-180px)]">
+      <div className="flex gap-4 flex-1 min-h-0">
         {/* Left: Ticket List */}
         <div className="w-[340px] flex-shrink-0 bg-white rounded-xl border border-gray-100 shadow-sm flex flex-col">
           {/* Filters */}

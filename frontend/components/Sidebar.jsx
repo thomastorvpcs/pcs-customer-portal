@@ -17,7 +17,7 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="w-44 min-h-screen bg-[#0b1b3a] flex flex-col text-white flex-shrink-0">
+    <div className="w-44 h-full bg-[#0b1b3a] flex flex-col text-white flex-shrink-0">
       {/* Logo */}
       <div className="px-5 py-6">
         <div className="flex items-center gap-2">

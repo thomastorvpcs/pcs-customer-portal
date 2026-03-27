@@ -39,7 +39,7 @@ export default function ShipmentsPage() {
   })
 
   return (
-    <div className="flex-1 p-8 bg-[#f1f5f9] overflow-auto">
+    <div className="flex-1 p-8 bg-[#f1f5f9]">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Shipments</h1>
 
       {/* Search + Filter row */}

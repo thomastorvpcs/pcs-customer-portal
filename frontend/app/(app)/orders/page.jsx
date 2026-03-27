@@ -27,7 +27,7 @@ export default function OrdersPage() {
   const filtered = activeTab === 'All Orders' ? orders : orders.filter((o) => o.status === activeTab)
 
   return (
-    <div className="flex-1 p-8 bg-[#f1f5f9] overflow-auto">
+    <div className="flex-1 p-8 bg-[#f1f5f9]">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Orders</h1>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
