@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText } from 'lucide-react'
+import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText, Mail, Truck, CreditCard, Headphones, Package } from 'lucide-react'
 
 const navItems = [
   { key: 'company', label: 'Company', sub: 'Business details', icon: Building2 },
@@ -20,6 +20,29 @@ const users = [
   { initials: 'AW', bg: 'bg-orange-400', name: 'Amy Wilson', email: 'amy.wilson@techmobile.com', role: 'Viewer', status: 'Active', lastActive: 'Mar 26, 2024', isCurrentUser: false },
 ]
 
+const emailNotifications = [
+  { key: 'orderConfirm', icon: Mail, label: 'Order Confirmations', sub: 'Receive email when orders are confirmed', defaultOn: true },
+  { key: 'shipmentUpdates', icon: Truck, label: 'Shipment Updates', sub: 'Get notified when shipments status changes', defaultOn: true },
+  { key: 'invoiceReminders', icon: FileText, label: 'Invoice Reminders', sub: 'Payment due date reminders and overdue notices', defaultOn: true },
+  { key: 'supportTickets', icon: Headphones, label: 'Support Ticket Updates', sub: 'Responses and status changes to your tickets', defaultOn: false },
+]
+
+const smsNotifications = [
+  { key: 'shipmentDelivered', icon: Package, label: 'Shipment Delivered', sub: 'Text alert when shipment is delivered', defaultOn: true },
+  { key: 'paymentAlerts', icon: CreditCard, label: 'Payment Due Alerts', sub: 'Urgent reminders for past-due invoices', defaultOn: false },
+]
+
+function Toggle({ on, onChange }) {
+  return (
+    <button
+      onClick={() => onChange(!on)}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${on ? 'bg-[#0b1b3a]' : 'bg-gray-200'}`}
+    >
+      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${on ? 'translate-x-6' : 'translate-x-1'}`} />
+    </button>
+  )
+}
+
 const roleStyles = {
   Admin: 'bg-orange-50 text-orange-600',
   Buyer: 'bg-blue-50 text-blue-600',
@@ -28,6 +51,9 @@ const roleStyles = {
 
 export default function SettingsPage() {
   const [active, setActive] = useState('company')
+  const [toggles, setToggles] = useState(() =>
+    Object.fromEntries([...emailNotifications, ...smsNotifications].map((n) => [n.key, n.defaultOn]))
+  )
 
   return (
     <div className="flex-1 p-8 bg-[#f1f5f9]">
@@ -233,7 +259,89 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {active !== 'company' && active !== 'users' && (
+        {/* Preferences Panel */}
+        {active === 'preferences' && (
+          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Preferences</h2>
+              <p className="text-sm text-gray-400 mt-1">Customize your notification and display settings</p>
+            </div>
+
+            {/* Email Notifications */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">Email Notifications</h3>
+              <p className="text-xs text-gray-400 mb-4">Choose which updates you'd like to receive via email</p>
+              <div className="space-y-1">
+                {emailNotifications.map(({ key, icon: Icon, label, sub }) => (
+                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50">
+                    <div className="flex items-center gap-4">
+                      <Icon size={16} className="text-gray-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">{label}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+                      </div>
+                    </div>
+                    <Toggle on={toggles[key]} onChange={(val) => setToggles((t) => ({ ...t, [key]: val }))} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SMS Notifications */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">SMS Notifications</h3>
+              <p className="text-xs text-gray-400 mb-4">Get text messages for critical updates</p>
+              <div className="space-y-1">
+                {smsNotifications.map(({ key, icon: Icon, label, sub }) => (
+                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50">
+                    <div className="flex items-center gap-4">
+                      <Icon size={16} className="text-gray-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">{label}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+                      </div>
+                    </div>
+                    <Toggle on={toggles[key]} onChange={(val) => setToggles((t) => ({ ...t, [key]: val }))} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Regional Settings */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-4">Regional Settings</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Currency</label>
+                  <select className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option>USD - US Dollar</option>
+                    <option>EUR - Euro</option>
+                    <option>GBP - British Pound</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Timezone</label>
+                  <select className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option>America/Chicago (CST)</option>
+                    <option>America/New_York (EST)</option>
+                    <option>America/Los_Angeles (PST)</option>
+                    <option>America/Denver (MST)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Date Format</label>
+                  <select className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option>MM/DD/YYYY</option>
+                    <option>DD/MM/YYYY</option>
+                    <option>YYYY-MM-DD</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {active !== 'company' && active !== 'users' && active !== 'preferences' && (
           <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 flex items-center justify-center">
             <p className="text-sm text-gray-400">Select a section to manage settings</p>
           </div>
