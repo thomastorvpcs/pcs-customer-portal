@@ -11,6 +11,21 @@ const navItems = [
   { key: 'security', label: 'Security', sub: 'Password, 2FA, sessions', icon: Shield },
 ]
 
+const users = [
+  { initials: 'JD', bg: 'bg-[#0b1b3a]', name: 'John Davis', email: 'john.davis@techmobile.com', role: 'Admin', status: 'Active', lastActive: 'Just now', isCurrentUser: true },
+  { initials: 'SM', bg: 'bg-teal-700', name: 'Sarah Mitchell', email: 'sarah.mitchell@techmobile.com', role: 'Admin', status: 'Active', lastActive: '2 hours ago', isCurrentUser: false },
+  { initials: 'MR', bg: 'bg-purple-500', name: 'Mike Rodriguez', email: 'm.ke.r@techmobile.com', role: 'Buyer', status: 'Active', lastActive: 'Yesterday', isCurrentUser: false },
+  { initials: 'LC', bg: 'bg-indigo-500', name: 'Lisa Chen', email: 'lisa.chen@techmobile.com', role: 'Buyer', status: 'Active', lastActive: 'Mar 25, 2024', isCurrentUser: false },
+  { initials: 'DP', bg: 'bg-emerald-500', name: 'David Park', email: 'david.park@techmobile.com', role: 'Buyer', status: 'Inactive', lastActive: 'Mar 10, 2024', isCurrentUser: false },
+  { initials: 'AW', bg: 'bg-orange-400', name: 'Amy Wilson', email: 'amy.wilson@techmobile.com', role: 'Viewer', status: 'Active', lastActive: 'Mar 26, 2024', isCurrentUser: false },
+]
+
+const roleStyles = {
+  Admin: 'bg-orange-50 text-orange-600',
+  Buyer: 'bg-blue-50 text-blue-600',
+  Viewer: 'bg-gray-100 text-gray-500',
+}
+
 export default function SettingsPage() {
   const [active, setActive] = useState('company')
 
@@ -38,69 +53,46 @@ export default function SettingsPage() {
           ))}
         </div>
 
-        {/* Right Panel */}
+        {/* Company Panel */}
         {active === 'company' && (
           <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
-            {/* Header */}
             <div>
               <h2 className="text-xl font-bold text-gray-900">Company Information</h2>
               <p className="text-sm text-gray-400 mt-1">Manage your business details and tax information</p>
             </div>
-
-            {/* Business Details */}
             <div>
               <h3 className="text-sm font-semibold text-gray-900 mb-4">Business Details</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Company Name</label>
-                  <input
-                    defaultValue="TechMobile Distributors LLC"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <input defaultValue="TechMobile Distributors LLC" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Business Type</label>
-                  <input
-                    defaultValue="Wholesale Reseller"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <input defaultValue="Wholesale Reseller" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
               <div className="mb-4">
                 <label className="block text-xs font-medium text-gray-500 mb-1.5">Business Address</label>
-                <input
-                  defaultValue="4521 Commerce Way, Suite 200, Dallas, TX 75201"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <input defaultValue="4521 Commerce Way, Suite 200, Dallas, TX 75201" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Phone Number</label>
-                  <input
-                    defaultValue="(214) 555-7890"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <input defaultValue="(214) 555-7890" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Email Address</label>
-                  <input
-                    defaultValue="orders@techmobile.com"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <input defaultValue="orders@techmobile.com" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
             </div>
-
-            {/* Tax Information */}
             <div>
               <h3 className="text-sm font-semibold text-gray-900 mb-4">Tax Information</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">EIN (Tax ID)</label>
-                  <input
-                    defaultValue="82 1234567"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <input defaultValue="82 1234567" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">Tax Exempt Status</label>
@@ -121,8 +113,6 @@ export default function SettingsPage() {
                 </div>
               </div>
             </div>
-
-            {/* Account Status */}
             <div>
               <h3 className="text-sm font-semibold text-gray-900 mb-4">Account Status</h3>
               <div className="grid grid-cols-3 gap-4">
@@ -143,7 +133,107 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {active !== 'company' && (
+        {/* Users Panel */}
+        {active === 'users' && (
+          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">User Management</h2>
+                <p className="text-sm text-gray-400 mt-1">Manage team members and their access levels</p>
+              </div>
+              <button className="px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
+                + Invite User
+              </button>
+            </div>
+
+            {/* Stats */}
+            <div className="flex items-center gap-6 py-4 border-b border-gray-100 mb-2 text-sm text-gray-500">
+              <span>Total Users: <strong className="text-gray-900">6</strong></span>
+              <span>Admins: <strong className="text-gray-900">2</strong></span>
+              <span>Buyers: <strong className="text-gray-900">3</strong></span>
+              <span>Viewers: <strong className="text-gray-900">1</strong></span>
+            </div>
+
+            {/* Table */}
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-100">
+                  {['User', 'Role', 'Status', 'Last Active', 'Actions'].map((col) => (
+                    <th key={col} className="py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide pr-4">
+                      {col}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {users.map((user) => (
+                  <tr key={user.email} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="py-4 pr-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-9 h-9 rounded-full ${user.bg} flex items-center justify-center text-white text-xs font-semibold flex-shrink-0`}>
+                          {user.initials}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">{user.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 pr-4">
+                      <span className={`px-2.5 py-1 rounded text-xs font-medium ${roleStyles[user.role]}`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="py-4 pr-4">
+                      <span className={`px-2.5 py-1 rounded text-xs font-medium ${
+                        user.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'
+                      }`}>
+                        {user.status}
+                      </span>
+                    </td>
+                    <td className="py-4 pr-4 text-sm text-gray-500">{user.lastActive}</td>
+                    <td className="py-4">
+                      <div className="flex items-center gap-2">
+                        <button className="px-3 py-1.5 text-xs font-medium border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                          Edit
+                        </button>
+                        {!user.isCurrentUser && (
+                          <button className={`px-3 py-1.5 text-xs font-medium border rounded-lg transition-colors ${
+                            user.status === 'Inactive'
+                              ? 'border-green-400 text-green-600 hover:bg-green-50'
+                              : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                          }`}>
+                            {user.status === 'Inactive' ? 'Activate' : 'Deactivate'}
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Role Permissions Footer */}
+            <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-4 flex-wrap">
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Role Permissions:</span>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-orange-50 text-orange-600">Admin</span>
+                <span className="text-xs text-gray-500">Full access, user management</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-600">Buyer</span>
+                <span className="text-xs text-gray-500">Create orders, view financial</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">Viewer</span>
+                <span className="text-xs text-gray-500">Read-only access</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {active !== 'company' && active !== 'users' && (
           <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 flex items-center justify-center">
             <p className="text-sm text-gray-400">Select a section to manage settings</p>
           </div>
