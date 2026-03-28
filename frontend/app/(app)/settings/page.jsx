@@ -63,7 +63,7 @@ export default function SettingsPage() {
 
       <div className="flex gap-5">
         {/* Left Nav */}
-        <div className="w-[220px] flex-shrink-0 bg-white rounded-xl border border-gray-100 shadow-sm p-2">
+        <div className="w-[220px] flex-shrink-0 bg-white rounded-xl border border-gray-100 shadow-sm p-2 self-start">
           {navItems.map(({ key, label, sub, icon: Icon }) => (
             <button
               key={key}
