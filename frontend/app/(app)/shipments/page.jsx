@@ -163,7 +163,7 @@ export default function ShipmentsPage() {
                           )}
                         </div>
                         {i < trackingSteps.length - 1 && (
-                          <div className={`flex-1 h-0.5 -ml-1 ${step.done && !step.active ? 'bg-green-400' : 'bg-gray-200'}`} />
+                          <div className={`flex-1 h-0.5 -ml-1 ${step.done && !step.active ? 'bg-green-400' : step.active ? 'bg-blue-400' : 'bg-gray-200'}`} />
                         )}
                       </div>
                       <p className={`text-xs font-medium mt-2 text-center ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700' : 'text-gray-400'}`}>
