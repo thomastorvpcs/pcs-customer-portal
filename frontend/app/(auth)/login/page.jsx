@@ -7,12 +7,22 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel */}
-      <div className="w-80 bg-[#0b1b3a] flex flex-col justify-between p-10 text-white flex-shrink-0 relative overflow-hidden">
-        {/* Background glow effects */}
-        <div className="absolute top-[-80px] right-[-60px] w-64 h-64 rounded-full bg-blue-500 opacity-10 blur-3xl pointer-events-none" />
-        <div className="absolute top-[60px] left-[-40px] w-48 h-48 rounded-full bg-indigo-400 opacity-10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[80px] right-[-40px] w-56 h-56 rounded-full bg-blue-400 opacity-10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[-60px] left-[-20px] w-40 h-40 rounded-full bg-cyan-400 opacity-10 blur-3xl pointer-events-none" />
+      <div className="w-80 flex flex-col justify-between p-10 text-white flex-shrink-0 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #021948, #00569b)' }}>
+        {/* Dot grid pattern - bottom right */}
+        <svg className="absolute bottom-0 right-0 pointer-events-none" width="220" height="220" viewBox="0 0 220 220">
+          {Array.from({ length: 8 }).map((_, row) => {
+            const alpha = 0.08 + row * 0.015
+            return Array.from({ length: 8 }).map((_, col) => (
+              <circle
+                key={`${row}-${col}`}
+                cx={col * 24 + 3}
+                cy={row * 24 + 3}
+                r={3}
+                fill={`rgba(255, 203, 112, ${alpha})`}
+              />
+            ))
+          })}
+        </svg>
         <div>
           <div className="flex items-center gap-2 mb-14">
             <div className="flex items-end gap-0.5">
