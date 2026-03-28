@@ -1,4 +1,9 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+
 export default function LoginPage() {
+  const router = useRouter()
   return (
     <div className="min-h-screen flex">
       {/* Left panel */}
@@ -52,7 +57,7 @@ export default function LoginPage() {
             Enter your credentials to access the portal
           </p>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); router.push('/') }}>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Email address
