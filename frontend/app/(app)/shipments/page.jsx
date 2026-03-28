@@ -149,7 +149,7 @@ export default function ShipmentsPage() {
                     <div className="flex flex-col items-center flex-1">
                       <div className="flex items-center w-full">
                         {i > 0 && (
-                          <div className={`flex-1 h-0.5 -mr-1 ${trackingSteps[i - 1].done && !trackingSteps[i - 1].active ? 'bg-green-400' : trackingSteps[i - 1].active ? 'bg-blue-400' : 'bg-gray-200'}`} />
+                          <div className={`flex-1 h-0.5 -mr-1 ${!step.done ? 'bg-gray-200' : trackingSteps[i - 1].done && !trackingSteps[i - 1].active ? 'bg-green-400' : 'bg-blue-400'}`} />
                         )}
                         <div className="flex-shrink-0 z-10">
                           {step.done ? (
