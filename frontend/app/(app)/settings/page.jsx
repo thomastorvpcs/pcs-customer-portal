@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText, Mail, Truck, CreditCard, Headphones, Package, Eye, Copy, Trash2, Pencil, Plus } from 'lucide-react'
+import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText, Mail, Truck, CreditCard, Headphones, Package, Eye, Copy, Trash2, Pencil, Plus, Sun, Moon, Monitor } from 'lucide-react'
+import { useTheme } from '@/components/ThemeProvider'
 
 const navItems = [
   { key: 'company', label: 'Company', sub: 'Business details', icon: Building2 },
@@ -36,7 +37,7 @@ function Toggle({ on, onChange }) {
   return (
     <button
       onClick={() => onChange(!on)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${on ? 'bg-[#0b1b3a]' : 'bg-gray-200'}`}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${on ? 'bg-[#0b1b3a]' : 'bg-gray-200 dark:bg-gray-600'}`}
     >
       <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${on ? 'translate-x-6' : 'translate-x-1'}`} />
     </button>
@@ -44,9 +45,9 @@ function Toggle({ on, onChange }) {
 }
 
 const roleStyles = {
-  Admin: 'bg-orange-50 text-orange-600',
-  Buyer: 'bg-blue-50 text-blue-600',
-  Viewer: 'bg-gray-100 text-gray-500',
+  Admin: 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
+  Buyer: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+  Viewer: 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400',
 }
 
 export default function SettingsPage() {
@@ -56,25 +57,32 @@ export default function SettingsPage() {
     authApp: true,
     smsVerify: false,
   }))
+  const { theme, setTheme } = useTheme()
+
+  const appearanceOptions = [
+    { value: 'light', label: 'Light', icon: Sun },
+    { value: 'dark', label: 'Dark', icon: Moon },
+    { value: 'system', label: 'System', icon: Monitor },
+  ]
 
   return (
-    <div className="flex-1 p-8 bg-[#f1f5f9]">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
+    <div className="flex-1 p-8 bg-[#f1f5f9] dark:bg-[#0d1829]">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Settings</h1>
 
       <div className="flex gap-5">
         {/* Left Nav */}
-        <div className="w-[220px] flex-shrink-0 bg-white rounded-xl border border-gray-100 shadow-sm p-2 self-start">
+        <div className="w-[220px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-2 self-start">
           {navItems.map(({ key, label, sub, icon: Icon }) => (
             <button
               key={key}
               onClick={() => setActive(key)}
               className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
-                active === key ? 'bg-blue-50' : 'hover:bg-gray-50'
+                active === key ? 'bg-blue-50 dark:bg-blue-900/30' : 'hover:bg-gray-50 dark:hover:bg-[#1a2540]'
               }`}
             >
-              <Icon size={16} className={active === key ? 'text-blue-600' : 'text-gray-400'} />
+              <Icon size={16} className={active === key ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'} />
               <div>
-                <p className={`text-sm font-medium ${active === key ? 'text-blue-700' : 'text-gray-800'}`}>{label}</p>
+                <p className={`text-sm font-medium ${active === key ? 'text-blue-700 dark:text-blue-400' : 'text-gray-800 dark:text-gray-200'}`}>{label}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
               </div>
             </button>
@@ -83,78 +91,78 @@ export default function SettingsPage() {
 
         {/* Company Panel */}
         {active === 'company' && (
-          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Company Information</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Company Information</h2>
               <p className="text-sm text-gray-400 mt-1">Manage your business details and tax information</p>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Business Details</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Business Details</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Company Name</label>
-                  <input defaultValue="TechMobile Distributors LLC" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Company Name</label>
+                  <input defaultValue="TechMobile Distributors LLC" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Business Type</label>
-                  <input defaultValue="Wholesale Reseller" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Business Type</label>
+                  <input defaultValue="Wholesale Reseller" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
               <div className="mb-4">
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Business Address</label>
-                <input defaultValue="4521 Commerce Way, Suite 200, Dallas, TX 75201" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Business Address</label>
+                <input defaultValue="4521 Commerce Way, Suite 200, Dallas, TX 75201" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Phone Number</label>
-                  <input defaultValue="(214) 555-7890" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Phone Number</label>
+                  <input defaultValue="(214) 555-7890" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Email Address</label>
-                  <input defaultValue="orders@techmobile.com" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Email Address</label>
+                  <input defaultValue="orders@techmobile.com" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Tax Information</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Tax Information</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">EIN (Tax ID)</label>
-                  <input defaultValue="82 1234567" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">EIN (Tax ID)</label>
+                  <input defaultValue="82 1234567" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Tax Exempt Status</label>
-                  <div className="flex items-center gap-2 border border-green-200 bg-green-50 rounded-lg px-3 py-2.5">
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Tax Exempt Status</label>
+                  <div className="flex items-center gap-2 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-lg px-3 py-2.5">
                     <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
-                    <span className="text-sm font-medium text-green-700">Tax Exempt Verified</span>
+                    <span className="text-sm font-medium text-green-700 dark:text-green-400">Tax Exempt Verified</span>
                   </div>
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Tax Exemption Certificate</label>
-                <div className="border border-gray-200 rounded-lg px-4 py-4 flex items-center justify-center gap-3">
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Tax Exemption Certificate</label>
+                <div className="border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-4 flex items-center justify-center gap-3">
                   <FileText size={18} className="text-red-400 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">TX_Exemption_2024.pdf</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200">TX_Exemption_2024.pdf</p>
                     <p className="text-xs text-gray-400 mt-0.5">Uploaded Jan 15, 2024</p>
                   </div>
                 </div>
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Account Status</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Account Status</h3>
               <div className="grid grid-cols-3 gap-4">
-                <div className="border border-gray-200 rounded-xl px-5 py-4">
+                <div className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4">
                   <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Account ID</p>
-                  <p className="text-lg font-bold text-gray-900">TM-2024-0482</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white">TM-2024-0482</p>
                 </div>
-                <div className="border border-gray-200 rounded-xl px-5 py-4">
+                <div className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4">
                   <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Member Since</p>
-                  <p className="text-lg font-bold text-gray-900">March 2019</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white">March 2019</p>
                 </div>
-                <div className="border border-blue-200 rounded-xl px-5 py-4">
+                <div className="border border-blue-200 dark:border-blue-700 rounded-xl px-5 py-4">
                   <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Account Tier</p>
-                  <p className="text-lg font-bold text-blue-700">Gold Partner</p>
+                  <p className="text-lg font-bold text-blue-700 dark:text-blue-400">Gold Partner</p>
                 </div>
               </div>
             </div>
@@ -163,11 +171,10 @@ export default function SettingsPage() {
 
         {/* Users Panel */}
         {active === 'users' && (
-          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7">
-            {/* Header */}
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7">
             <div className="flex items-center justify-between mb-2">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">User Management</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">User Management</h2>
                 <p className="text-sm text-gray-400 mt-1">Manage team members and their access levels</p>
               </div>
               <button className="px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
@@ -175,18 +182,16 @@ export default function SettingsPage() {
               </button>
             </div>
 
-            {/* Stats */}
-            <div className="flex items-center gap-6 py-4 border-b border-gray-100 mb-2 text-sm text-gray-500">
-              <span>Total Users: <strong className="text-gray-900">6</strong></span>
-              <span>Admins: <strong className="text-gray-900">2</strong></span>
-              <span>Buyers: <strong className="text-gray-900">3</strong></span>
-              <span>Viewers: <strong className="text-gray-900">1</strong></span>
+            <div className="flex items-center gap-6 py-4 border-b border-gray-100 dark:border-gray-700 mb-2 text-sm text-gray-500 dark:text-gray-400">
+              <span>Total Users: <strong className="text-gray-900 dark:text-white">6</strong></span>
+              <span>Admins: <strong className="text-gray-900 dark:text-white">2</strong></span>
+              <span>Buyers: <strong className="text-gray-900 dark:text-white">3</strong></span>
+              <span>Viewers: <strong className="text-gray-900 dark:text-white">1</strong></span>
             </div>
 
-            {/* Table */}
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100">
+                <tr className="border-b border-gray-100 dark:border-gray-700">
                   {['User', 'Role', 'Status', 'Last Active', 'Actions'].map((col) => (
                     <th key={col} className="py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide pr-4">
                       {col}
@@ -194,16 +199,16 @@ export default function SettingsPage() {
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
                 {users.map((user) => (
-                  <tr key={user.email} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={user.email} className="hover:bg-gray-50/50 dark:hover:bg-[#1a2540] transition-colors">
                     <td className="py-4 pr-4">
                       <div className="flex items-center gap-3">
                         <div className={`w-9 h-9 rounded-full ${user.bg} flex items-center justify-center text-white text-xs font-semibold flex-shrink-0`}>
                           {user.initials}
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</p>
                           <p className="text-xs text-gray-400 mt-0.5">{user.email}</p>
                         </div>
                       </div>
@@ -215,22 +220,22 @@ export default function SettingsPage() {
                     </td>
                     <td className="py-4 pr-4">
                       <span className={`px-2.5 py-1 rounded text-xs font-medium ${
-                        user.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'
+                        user.status === 'Active' ? 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-50 text-red-500 dark:bg-red-900/30 dark:text-red-400'
                       }`}>
                         {user.status}
                       </span>
                     </td>
-                    <td className="py-4 pr-4 text-sm text-gray-500">{user.lastActive}</td>
+                    <td className="py-4 pr-4 text-sm text-gray-500 dark:text-gray-400">{user.lastActive}</td>
                     <td className="py-4">
                       <div className="flex items-center gap-2">
-                        <button className="px-3 py-1.5 text-xs font-medium border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                        <button className="px-3 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
                           Edit
                         </button>
                         {!user.isCurrentUser && (
                           <button className={`px-3 py-1.5 text-xs font-medium border rounded-lg transition-colors ${
                             user.status === 'Inactive'
-                              ? 'border-green-400 text-green-600 hover:bg-green-50'
-                              : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                              ? 'border-green-400 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                              : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]'
                           }`}>
                             {user.status === 'Inactive' ? 'Activate' : 'Deactivate'}
                           </button>
@@ -242,20 +247,19 @@ export default function SettingsPage() {
               </tbody>
             </table>
 
-            {/* Role Permissions Footer */}
-            <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-4 flex-wrap">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Role Permissions:</span>
+            <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center gap-4 flex-wrap">
+              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Role Permissions:</span>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-xs font-medium bg-orange-50 text-orange-600">Admin</span>
-                <span className="text-xs text-gray-500">Full access, user management</span>
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">Admin</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">Full access, user management</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-600">Buyer</span>
-                <span className="text-xs text-gray-500">Create orders, view financial</span>
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">Buyer</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">Create orders, view financial</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">Viewer</span>
-                <span className="text-xs text-gray-500">Read-only access</span>
+                <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400">Viewer</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">Read-only access</span>
               </div>
             </div>
           </div>
@@ -263,23 +267,45 @@ export default function SettingsPage() {
 
         {/* Preferences Panel */}
         {active === 'preferences' && (
-          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Preferences</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Preferences</h2>
               <p className="text-sm text-gray-400 mt-1">Customize your notification and display settings</p>
+            </div>
+
+            {/* Appearance */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Appearance</h3>
+              <p className="text-xs text-gray-400 mb-4">Choose your preferred color theme</p>
+              <div className="flex gap-3">
+                {appearanceOptions.map(({ value, label, icon: Icon }) => (
+                  <button
+                    key={value}
+                    onClick={() => setTheme(value)}
+                    className={`flex-1 flex flex-col items-center gap-2 px-4 py-4 rounded-xl border-2 transition-colors ${
+                      theme === value
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                    }`}
+                  >
+                    <Icon size={20} className={theme === value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'} />
+                    <span className={`text-sm font-medium ${theme === value ? 'text-blue-700 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`}>{label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Email Notifications */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">Email Notifications</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Email Notifications</h3>
               <p className="text-xs text-gray-400 mb-4">Choose which updates you'd like to receive via email</p>
               <div className="space-y-1">
                 {emailNotifications.map(({ key, icon: Icon, label, sub }) => (
-                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50">
+                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50 dark:border-gray-700">
                     <div className="flex items-center gap-4">
                       <Icon size={16} className="text-gray-400 flex-shrink-0" />
                       <div>
-                        <p className="text-sm font-medium text-gray-800">{label}</p>
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{label}</p>
                         <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
                       </div>
                     </div>
@@ -291,15 +317,15 @@ export default function SettingsPage() {
 
             {/* SMS Notifications */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">SMS Notifications</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">SMS Notifications</h3>
               <p className="text-xs text-gray-400 mb-4">Get text messages for critical updates</p>
               <div className="space-y-1">
                 {smsNotifications.map(({ key, icon: Icon, label, sub }) => (
-                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50">
+                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50 dark:border-gray-700">
                     <div className="flex items-center gap-4">
                       <Icon size={16} className="text-gray-400 flex-shrink-0" />
                       <div>
-                        <p className="text-sm font-medium text-gray-800">{label}</p>
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{label}</p>
                         <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
                       </div>
                     </div>
@@ -311,19 +337,19 @@ export default function SettingsPage() {
 
             {/* Regional Settings */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Regional Settings</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Regional Settings</h3>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Currency</label>
-                  <select className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Currency</label>
+                  <select className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>USD - US Dollar</option>
                     <option>EUR - Euro</option>
                     <option>GBP - British Pound</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Timezone</label>
-                  <select className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Timezone</label>
+                  <select className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>America/Chicago (CST)</option>
                     <option>America/New_York (EST)</option>
                     <option>America/Los_Angeles (PST)</option>
@@ -331,8 +357,8 @@ export default function SettingsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Date Format</label>
-                  <select className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Date Format</label>
+                  <select className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>MM/DD/YYYY</option>
                     <option>DD/MM/YYYY</option>
                     <option>YYYY-MM-DD</option>
@@ -345,45 +371,45 @@ export default function SettingsPage() {
 
         {/* Integrations Panel */}
         {active === 'integrations' && (
-          <div className="flex-1 min-w-0 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 min-w-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Integrations</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Integrations</h2>
               <p className="text-sm text-gray-400 mt-1">Manage API keys, webhooks, and third-party connections</p>
             </div>
 
             {/* API Keys */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">API Keys</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">API Keys</h3>
               <p className="text-xs text-gray-400 mb-4">Use API keys to authenticate requests to the PCS Wireless API</p>
               <div className="space-y-3">
                 {[
                   { name: 'Production', key: 'pk_live_********************', created: 'Jan 15, 2024', active: true, label: 'Active' },
                   { name: 'Test / Sandbox', key: 'pk_test_********************', created: 'Jan 15, 2024', active: false, label: 'Test Mode' },
                 ].map((k) => (
-                  <div key={k.name} className="border border-gray-200 rounded-xl px-5 py-4">
+                  <div key={k.name} className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4">
                     <div className="flex items-center gap-4 min-w-0">
                       <div className="w-36 flex-shrink-0">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Key Name</p>
-                        <p className="text-sm font-semibold text-gray-900">{k.name}</p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{k.name}</p>
                         <div className="flex items-center gap-1 mt-1">
                           <span className={`w-1.5 h-1.5 rounded-full ${k.active ? 'bg-green-500' : 'bg-orange-400'}`} />
-                          <span className={`text-xs font-medium ${k.active ? 'text-green-600' : 'text-orange-500'}`}>{k.label}</span>
+                          <span className={`text-xs font-medium ${k.active ? 'text-green-600 dark:text-green-400' : 'text-orange-500'}`}>{k.label}</span>
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">API Key</p>
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-sm font-mono text-gray-700 truncate">{k.key}</span>
-                          <button className="text-gray-400 hover:text-gray-600 flex-shrink-0"><Eye size={14} /></button>
-                          <button className="text-gray-400 hover:text-gray-600 flex-shrink-0"><Copy size={14} /></button>
+                          <span className="text-sm font-mono text-gray-700 dark:text-gray-300 truncate">{k.key}</span>
+                          <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 flex-shrink-0"><Eye size={14} /></button>
+                          <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 flex-shrink-0"><Copy size={14} /></button>
                         </div>
                       </div>
                       <div className="w-32 flex-shrink-0">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Created</p>
-                        <p className="text-sm text-gray-700">{k.created}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300">{k.created}</p>
                       </div>
                       <div className="flex-shrink-0">
-                        <button className="px-4 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">Regenerate</button>
+                        <button className="px-4 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">Regenerate</button>
                       </div>
                     </div>
                   </div>
@@ -394,7 +420,7 @@ export default function SettingsPage() {
             {/* Webhooks */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <h3 className="text-sm font-semibold text-gray-900">Webhooks</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Webhooks</h3>
                 <button className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
                   <Plus size={13} /> Add Webhook
                 </button>
@@ -405,22 +431,22 @@ export default function SettingsPage() {
                   { name: 'Order Status Updates', url: 'https://api.techmobile.com/webhooks/orders', tags: ['order.created', 'order.shipped'] },
                   { name: 'Invoice Notifications', url: 'https://api.techmobile.com/webhooks/billing', tags: ['invoice.email', 'invoice.paid'] },
                 ].map((wh) => (
-                  <div key={wh.name} className="border border-gray-200 rounded-xl px-5 py-4 flex items-center gap-4">
+                  <div key={wh.name} className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4 flex items-center gap-4">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 mb-0.5">{wh.name}</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white mb-0.5">{wh.name}</p>
                       <p className="text-xs text-gray-400 truncate">{wh.url}</p>
                     </div>
                     <div className="flex items-center gap-1.5">
                       {wh.tags.map((tag) => (
-                        <span key={tag} className="px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-600">{tag}</span>
+                        <span key={tag} className="px-2 py-0.5 rounded text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">{tag}</span>
                       ))}
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                      <span className="text-xs font-medium text-green-600">Active</span>
+                      <span className="text-xs font-medium text-green-600 dark:text-green-400">Active</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <button className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"><Pencil size={13} /> Edit</button>
+                      <button className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white flex items-center gap-1"><Pencil size={13} /> Edit</button>
                       <button className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1"><Trash2 size={13} /> Delete</button>
                     </div>
                   </div>
@@ -430,25 +456,25 @@ export default function SettingsPage() {
 
             {/* ERP / WMS Integration */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">ERP / WMS Integration</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">ERP / WMS Integration</h3>
               <p className="text-xs text-gray-400 mb-4">Connect your enterprise systems for automated data sync</p>
               <div className="grid grid-cols-3 gap-4">
                 {[
                   { name: 'SAP', sync: '5 minutes ago' },
                   { name: 'NetSuite', sync: '12 minutes ago' },
                 ].map((erp) => (
-                  <div key={erp.name} className="border border-gray-200 rounded-xl px-5 py-4">
+                  <div key={erp.name} className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4">
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-bold text-gray-900">{erp.name}</p>
-                      <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-600">Connected</span>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{erp.name}</p>
+                      <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400">Connected</span>
                     </div>
                     <p className="text-xs text-gray-400 mb-3">Last sync: {erp.sync}</p>
-                    <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">Configure</button>
+                    <button className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors">Configure</button>
                   </div>
                 ))}
-                <div className="border border-dashed border-gray-200 rounded-xl px-5 py-4 flex flex-col items-center justify-center gap-2 text-center hover:bg-gray-50 cursor-pointer transition-colors">
-                  <Zap size={20} className="text-gray-300" />
-                  <p className="text-sm font-medium text-gray-500">Add Custom Integration</p>
+                <div className="border border-dashed border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4 flex flex-col items-center justify-center gap-2 text-center hover:bg-gray-50 dark:hover:bg-[#1a2540] cursor-pointer transition-colors">
+                  <Zap size={20} className="text-gray-300 dark:text-gray-500" />
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Add Custom Integration</p>
                 </div>
               </div>
             </div>
@@ -457,23 +483,23 @@ export default function SettingsPage() {
 
         {/* Security Panel */}
         {active === 'security' && (
-          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Security</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Security</h2>
               <p className="text-sm text-gray-400 mt-1">Manage your password, two-factor authentication, and active sessions</p>
             </div>
 
             {/* Password */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <h3 className="text-sm font-semibold text-gray-900">Password</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Password</h3>
                 <span className="text-xs text-gray-400">Last changed: 40 days ago</span>
               </div>
               <p className="text-xs text-gray-400 mb-4">Update your password to keep your account secure</p>
               <div className="space-y-3 max-w-md">
-                <input type="password" placeholder="Current Password" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <input type="password" placeholder="New Password" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <input type="password" placeholder="Confirm New Password" className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="password" placeholder="Current Password" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="password" placeholder="New Password" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="password" placeholder="Confirm New Password" className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <button className="mt-4 px-5 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
                 Update Password
@@ -482,18 +508,18 @@ export default function SettingsPage() {
 
             {/* Two-Factor Authentication */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">Two-Factor Authentication</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Two-Factor Authentication</h3>
               <p className="text-xs text-gray-400 mb-4">Add an extra layer of security to your account</p>
               <div className="space-y-1">
                 {[
                   { key: 'authApp', icon: Shield, label: 'Authenticator App', sub: 'Use an app like Google Authenticator or Authy' },
                   { key: 'smsVerify', icon: Package, label: 'SMS Verification', sub: 'Receive codes via text message' },
                 ].map(({ key, icon: Icon, label, sub }) => (
-                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50">
+                  <div key={key} className="flex items-center justify-between py-4 border-b border-gray-50 dark:border-gray-700">
                     <div className="flex items-center gap-4">
                       <Icon size={16} className="text-gray-400 flex-shrink-0" />
                       <div>
-                        <p className="text-sm font-medium text-gray-800">{label}</p>
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{label}</p>
                         <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
                       </div>
                     </div>
@@ -505,30 +531,30 @@ export default function SettingsPage() {
 
             {/* Active Sessions */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">Active Sessions</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Active Sessions</h3>
               <p className="text-xs text-gray-400 mb-4">Manage and see where you're currently logged in</p>
               <div className="space-y-3">
                 {[
                   { device: 'MacBook Pro - Chrome', location: 'Miami, FL, USA', current: true },
                   { device: 'iPhone 14 - Safari', location: 'Dallas, TX, USA', current: false },
                 ].map((session) => (
-                  <div key={session.device} className="border border-gray-200 rounded-xl px-5 py-4 flex items-center justify-between">
+                  <div key={session.device} className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                        <Shield size={14} className="text-gray-500" />
+                      <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-[#1e2d45] flex items-center justify-center flex-shrink-0">
+                        <Shield size={14} className="text-gray-500 dark:text-gray-400" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-semibold text-gray-900">{session.device}</p>
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white">{session.device}</p>
                           {session.current && (
-                            <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-600">Current</span>
+                            <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400">Current</span>
                           )}
                         </div>
                         <p className="text-xs text-gray-400 mt-0.5">{session.location}</p>
                       </div>
                     </div>
                     {!session.current && (
-                      <button className="px-3 py-1.5 text-xs font-medium border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition-colors">
+                      <button className="px-3 py-1.5 text-xs font-medium border border-red-200 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                         Revoke
                       </button>
                     )}
@@ -543,7 +569,7 @@ export default function SettingsPage() {
         )}
 
         {active !== 'company' && active !== 'users' && active !== 'preferences' && active !== 'integrations' && active !== 'security' && (
-          <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-8 py-7 flex items-center justify-center">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 flex items-center justify-center">
             <p className="text-sm text-gray-400">Select a section to manage settings</p>
           </div>
         )}
