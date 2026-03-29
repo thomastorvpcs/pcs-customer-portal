@@ -17,16 +17,16 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="w-44 h-full bg-[#0b1b3a] hidden md:flex flex-col text-white flex-shrink-0">
+    <div className="w-44 h-full bg-white dark:bg-[#0b1b3a] border-r border-gray-200 dark:border-white/10 hidden md:flex flex-col flex-shrink-0">
       {/* Logo */}
       <div className="px-5 py-6">
         <div className="flex items-center gap-2">
           <div className="flex items-end gap-0.5">
-            <span className="w-1.5 h-3 rounded-sm bg-blue-400 opacity-60"></span>
-            <span className="w-1.5 h-4 rounded-sm bg-blue-300 opacity-80"></span>
-            <span className="w-1.5 h-2 rounded-sm bg-blue-400 opacity-60"></span>
+            <span className="w-1.5 h-3 rounded-sm bg-blue-500 dark:bg-blue-400 opacity-60"></span>
+            <span className="w-1.5 h-4 rounded-sm bg-blue-400 dark:bg-blue-300 opacity-80"></span>
+            <span className="w-1.5 h-2 rounded-sm bg-blue-500 dark:bg-blue-400 opacity-60"></span>
           </div>
-          <span className="text-xs font-semibold tracking-widest uppercase text-blue-100">
+          <span className="text-xs font-semibold tracking-widest uppercase text-gray-700 dark:text-blue-100">
             pcs wireless
           </span>
         </div>
@@ -42,11 +42,11 @@ export default function Sidebar() {
               href={href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                 isActive
-                  ? 'bg-yellow-400/15 text-yellow-400 font-medium'
-                  : 'text-blue-200/60 hover:bg-white/5 hover:text-blue-100'
+                  ? 'bg-yellow-400/15 text-yellow-600 dark:text-yellow-400 font-medium'
+                  : 'text-gray-500 dark:text-blue-200/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-800 dark:hover:text-blue-100'
               }`}
             >
-              <Icon size={15} className={isActive ? 'text-yellow-400' : ''} />
+              <Icon size={15} className={isActive ? 'text-yellow-600 dark:text-yellow-400' : ''} />
               {label}
             </Link>
           )
@@ -54,11 +54,11 @@ export default function Sidebar() {
       </nav>
 
       {/* Sales Rep */}
-      <div className="px-5 py-5 border-t border-white/10">
-        <p className="text-[10px] text-blue-300/50 uppercase tracking-widest mb-2">Your Sales Rep</p>
-        <p className="text-sm font-semibold text-white">Michael Torres</p>
-        <p className="text-xs text-blue-300/50 mt-0.5">m.torres@pcsww.com</p>
-        <button className="mt-2 text-xs text-yellow-400 hover:text-yellow-300 transition-colors">
+      <div className="px-5 py-5 border-t border-gray-200 dark:border-white/10">
+        <p className="text-[10px] text-gray-400 dark:text-blue-300/50 uppercase tracking-widest mb-2">Your Sales Rep</p>
+        <p className="text-sm font-semibold text-gray-800 dark:text-white">Michael Torres</p>
+        <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">m.torres@pcsww.com</p>
+        <button className="mt-2 text-xs text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors">
           Contact
         </button>
       </div>
