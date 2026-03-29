@@ -40,7 +40,7 @@ export default function OrdersPage() {
   return (
     <>
       {/* ── MOBILE ── */}
-      <div className="md:hidden min-h-screen bg-[#f1f5f9] dark:bg-[#0d1829] px-4 pt-6 pb-4">
+      <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] px-4 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Orders</h1>
 
         {/* Search */}

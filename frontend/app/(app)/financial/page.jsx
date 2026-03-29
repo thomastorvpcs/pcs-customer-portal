@@ -76,7 +76,7 @@ export default function FinancialPage() {
   return (
     <>
       {/* ── MOBILE ── */}
-      <div className="md:hidden min-h-screen bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
+      <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
         {/* Title Row */}
         <div className="flex items-center justify-between px-4 pt-5 pb-4">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Financial</h1>

@@ -34,7 +34,7 @@ export default function DashboardPage() {
   return (
     <>
       {/* ── MOBILE ── */}
-      <div className="md:hidden min-h-screen bg-[#f1f5f9] dark:bg-[#0d1829] px-4 pt-6">
+      <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] px-4 pt-6">
         {/* Greeting */}
         <div className="mb-5">
           <p className="text-sm text-gray-500 dark:text-blue-300/60">Good morning,</p>

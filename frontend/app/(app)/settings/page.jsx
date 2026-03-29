@@ -71,7 +71,7 @@ export default function SettingsPage() {
   return (
     <>
     {/* ── MOBILE ── */}
-    <div className="md:hidden min-h-screen bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
+    <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
       {mobilePanel === null ? (
         /* Nav List */
         <div className="px-4 pt-5">
