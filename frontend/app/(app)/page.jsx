@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { AlertTriangle, ShoppingBag, Truck, DollarSign, TicketCheck, ChevronRight, FileText, RotateCcw, Headphones, Smartphone, CheckCircle, Package, Truck as TruckIcon } from 'lucide-react'
+import Greeting from '@/components/Greeting'
 
 const stats = [
   { label: 'Open Orders', value: '12', sub: '$284,500', href: '/orders', icon: ShoppingBag, iconColor: 'text-blue-500' },
@@ -37,7 +38,7 @@ export default function DashboardPage() {
       <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] px-4 pt-6">
         {/* Greeting */}
         <div className="mb-5">
-          <p className="text-sm text-gray-500 dark:text-blue-300/60">Good morning,</p>
+          <Greeting />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">John Davis</h1>
         </div>
 
