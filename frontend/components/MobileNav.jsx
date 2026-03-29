@@ -43,8 +43,8 @@ export default function MobileNav() {
   return (
     <>
       {/* Mobile Top Header */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-[#0b1b3a] border-b border-white/10 sticky top-0 z-30 flex-shrink-0">
-        <button onClick={() => setDrawerOpen(true)} className="text-white p-1">
+      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#0b1b3a] border-b border-gray-200 dark:border-white/10 sticky top-0 z-30 flex-shrink-0">
+        <button onClick={() => setDrawerOpen(true)} className="text-gray-700 dark:text-white p-1">
           <Menu size={22} />
         </button>
         <div className="flex items-center gap-2">
@@ -53,10 +53,10 @@ export default function MobileNav() {
             <span className="w-1.5 h-4 rounded-sm bg-blue-300 opacity-80" />
             <span className="w-1.5 h-2 rounded-sm bg-blue-400 opacity-60" />
           </div>
-          <span className="text-xs font-semibold tracking-widest uppercase text-blue-100">pcs wireless</span>
+          <span className="text-xs font-semibold tracking-widest uppercase text-gray-700 dark:text-blue-100">pcs wireless</span>
         </div>
         <div className="flex items-center gap-2">
-          <button className="text-white/60 p-1"><Bell size={18} /></button>
+          <button className="text-gray-400 dark:text-white/60 p-1"><Bell size={18} /></button>
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">JD</div>
         </div>
       </header>
@@ -138,14 +138,14 @@ export default function MobileNav() {
       </div>
 
       {/* Bottom Tab Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0b1b3a] border-t border-white/10 flex z-40">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0b1b3a] border-t border-gray-200 dark:border-white/10 flex z-40">
         {bottomItems.map(({ href, label, icon: Icon }) => {
           const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
           return (
             <Link
               key={href}
               href={href}
-              className={`flex-1 flex flex-col items-center justify-center py-3 gap-0.5 transition-colors ${isActive ? 'text-yellow-400' : 'text-blue-200/40'}`}
+              className={`flex-1 flex flex-col items-center justify-center py-3 gap-0.5 transition-colors ${isActive ? 'text-yellow-500 dark:text-yellow-400' : 'text-gray-400 dark:text-blue-200/40'}`}
             >
               <Icon size={20} />
               <span className="text-[10px] font-medium">{label}</span>
