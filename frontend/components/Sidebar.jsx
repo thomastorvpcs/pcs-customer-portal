@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { LayoutDashboard, ShoppingCart, Truck, BarChart2, Headphones, Settings } from 'lucide-react'
 
@@ -20,16 +21,7 @@ export default function Sidebar() {
     <div className="w-44 h-full bg-white dark:bg-[#0b1b3a] border-r border-gray-200 dark:border-white/10 hidden md:flex flex-col flex-shrink-0">
       {/* Logo */}
       <div className="px-5 py-6">
-        <div className="flex items-center gap-2">
-          <div className="flex items-end gap-0.5">
-            <span className="w-1.5 h-3 rounded-sm bg-blue-500 dark:bg-blue-400 opacity-60"></span>
-            <span className="w-1.5 h-4 rounded-sm bg-blue-400 dark:bg-blue-300 opacity-80"></span>
-            <span className="w-1.5 h-2 rounded-sm bg-blue-500 dark:bg-blue-400 opacity-60"></span>
-          </div>
-          <span className="text-xs font-semibold tracking-widest uppercase text-gray-700 dark:text-blue-100">
-            pcs wireless
-          </span>
-        </div>
+        <Image src="/Logo.png" alt="PCS Wireless" width={120} height={36} className="object-contain" priority />
       </div>
 
       {/* Nav */}

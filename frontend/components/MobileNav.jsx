@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 import {
   Menu, X, LayoutDashboard, ShoppingCart, Truck, BarChart2,
   Headphones, Settings, FileText, RotateCcw, Smartphone, Bell,
@@ -47,14 +48,7 @@ export default function MobileNav() {
         <button onClick={() => setDrawerOpen(true)} className="text-gray-700 dark:text-white p-1">
           <Menu size={22} />
         </button>
-        <div className="flex items-center gap-2">
-          <div className="flex items-end gap-0.5">
-            <span className="w-1.5 h-3 rounded-sm bg-blue-400 opacity-60" />
-            <span className="w-1.5 h-4 rounded-sm bg-blue-300 opacity-80" />
-            <span className="w-1.5 h-2 rounded-sm bg-blue-400 opacity-60" />
-          </div>
-          <span className="text-xs font-semibold tracking-widest uppercase text-gray-700 dark:text-blue-100">pcs wireless</span>
-        </div>
+        <Image src="/Logo.png" alt="PCS Wireless" width={100} height={30} className="object-contain" priority />
         <div className="flex items-center gap-2">
           <button className="text-gray-400 dark:text-white/60 p-1"><Bell size={18} /></button>
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">JD</div>
@@ -71,14 +65,7 @@ export default function MobileNav() {
       <div className={`fixed top-0 left-0 h-full w-[270px] bg-[#0d1829] z-50 md:hidden flex flex-col transition-transform duration-300 ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-          <div className="flex items-center gap-2">
-            <div className="flex items-end gap-0.5">
-              <span className="w-1.5 h-3 rounded-sm bg-blue-400 opacity-60" />
-              <span className="w-1.5 h-4 rounded-sm bg-blue-300 opacity-80" />
-              <span className="w-1.5 h-2 rounded-sm bg-blue-400 opacity-60" />
-            </div>
-            <span className="text-xs font-semibold tracking-widest uppercase text-blue-100">pcs wireless</span>
-          </div>
+          <Image src="/Logo.png" alt="PCS Wireless" width={100} height={30} className="object-contain" priority />
           <button
             onClick={() => setDrawerOpen(false)}
             className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white"
