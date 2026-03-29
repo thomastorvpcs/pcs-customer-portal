@@ -8,7 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="h-screen overflow-hidden">
+      <body className="md:h-screen md:overflow-hidden">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
