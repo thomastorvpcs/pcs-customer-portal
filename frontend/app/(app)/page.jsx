@@ -34,11 +34,11 @@ export default function DashboardPage() {
   return (
     <>
       {/* ── MOBILE ── */}
-      <div className="md:hidden min-h-screen bg-[#0d1829] dark:bg-[#0d1829] px-4 pt-6">
+      <div className="md:hidden min-h-screen bg-[#f1f5f9] dark:bg-[#0d1829] px-4 pt-6">
         {/* Greeting */}
         <div className="mb-5">
-          <p className="text-sm text-blue-300/60">Good morning,</p>
-          <h1 className="text-2xl font-bold text-white">John Davis</h1>
+          <p className="text-sm text-gray-500 dark:text-blue-300/60">Good morning,</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">John Davis</h1>
         </div>
 
         {/* Stat Cards — horizontal scroll */}
@@ -47,36 +47,36 @@ export default function DashboardPage() {
             <Link
               key={s.label}
               href={s.href}
-              className="flex-shrink-0 w-36 bg-[#152035] rounded-2xl p-4 block"
+              className="flex-shrink-0 w-36 bg-white dark:bg-[#152035] rounded-2xl p-4 block border border-gray-100 dark:border-white/5"
             >
               <s.icon size={18} className={`${s.iconColor} mb-3`} />
-              <p className="text-xs text-blue-300/50 mb-1">{s.label}</p>
-              <p className="text-xl font-bold text-white leading-tight">{s.value}</p>
-              <p className={`text-xs mt-0.5 ${s.subRed ? 'text-red-400' : 'text-blue-300/50'}`}>{s.sub}</p>
+              <p className="text-xs text-gray-500 dark:text-blue-300/50 mb-1">{s.label}</p>
+              <p className="text-xl font-bold text-gray-900 dark:text-white leading-tight">{s.value}</p>
+              <p className={`text-xs mt-0.5 ${s.subRed ? 'text-red-500 dark:text-red-400' : 'text-gray-400 dark:text-blue-300/50'}`}>{s.sub}</p>
             </Link>
           ))}
         </div>
 
         {/* Payment Overdue Alert */}
-        <div className="bg-red-950/60 border border-red-500/40 rounded-2xl px-4 py-3 mb-5">
+        <div className="bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-500/40 rounded-2xl px-4 py-3 mb-5">
           <div className="flex items-center gap-2 mb-1">
-            <AlertTriangle size={15} className="text-red-400 flex-shrink-0" />
-            <p className="text-sm font-semibold text-red-400">Payment Overdue</p>
+            <AlertTriangle size={15} className="text-red-500 dark:text-red-400 flex-shrink-0" />
+            <p className="text-sm font-semibold text-red-600 dark:text-red-400">Payment Overdue</p>
           </div>
-          <p className="text-xs text-red-300/70 mb-2">INV-8815 is 5 days past due</p>
-          <button className="text-xs font-semibold text-yellow-400">Pay Now</button>
+          <p className="text-xs text-red-500 dark:text-red-300/70 mb-2">INV-8815 is 5 days past due</p>
+          <button className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Pay Now</button>
         </div>
 
         {/* Quick Actions */}
         <div className="mb-5">
-          <h2 className="text-sm font-semibold text-white mb-3">Quick Actions</h2>
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Quick Actions</h2>
           <div className="grid grid-cols-4 gap-3">
             {mobileQuickActions.map((a) => (
               <button key={a.label} className="flex flex-col items-center gap-2">
                 <div className={`w-14 h-14 rounded-2xl ${a.bg} flex items-center justify-center`}>
                   <a.icon size={22} className={a.color} />
                 </div>
-                <span className="text-xs text-blue-200/60">{a.label}</span>
+                <span className="text-xs text-gray-500 dark:text-blue-200/60">{a.label}</span>
               </button>
             ))}
           </div>
@@ -85,18 +85,18 @@ export default function DashboardPage() {
         {/* Recent Activity */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-white">Recent Activity</h2>
-            <button className="text-xs text-blue-400">View All</button>
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Recent Activity</h2>
+            <button className="text-xs text-blue-600 dark:text-blue-400">View All</button>
           </div>
-          <div className="bg-[#152035] rounded-2xl divide-y divide-white/5">
+          <div className="bg-white dark:bg-[#152035] rounded-2xl divide-y divide-gray-100 dark:divide-white/5 border border-gray-100 dark:border-white/5">
             {recentActivity.map((a) => (
               <div key={a.title} className="flex items-center gap-3 px-4 py-3">
                 <div className={`w-9 h-9 rounded-xl ${a.iconBg} flex items-center justify-center flex-shrink-0`}>
                   <a.icon size={16} className={a.iconColor} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-white font-medium truncate">{a.title}</p>
-                  <p className="text-xs text-blue-300/50 mt-0.5">{a.time}</p>
+                  <p className="text-sm text-gray-900 dark:text-white font-medium truncate">{a.title}</p>
+                  <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{a.time}</p>
                 </div>
               </div>
             ))}

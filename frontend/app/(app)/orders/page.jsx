@@ -40,17 +40,17 @@ export default function OrdersPage() {
   return (
     <>
       {/* ── MOBILE ── */}
-      <div className="md:hidden min-h-screen bg-[#0d1829] dark:bg-[#0d1829] px-4 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-white mb-4">Orders</h1>
+      <div className="md:hidden min-h-screen bg-[#f1f5f9] dark:bg-[#0d1829] px-4 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Orders</h1>
 
         {/* Search */}
-        <div className="flex items-center gap-2 bg-[#152035] rounded-xl px-4 py-3 mb-4">
-          <Search size={16} className="text-blue-300/40 flex-shrink-0" />
+        <div className="flex items-center gap-2 bg-white dark:bg-[#152035] rounded-xl px-4 py-3 mb-4 border border-gray-100 dark:border-white/5">
+          <Search size={16} className="text-gray-400 dark:text-blue-300/40 flex-shrink-0" />
           <input
             placeholder="Search orders..."
-            className="flex-1 bg-transparent text-sm text-white placeholder-blue-300/40 focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-blue-300/40 focus:outline-none"
           />
-          <SlidersHorizontal size={16} className="text-blue-300/40 flex-shrink-0" />
+          <SlidersHorizontal size={16} className="text-gray-400 dark:text-blue-300/40 flex-shrink-0" />
         </div>
 
         {/* Filter Tabs */}
@@ -61,8 +61,8 @@ export default function OrdersPage() {
               onClick={() => setMobileTab(tab)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 mobileTab === tab
-                  ? 'bg-[#0b1b3a] text-white border border-blue-500'
-                  : 'text-blue-300/50 border border-white/10'
+                  ? 'bg-[#0b1b3a] text-white'
+                  : 'text-gray-500 dark:text-blue-300/50 border border-gray-200 dark:border-white/10 bg-white dark:bg-transparent'
               }`}
             >
               {tab}
@@ -76,31 +76,31 @@ export default function OrdersPage() {
             <Link
               key={order.id}
               href={`/orders/${order.id}`}
-              className="block bg-[#152035] rounded-2xl p-4 border border-white/5"
+              className="block bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5"
             >
               <div className="flex items-start justify-between mb-1">
-                <p className="text-base font-bold text-white">{order.id}</p>
+                <p className="text-base font-bold text-gray-900 dark:text-white">{order.id}</p>
                 <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${mobileStatusStyles[order.status]}`}>
                   {order.status}
                 </span>
               </div>
-              <p className="text-xs text-blue-300/50 mb-3">PO: {order.po}</p>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-3">PO: {order.po}</p>
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <p className="text-[10px] font-semibold text-blue-300/40 uppercase tracking-wide mb-1">Items</p>
-                  <p className="text-sm font-bold text-white">{order.items}</p>
+                  <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">Items</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">{order.items}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-semibold text-blue-300/40 uppercase tracking-wide mb-1">Total</p>
-                  <p className="text-sm font-bold text-white">{order.total}</p>
+                  <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">Total</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">{order.total}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-semibold text-blue-300/40 uppercase tracking-wide mb-1">
+                  <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">
                     {order.status === 'Delivered' ? 'Delivered' : 'ETA'}
                   </p>
                   <p className={`text-sm font-bold ${
-                    order.eta === 'TBD' ? 'text-red-400' :
-                    order.status === 'Delivered' ? 'text-green-400' : 'text-white'
+                    order.eta === 'TBD' ? 'text-red-500 dark:text-red-400' :
+                    order.status === 'Delivered' ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'
                   }`}>{order.eta}</p>
                 </div>
               </div>
