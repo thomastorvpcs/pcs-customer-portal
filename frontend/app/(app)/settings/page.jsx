@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText, Mail, Truck, CreditCard, Headphones, Package, Eye, Copy, Trash2, Pencil, Plus, Sun, Moon, Monitor } from 'lucide-react'
+import { Building2, Users, SlidersHorizontal, Zap, Shield, CheckCircle, FileText, Mail, Truck, CreditCard, Headphones, Package, Eye, Copy, Trash2, Pencil, Plus, Sun, Moon, Monitor, ChevronRight, ArrowLeft } from 'lucide-react'
 import { useTheme } from '@/components/ThemeProvider'
 
 const navItems = [
@@ -52,6 +52,7 @@ const roleStyles = {
 
 export default function SettingsPage() {
   const [active, setActive] = useState('company')
+  const [mobilePanel, setMobilePanel] = useState(null)
   const [toggles, setToggles] = useState(() => ({
     ...Object.fromEntries([...emailNotifications, ...smsNotifications].map((n) => [n.key, n.defaultOn])),
     authApp: true,
@@ -65,8 +66,154 @@ export default function SettingsPage() {
     { value: 'system', label: 'System', icon: Monitor },
   ]
 
+  const activePanelKey = mobilePanel ?? active
+
   return (
-    <div className="flex-1 p-8 bg-[#f1f5f9] dark:bg-[#0d1829]">
+    <>
+    {/* ── MOBILE ── */}
+    <div className="md:hidden min-h-screen bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
+      {mobilePanel === null ? (
+        /* Nav List */
+        <div className="px-4 pt-5">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-5">Settings</h1>
+          <div className="bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 divide-y divide-gray-50 dark:divide-white/5">
+            {navItems.map(({ key, label, sub, icon: Icon }) => (
+              <button
+                key={key}
+                onClick={() => setMobilePanel(key)}
+                className="w-full flex items-center gap-4 px-4 py-4 text-left hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors"
+              >
+                <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                  <Icon size={17} className="text-blue-600 dark:text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{label}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+                </div>
+                <ChevronRight size={16} className="text-gray-400 flex-shrink-0" />
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Panel Content */
+        <div>
+          <div className="flex items-center gap-3 px-4 pt-5 pb-4">
+            <button onClick={() => setMobilePanel(null)} className="text-blue-500">
+              <ArrowLeft size={20} />
+            </button>
+            <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+              {navItems.find(n => n.key === mobilePanel)?.label}
+            </h1>
+          </div>
+          <div className="px-4">
+            {/* Reuse desktop panel content, just in a card wrapper */}
+            <div className="bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 px-5 py-5 space-y-6">
+              {/* Company */}
+              {mobilePanel === 'company' && (
+                <>
+                  <div className="space-y-3">
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Business Details</p>
+                    {[['Company Name', 'TechMobile Distributors LLC'], ['Business Type', 'Wholesale Reseller'], ['Phone', '(214) 555-7890'], ['Email', 'orders@techmobile.com']].map(([label, val]) => (
+                      <div key={label}>
+                        <p className="text-xs text-gray-400 mb-1">{label}</p>
+                        <input defaultValue={val} className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-3">
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Tax Information</p>
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">EIN (Tax ID)</p>
+                      <input defaultValue="82 1234567" className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+                    <div className="flex items-center gap-2 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-xl px-3 py-2.5">
+                      <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
+                      <span className="text-sm font-medium text-green-700 dark:text-green-400">Tax Exempt Verified</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[['Account ID', 'TM-2024-0482'], ['Member Since', 'March 2019'], ['Account Tier', 'Gold Partner']].map(([label, val]) => (
+                      <div key={label} className="border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">{label}</p>
+                        <p className={`text-base font-bold ${label === 'Account Tier' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>{val}</p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {/* Preferences */}
+              {mobilePanel === 'preferences' && (
+                <>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">Appearance</p>
+                    <div className="flex gap-2">
+                      {appearanceOptions.map(({ value, label, icon: Icon }) => (
+                        <button key={value} onClick={() => setTheme(value)} className={`flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 transition-colors ${theme === value ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30' : 'border-gray-200 dark:border-gray-600'}`}>
+                          <Icon size={18} className={theme === value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'} />
+                          <span className={`text-xs font-medium ${theme === value ? 'text-blue-700 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`}>{label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">Notifications</p>
+                    {[...emailNotifications, ...smsNotifications].map(({ key, icon: Icon, label }) => (
+                      <div key={key} className="flex items-center justify-between py-3 border-b border-gray-50 dark:border-gray-700 last:border-0">
+                        <div className="flex items-center gap-3">
+                          <Icon size={15} className="text-gray-400" />
+                          <p className="text-sm text-gray-800 dark:text-gray-200">{label}</p>
+                        </div>
+                        <Toggle on={toggles[key]} onChange={(val) => setToggles((t) => ({ ...t, [key]: val }))} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {/* Security */}
+              {mobilePanel === 'security' && (
+                <>
+                  <div className="space-y-3">
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Password</p>
+                    <input type="password" placeholder="Current Password" className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input type="password" placeholder="New Password" className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input type="password" placeholder="Confirm New Password" className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 bg-white dark:bg-[#1e2d45] focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <button className="w-full py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-xl">Update Password</button>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">Two-Factor Authentication</p>
+                    {[
+                      { key: 'authApp', icon: Shield, label: 'Authenticator App', sub: 'Google Authenticator or Authy' },
+                      { key: 'smsVerify', icon: Package, label: 'SMS Verification', sub: 'Receive codes via text' },
+                    ].map(({ key, icon: Icon, label, sub }) => (
+                      <div key={key} className="flex items-center justify-between py-3 border-b border-gray-50 dark:border-gray-700 last:border-0">
+                        <div className="flex items-center gap-3">
+                          <Icon size={15} className="text-gray-400" />
+                          <div>
+                            <p className="text-sm text-gray-800 dark:text-gray-200">{label}</p>
+                            <p className="text-xs text-gray-400">{sub}</p>
+                          </div>
+                        </div>
+                        <Toggle on={toggles[key] ?? (key === 'authApp')} onChange={(val) => setToggles((t) => ({ ...t, [key]: val }))} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {/* Users & Integrations — show a simplified message for mobile */}
+              {(mobilePanel === 'users' || mobilePanel === 'integrations') && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+                  This section is best viewed on desktop for full management capabilities.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* ── DESKTOP ── */}
+    <div className="hidden md:block flex-1 p-8 bg-[#f1f5f9] dark:bg-[#0d1829]">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Settings</h1>
 
       <div className="flex gap-5">
@@ -575,5 +722,6 @@ export default function SettingsPage() {
         )}
       </div>
     </div>
+    </>
   )
 }
