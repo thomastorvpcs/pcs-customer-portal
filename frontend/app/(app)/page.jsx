@@ -1,10 +1,11 @@
+import Link from 'next/link'
 import { AlertTriangle, ShoppingBag, Truck, DollarSign, TicketCheck, ChevronRight, FileText, RotateCcw, Headphones, Smartphone } from 'lucide-react'
 
 const stats = [
-  { label: 'Open Orders', value: '12', sub: '$284,500', link: 'View all orders', icon: ShoppingBag, iconColor: 'text-blue-500' },
-  { label: 'Pending Shipments', value: '8', sub: null, link: 'Track shipments', icon: Truck, iconColor: 'text-teal-500' },
-  { label: 'Outstanding Balance', value: '$47,230', sub: '$12,450 past due', subRed: true, link: 'View invoices', icon: DollarSign, iconColor: 'text-rose-500' },
-  { label: 'Support Tickets', value: '3', sub: null, link: 'View tickets', icon: TicketCheck, iconColor: 'text-purple-500' },
+  { label: 'Open Orders', value: '12', sub: '$284,500', href: '/orders', icon: ShoppingBag, iconColor: 'text-blue-500' },
+  { label: 'Pending Shipments', value: '8', sub: null, href: '/shipments', icon: Truck, iconColor: 'text-teal-500' },
+  { label: 'Outstanding Balance', value: '$47,230', sub: '$12,450 past due', subRed: true, href: '/financial', icon: DollarSign, iconColor: 'text-rose-500' },
+  { label: 'Support Tickets', value: '3', sub: null, href: '/support', icon: TicketCheck, iconColor: 'text-purple-500' },
 ]
 
 const quickActions = [
@@ -42,7 +43,7 @@ export default function DashboardPage() {
       {/* Stat Cards */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {stats.map((s) => (
-          <div key={s.label} className="bg-white dark:bg-[#152035] rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+          <Link key={s.label} href={s.href} className="bg-white dark:bg-[#152035] rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-md transition-all block">
             <div className="flex items-start justify-between mb-3">
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">{s.label}</p>
               <s.icon size={17} className={s.iconColor} />
@@ -51,8 +52,7 @@ export default function DashboardPage() {
             {s.sub && (
               <p className={`text-xs mt-0.5 ${s.subRed ? 'text-red-500' : 'text-gray-400'}`}>{s.sub}</p>
             )}
-            <a href="#" className="text-xs text-blue-600 hover:underline mt-3 block">{s.link}</a>
-          </div>
+          </Link>
         ))}
       </div>
 
