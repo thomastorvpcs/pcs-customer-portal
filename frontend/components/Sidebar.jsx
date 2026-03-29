@@ -3,13 +3,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ShoppingCart, Truck, BarChart2, Headphones, Settings } from 'lucide-react'
+import { LayoutDashboard, ShoppingCart, Truck, BarChart2, Activity, Headphones, Settings } from 'lucide-react'
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/shipments', label: 'Shipments', icon: Truck },
   { href: '/financial', label: 'Financial', icon: BarChart2 },
+  { href: '/activity', label: 'Recent Activities', icon: Activity },
   { href: '/support', label: 'Support', icon: Headphones },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import {
   Menu, X, LayoutDashboard, ShoppingCart, Truck, BarChart2,
-  Headphones, Settings, FileText, RotateCcw, Smartphone, Bell,
+  Activity, Headphones, Settings, FileText, RotateCcw, Smartphone, Bell,
 } from 'lucide-react'
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { href: '/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/shipments', label: 'Shipments', icon: Truck },
   { href: '/financial', label: 'Financial', icon: BarChart2 },
+  { href: '/activity', label: 'Recent Activities', icon: Activity },
   { href: '/support', label: 'Support', icon: Headphones },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
@@ -21,7 +22,7 @@ const navItems = [
 const bottomItems = [
   { href: '/', label: 'Home', icon: LayoutDashboard },
   { href: '/orders', label: 'Orders', icon: ShoppingCart },
-  { href: '/shipments', label: 'Shipments', icon: Truck },
+  { href: '/activity', label: 'Activity', icon: Activity },
   { href: '/financial', label: 'Financial', icon: BarChart2 },
   { href: '/support', label: 'Support', icon: Headphones },
 ]
