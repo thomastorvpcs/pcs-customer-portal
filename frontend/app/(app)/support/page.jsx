@@ -130,8 +130,6 @@ export default function SupportPage() {
 
       {/* ── DESKTOP ── */}
       <div className="hidden md:flex flex-1 p-8 flex-col">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Support</h1>
-
         <div className="flex gap-4 flex-1 min-h-0">
           {/* Left: Ticket List */}
           <div className="w-[340px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col">

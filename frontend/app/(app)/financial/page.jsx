@@ -175,8 +175,6 @@ export default function FinancialPage() {
 
       {/* ── DESKTOP ── */}
       <div className="hidden md:block flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Financial</h1>
-
         {/* Account Summary */}
         <div className="grid grid-cols-4 gap-4 mb-4">
           {accountSummary.map((item) => (

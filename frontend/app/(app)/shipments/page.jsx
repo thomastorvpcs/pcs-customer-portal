@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, SlidersHorizontal, Download, CheckCircle2, Circle, Truck, FileText, Package, ArrowLeft } from 'lucide-react'
+import { Search, SlidersHorizontal, Download, CheckCircle2, CircleDot, Circle, Truck, FileText, Package, ArrowLeft } from 'lucide-react'
 
 const shipments = [
   { id: 'SHP-78432', order: 'PCS-2024-1847', carrier: 'FedEx Freight', status: 'In Transit', eta: 'Mar 28' },
@@ -82,15 +82,17 @@ export default function ShipmentsPage() {
                     <div key={step.label} className="flex items-start flex-1">
                       <div className="flex flex-col items-center flex-1">
                         <div className="flex items-center w-full">
-                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${!step.done ? 'bg-gray-200 dark:bg-gray-600' : trackingSteps[i - 1].done && !trackingSteps[i - 1].active ? 'bg-green-400' : 'bg-blue-400'}`} />}
+                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${trackingSteps[i - 1].done ? 'bg-green-400' : trackingSteps[i - 1].active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                           <div className="flex-shrink-0 z-10">
                             {step.done ? (
-                              <CheckCircle2 size={20} className={step.active ? 'text-blue-500' : 'text-green-500'} fill={step.active ? '#eff6ff' : '#f0fdf4'} />
+                              <CheckCircle2 size={20} className="text-green-500" fill="#f0fdf4" />
+                            ) : step.active ? (
+                              <CircleDot size={20} className="text-blue-500" fill="#eff6ff" />
                             ) : (
                               <Circle size={20} className="text-gray-300 dark:text-gray-600" fill="white" />
                             )}
                           </div>
-                          {i < trackingSteps.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done && !step.active ? 'bg-green-400' : step.active ? 'bg-blue-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          {i < trackingSteps.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                         </div>
                         <p className={`text-[9px] font-medium mt-1.5 text-center leading-tight ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>{step.label}</p>
                         <p className="text-[8px] text-gray-400 mt-0.5">{step.date}</p>
@@ -196,8 +198,6 @@ export default function ShipmentsPage() {
 
       {/* ── DESKTOP ── */}
       <div className="hidden md:block flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Shipments</h1>
-
         <div className="flex items-center justify-between mb-4">
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -270,15 +270,17 @@ export default function ShipmentsPage() {
                     <div key={step.label} className="flex items-start flex-1">
                       <div className="flex flex-col items-center flex-1">
                         <div className="flex items-center w-full">
-                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${!step.done ? 'bg-gray-200 dark:bg-gray-600' : trackingSteps[i - 1].done && !trackingSteps[i - 1].active ? 'bg-green-400' : 'bg-blue-400'}`} />}
+                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${trackingSteps[i - 1].done ? 'bg-green-400' : trackingSteps[i - 1].active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                           <div className="flex-shrink-0 z-10">
                             {step.done ? (
-                              <CheckCircle2 size={24} className={step.active ? 'text-blue-500' : 'text-green-500'} fill={step.active ? '#eff6ff' : '#f0fdf4'} />
+                              <CheckCircle2 size={24} className="text-green-500" fill="#f0fdf4" />
+                            ) : step.active ? (
+                              <CircleDot size={24} className="text-blue-500" fill="#eff6ff" />
                             ) : (
                               <Circle size={24} className="text-gray-300 dark:text-gray-600" fill="white" />
                             )}
                           </div>
-                          {i < trackingSteps.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done && !step.active ? 'bg-green-400' : step.active ? 'bg-blue-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          {i < trackingSteps.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                         </div>
                         <p className={`text-xs font-medium mt-2 text-center ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>{step.label}</p>
                         <p className="text-[10px] text-gray-400 mt-0.5">{step.date}</p>

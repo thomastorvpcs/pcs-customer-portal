@@ -214,8 +214,6 @@ export default function SettingsPage() {
 
     {/* ── DESKTOP ── */}
     <div className="hidden md:block flex-1 p-8 bg-[#f1f5f9] dark:bg-[#0d1829]">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Settings</h1>
-
       <div className="flex gap-5">
         {/* Left Nav */}
         <div className="w-[220px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-2 self-start">

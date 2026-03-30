@@ -107,8 +107,6 @@ export default function DashboardPage() {
 
       {/* ── DESKTOP ── */}
       <div className="hidden md:block flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Dashboard</h1>
-
         {/* Alert Banner */}
         <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg px-4 py-3 flex items-center justify-between mb-6">
           <div className="flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-300">
