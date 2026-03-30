@@ -366,7 +366,18 @@ export default function OrdersPage() {
                               <Circle size={24} className="text-gray-300 dark:text-gray-600" fill="white" />
                             )}
                           </div>
-                          {i < selectedOrder.timeline.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          {i < selectedOrder.timeline.length - 1 && (
+                            step.done ? (
+                              <div className="flex-1 h-0.5 -ml-1 bg-green-400" />
+                            ) : step.active ? (
+                              <div className="flex-1 h-0.5 -ml-1 flex">
+                                <div className="flex-1 progress-line-animated" />
+                                <div className="flex-1 bg-gray-200 dark:bg-gray-600" />
+                              </div>
+                            ) : (
+                              <div className="flex-1 h-0.5 -ml-1 bg-gray-200 dark:bg-gray-600" />
+                            )
+                          )}
                         </div>
                         <p className={`text-xs font-medium mt-2 text-center ${step.done ? 'text-gray-700 dark:text-gray-300' : step.active ? 'text-blue-600' : 'text-gray-400'}`}>{step.label}</p>
                         <p className="text-[10px] text-gray-400 mt-0.5">{step.date}</p>
