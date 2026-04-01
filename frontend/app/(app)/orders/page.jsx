@@ -240,7 +240,7 @@ export default function OrdersPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:flex flex-col p-6 h-full min-h-0">
+      <div className="hidden md:flex flex-col p-8 h-full min-h-0">
 
         {/* Search + actions */}
         <div className="flex items-center justify-between mb-4">
