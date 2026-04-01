@@ -13,7 +13,6 @@ const quickActions = [
   { label: 'Request Quote', desc: 'Get pricing for bulk orders', icon: FileText, bg: 'bg-blue-50 dark:bg-blue-900/20', color: 'text-blue-500' },
   { label: 'Create RMA', desc: 'Return defective devices', icon: RotateCcw, bg: 'bg-rose-50 dark:bg-rose-900/20', color: 'text-rose-500' },
   { label: 'Contact Support', desc: 'Get help from our team', icon: Headphones, bg: 'bg-orange-50 dark:bg-orange-900/20', color: 'text-orange-500' },
-  { label: 'Device Lookup', desc: 'Check device availability', icon: Smartphone, bg: 'bg-green-50 dark:bg-green-900/20', color: 'text-green-500' },
 ]
 
 const recentActivity = [
@@ -28,7 +27,6 @@ const mobileQuickActions = [
   { label: 'Quote', icon: FileText, bg: 'bg-blue-500/20', color: 'text-blue-400' },
   { label: 'RMA', icon: RotateCcw, bg: 'bg-rose-500/20', color: 'text-rose-400' },
   { label: 'Support', icon: Headphones, bg: 'bg-orange-500/20', color: 'text-orange-400' },
-  { label: 'Lookup', icon: Smartphone, bg: 'bg-green-500/20', color: 'text-green-400' },
 ]
 
 export default function DashboardPage() {
@@ -71,7 +69,7 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <div className="mb-5">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Quick Actions</h2>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {mobileQuickActions.map((a) => (
               <button key={a.label} className="flex flex-col items-center gap-2">
                 <div className={`w-14 h-14 rounded-2xl ${a.bg} flex items-center justify-center`}>
@@ -145,7 +143,7 @@ export default function DashboardPage() {
               {quickActions.map((a) => (
                 <button
                   key={a.label}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors text-left"
+                  className="w-full flex items-center justify-between px-4 py-6 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors text-left"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-lg ${a.bg} flex items-center justify-center flex-shrink-0`}>
