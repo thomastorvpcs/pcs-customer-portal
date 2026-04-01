@@ -240,44 +240,48 @@ export default function OrdersPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:flex gap-5 p-6 h-full min-h-0">
+      <div className="hidden md:flex flex-col p-6 h-full min-h-0">
+
+        {/* Search + actions */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="relative">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              placeholder="Search by order #, PO #..."
+              className="pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg w-80 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex gap-2">
+            <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">
+              <SlidersHorizontal size={14} /> Filter
+            </button>
+            <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">
+              <Download size={14} /> Export
+            </button>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 mb-4">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === tab
+                  ? 'bg-[#0b1b3a] text-white'
+                  : 'bg-white dark:bg-[#152035] border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex gap-5 flex-1 min-h-0">
 
         {/* Left: Order List */}
         <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
-
-          {/* Search + actions */}
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-            <div className="relative flex-1">
-              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                placeholder="Search by order #, PO #..."
-                className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400"
-              />
-            </div>
-            <button className="flex items-center gap-1 px-3 py-2 text-xs border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] whitespace-nowrap">
-              <SlidersHorizontal size={12} /> Filter
-            </button>
-            <button className="flex items-center gap-1 px-3 py-2 text-xs border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] whitespace-nowrap">
-              <Download size={12} /> Export
-            </button>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex border-b border-gray-100 dark:border-gray-700 px-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-3 py-2.5 text-xs font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
-                  activeTab === tab
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
 
           {/* Column headers */}
           <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-2 border-b border-gray-100 dark:border-gray-700">
@@ -434,6 +438,7 @@ export default function OrdersPage() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </>
   )

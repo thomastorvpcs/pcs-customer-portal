@@ -233,16 +233,16 @@ export default function ShipmentsPage() {
               </thead>
               <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
                 {filtered.map((s) => (
-                  <tr key={s.id} onClick={() => setSelected(s)} className={`cursor-pointer transition-colors ${selected?.id === s.id ? 'bg-blue-50/60 dark:bg-blue-900/20' : 'hover:bg-gray-50 dark:hover:bg-[#1a2540]'}`}>
+                  <tr key={s.id} onClick={() => setSelected(s)} className={`cursor-pointer transition-colors ${selected?.id === s.id ? 'bg-[#0b1b3a] dark:bg-blue-900/40' : 'hover:bg-gray-50 dark:hover:bg-[#1a2540]'}`}>
                     <td className="px-4 py-3">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{s.id}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{s.order}</p>
-                      <p className="text-xs text-gray-400">{s.carrier}</p>
+                      <p className={`text-sm font-semibold ${selected?.id === s.id ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{s.id}</p>
+                      <p className={`text-xs mt-0.5 ${selected?.id === s.id ? 'text-blue-200/70' : 'text-gray-400'}`}>{s.order}</p>
+                      <p className={`text-xs ${selected?.id === s.id ? 'text-blue-200/50' : 'text-gray-400'}`}>{s.carrier}</p>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${statusStyles[s.status]}`}>{s.status}</span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${selected?.id === s.id ? 'bg-white/10 text-white' : statusStyles[s.status]}`}>{s.status}</span>
                     </td>
-                    <td className={`px-4 py-3 text-sm font-medium ${s.status === 'Exception' ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'}`}>{s.eta}</td>
+                    <td className={`px-4 py-3 text-sm font-medium ${selected?.id === s.id ? 'text-white' : s.status === 'Exception' ? 'text-red-500' : 'text-gray-700 dark:text-gray-300'}`}>{s.eta}</td>
                   </tr>
                 ))}
               </tbody>
