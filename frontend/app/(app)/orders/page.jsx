@@ -284,10 +284,10 @@ export default function OrdersPage() {
         <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
 
           {/* Column headers */}
-          <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Order</span>
-            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Status</span>
-            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Total</span>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Order</span>
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</span>
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Total</span>
           </div>
 
           {/* Order rows */}
@@ -303,7 +303,7 @@ export default function OrdersPage() {
                 }`}
               >
                 <div className="min-w-0">
-                  <p className={`text-sm font-semibold truncate ${selectedOrder?.id === order.id ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`}>
+                  <p className={`text-sm font-semibold truncate ${selectedOrder?.id === order.id ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
                     {order.id}
                   </p>
                   <p className={`text-xs truncate mt-0.5 ${selectedOrder?.id === order.id ? 'text-blue-200/70' : 'text-gray-400'}`}>
@@ -313,14 +313,14 @@ export default function OrdersPage() {
                     {order.date}
                   </p>
                 </div>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${
+                <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                   selectedOrder?.id === order.id
                     ? 'bg-white/10 text-white'
                     : statusStyles[order.status]
                 }`}>
                   {order.status}
                 </span>
-                <span className={`text-sm font-semibold whitespace-nowrap ${selectedOrder?.id === order.id ? 'text-white' : 'text-gray-700 dark:text-gray-200'}`}>
+                <span className={`text-sm font-medium whitespace-nowrap ${selectedOrder?.id === order.id ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>
                   {order.total}
                 </span>
               </button>
