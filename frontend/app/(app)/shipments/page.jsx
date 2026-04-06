@@ -4,12 +4,96 @@ import { useState } from 'react'
 import { Search, SlidersHorizontal, Download, CheckCircle2, CircleDot, Circle, Truck, FileText, Package, ArrowLeft } from 'lucide-react'
 
 const shipments = [
-  { id: 'SHP-78432', order: 'PCS-2024-1847', carrier: 'FedEx Freight', status: 'In Transit', eta: 'Mar 28' },
-  { id: 'SHP-78431', order: 'PCS-2024-1845', carrier: 'UPS Ground', status: 'Delivered', eta: 'Mar 25' },
-  { id: 'SHP-78430', order: 'PCS-2024-1843', carrier: 'FedEx Ground', status: 'Delivered', eta: 'Mar 23' },
-  { id: 'SHP-78429', order: 'PCS-2024-1842', carrier: 'FedEx Freight', status: 'In Transit', eta: 'Mar 27' },
-  { id: 'SHP-78428', order: 'PCS-2024-1840', carrier: 'Customer Pickup', status: 'Pickup Ready', eta: 'Mar 26' },
-  { id: 'SHP-78427', order: 'PCS-2024-1838', carrier: 'UPS Freight', status: 'Exception', eta: 'Delayed' },
+  {
+    id: 'SHP-78432', order: 'PCS-2024-1847', carrier: 'FedEx Freight', status: 'In Transit', eta: 'Mar 28',
+    tracking: '748923848392',
+    shipFrom: 'PCS Wireless – Miami, FL', shipTo: 'Wireless Depot – Dallas, TX',
+    weight: '2,450 lbs / 4 pallets', items: '500 devices',
+    shipDate: 'Mar 25, 2024', service: 'FedEx Freight Priority',
+    lastEvent: 'Departed FedEx location - Memphis, TN', lastEventTime: 'Mar 26, 2024 at 8:42 PM',
+    timeline: [
+      { label: 'Label Created', date: 'Mar 25', done: true },
+      { label: 'Picked Up', date: 'Mar 26', done: true },
+      { label: 'In Transit', date: 'Now', done: true, active: true },
+      { label: 'Out for Delivery', date: 'Mar 28', done: false },
+      { label: 'Delivered', date: 'ETA Mar 28', done: false },
+    ],
+  },
+  {
+    id: 'SHP-78431', order: 'PCS-2024-1845', carrier: 'UPS Ground', status: 'Delivered', eta: 'Mar 25',
+    tracking: '374839201847',
+    shipFrom: 'PCS Wireless – Miami, FL', shipTo: 'Metro by T-Mobile – Los Angeles, CA',
+    weight: '980 lbs / 2 pallets', items: '250 devices',
+    shipDate: 'Mar 23, 2024', service: 'UPS Ground',
+    lastEvent: 'Delivered - Los Angeles, CA', lastEventTime: 'Mar 25, 2024 at 2:14 PM',
+    timeline: [
+      { label: 'Label Created', date: 'Mar 23', done: true },
+      { label: 'Picked Up', date: 'Mar 23', done: true },
+      { label: 'In Transit', date: 'Mar 24', done: true },
+      { label: 'Out for Delivery', date: 'Mar 25', done: true },
+      { label: 'Delivered', date: 'Mar 25', done: true, active: true },
+    ],
+  },
+  {
+    id: 'SHP-78430', order: 'PCS-2024-1843', carrier: 'FedEx Ground', status: 'Delivered', eta: 'Mar 23',
+    tracking: '1Z839201847364',
+    shipFrom: 'PCS Wireless – Miami, FL', shipTo: 'AT&T Store – Chicago, IL',
+    weight: '1,280 lbs / 3 pallets', items: '320 devices',
+    shipDate: 'Mar 21, 2024', service: 'FedEx Ground',
+    lastEvent: 'Delivered - Chicago, IL', lastEventTime: 'Mar 23, 2024 at 11:05 AM',
+    timeline: [
+      { label: 'Label Created', date: 'Mar 21', done: true },
+      { label: 'Picked Up', date: 'Mar 22', done: true },
+      { label: 'In Transit', date: 'Mar 22', done: true },
+      { label: 'Out for Delivery', date: 'Mar 23', done: true },
+      { label: 'Delivered', date: 'Mar 23', done: true, active: true },
+    ],
+  },
+  {
+    id: 'SHP-78429', order: 'PCS-2024-1842', carrier: 'FedEx Freight', status: 'In Transit', eta: 'Mar 27',
+    tracking: '748923848001',
+    shipFrom: 'PCS Wireless – Miami, FL', shipTo: 'Metro by T-Mobile – New York, NY',
+    weight: '720 lbs / 2 pallets', items: '180 devices',
+    shipDate: 'Mar 22, 2024', service: 'FedEx Freight Economy',
+    lastEvent: 'Departed FedEx location - Philadelphia, PA', lastEventTime: 'Mar 25, 2024 at 6:30 PM',
+    timeline: [
+      { label: 'Label Created', date: 'Mar 22', done: true },
+      { label: 'Picked Up', date: 'Mar 22', done: true },
+      { label: 'In Transit', date: 'Now', done: true, active: true },
+      { label: 'Out for Delivery', date: 'Mar 27', done: false },
+      { label: 'Delivered', date: 'ETA Mar 27', done: false },
+    ],
+  },
+  {
+    id: 'SHP-78428', order: 'PCS-2024-1840', carrier: 'Customer Pickup', status: 'Pickup Ready', eta: 'Mar 26',
+    tracking: null,
+    shipFrom: 'PCS Wireless – Miami, FL', shipTo: 'Customer Pickup – Miami, FL',
+    weight: '3,200 lbs / 6 pallets', items: '800 devices',
+    shipDate: 'Mar 26, 2024', service: 'Customer Pickup',
+    lastEvent: 'Shipment ready for pickup at Miami facility', lastEventTime: 'Mar 26, 2024 at 9:00 AM',
+    timeline: [
+      { label: 'Label Created', date: 'Mar 25', done: true },
+      { label: 'Packed', date: 'Mar 25', done: true },
+      { label: 'Ready', date: 'Now', done: true, active: true },
+      { label: 'Picked Up', date: 'Mar 26', done: false },
+      { label: 'Complete', date: 'Est Mar 26', done: false },
+    ],
+  },
+  {
+    id: 'SHP-78427', order: 'PCS-2024-1838', carrier: 'UPS Freight', status: 'Exception', eta: 'Delayed',
+    tracking: '1Z738291047999',
+    shipFrom: 'PCS Wireless – Miami, FL', shipTo: 'Verizon Wireless – Chicago, IL',
+    weight: '3,200 lbs / 6 pallets', items: '800 devices',
+    shipDate: 'Mar 20, 2024', service: 'UPS Freight LTL',
+    lastEvent: 'Delivery exception - Address issue in Chicago, IL', lastEventTime: 'Mar 24, 2024 at 3:17 PM',
+    timeline: [
+      { label: 'Label Created', date: 'Mar 20', done: true },
+      { label: 'Picked Up', date: 'Mar 20', done: true },
+      { label: 'In Transit', date: 'Mar 21', done: true },
+      { label: 'Exception', date: 'Mar 24', done: false, active: true },
+      { label: 'Delivered', date: 'TBD', done: false },
+    ],
+  },
 ]
 
 const statusStyles = {
@@ -27,14 +111,6 @@ const mobileStatusStyles = {
 }
 
 const tabs = ['All', 'In Transit', 'Delivered', 'Exception', 'Pickup']
-
-const trackingSteps = [
-  { label: 'Label Created', date: 'Mar 25', done: true },
-  { label: 'Picked Up', date: 'Mar 26', done: true },
-  { label: 'In Transit', date: 'Now', done: true, active: true },
-  { label: 'Out for Delivery', date: 'Mar 28', done: false },
-  { label: 'Delivered', date: 'ETA Mar 28', done: false },
-]
 
 export default function ShipmentsPage() {
   const [activeTab, setActiveTab] = useState('All')
@@ -78,11 +154,11 @@ export default function ShipmentsPage() {
               <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Tracking Timeline</h3>
                 <div className="flex items-start">
-                  {trackingSteps.map((step, i) => (
+                  {mobileSelected.timeline.map((step, i) => (
                     <div key={step.label} className="flex items-start flex-1">
                       <div className="flex flex-col items-center flex-1">
                         <div className="flex items-center w-full">
-                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${trackingSteps[i - 1].done ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${mobileSelected.timeline[i - 1].done ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                           <div className="flex-shrink-0 z-10">
                             {step.done ? (
                               <CheckCircle2 size={20} className="text-green-500" fill="#f0fdf4" />
@@ -92,7 +168,7 @@ export default function ShipmentsPage() {
                               <Circle size={20} className="text-gray-300 dark:text-gray-600" fill="white" />
                             )}
                           </div>
-                          {i < trackingSteps.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          {i < mobileSelected.timeline.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                         </div>
                         <p className={`text-[9px] font-medium mt-1.5 text-center leading-tight ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>{step.label}</p>
                         <p className="text-[8px] text-gray-400 mt-0.5">{step.date}</p>
@@ -103,8 +179,8 @@ export default function ShipmentsPage() {
                 <div className="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-3 py-2.5 flex items-start gap-2">
                   <Truck size={14} className="text-blue-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-xs font-medium text-gray-800 dark:text-gray-200">Departed FedEx location - Memphis, TN</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">Mar 26, 2024 at 8:42 PM</p>
+                    <p className="text-xs font-medium text-gray-800 dark:text-gray-200">{mobileSelected.lastEvent}</p>
+                    <p className="text-[10px] text-gray-400 mt-0.5">{mobileSelected.lastEventTime}</p>
                   </div>
                 </div>
               </div>
@@ -114,10 +190,10 @@ export default function ShipmentsPage() {
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Shipment Details</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { label: 'Ship From', value: 'PCS Wireless – Miami, FL' },
-                    { label: 'Ship To', value: 'Wireless Depot – Dallas, TX' },
-                    { label: 'Weight', value: '2,450 lbs / 4 pallets' },
-                    { label: 'Items', value: '500 devices' },
+                    { label: 'Ship From', value: mobileSelected.shipFrom },
+                    { label: 'Ship To', value: mobileSelected.shipTo },
+                    { label: 'Weight', value: mobileSelected.weight },
+                    { label: 'Items', value: mobileSelected.items },
                   ].map((item) => (
                     <div key={item.label}>
                       <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">{item.label}</p>
@@ -260,17 +336,17 @@ export default function ShipmentsPage() {
                   <h2 className="text-lg font-bold text-gray-900 dark:text-white">{selected.id}</h2>
                   <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusStyles[selected.status]}`}>{selected.status}</span>
                 </div>
-                <p className="text-xs text-gray-400">Order: {selected.order} &nbsp;|&nbsp; {selected.carrier} &nbsp;|&nbsp; 12399AA1C123456784</p>
+                <p className="text-xs text-gray-400">Order: {selected.order} &nbsp;|&nbsp; {selected.carrier}{selected.tracking ? ` | ${selected.tracking}` : ''}</p>
               </div>
 
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Tracking Timeline</h3>
                 <div className="flex items-start">
-                  {trackingSteps.map((step, i) => (
+                  {selected.timeline.map((step, i) => (
                     <div key={step.label} className="flex items-start flex-1">
                       <div className="flex flex-col items-center flex-1">
                         <div className="flex items-center w-full">
-                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${trackingSteps[i - 1].done ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${selected.timeline[i - 1].done ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                           <div className="flex-shrink-0 z-10">
                             {step.done ? (
                               <CheckCircle2 size={24} className="text-green-500" fill="#f0fdf4" />
@@ -280,7 +356,7 @@ export default function ShipmentsPage() {
                               <Circle size={24} className="text-gray-300 dark:text-gray-600" fill="white" />
                             )}
                           </div>
-                          {i < trackingSteps.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          {i < selected.timeline.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                         </div>
                         <p className={`text-xs font-medium mt-2 text-center ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>{step.label}</p>
                         <p className="text-[10px] text-gray-400 mt-0.5">{step.date}</p>
@@ -291,8 +367,8 @@ export default function ShipmentsPage() {
                 <div className="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg px-4 py-3 flex items-start gap-3">
                   <Truck size={15} className="text-blue-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200">Departed FedEx location - Memphis, TN</p>
-                    <p className="text-xs text-gray-400 mt-0.5">Mar 26, 2024 at 8:42 PM</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{selected.lastEvent}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{selected.lastEventTime}</p>
                   </div>
                 </div>
               </div>
@@ -301,17 +377,16 @@ export default function ShipmentsPage() {
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Shipment Details</h3>
                 <div className="grid grid-cols-3 gap-x-8 gap-y-4">
                   {[
-                    { label: 'Ship From', value: 'PCS Wireless – Miami, FL', sub: '33122' },
-                    { label: 'Ship To', value: 'Wireless Depot – Dallas, TX', sub: '75201' },
-                    { label: 'Weight', value: '2,450 lbs', sub: '4 pallets' },
-                    { label: 'Items', value: '500 devices', sub: 'iPhone 13 Pro, Galaxy S22' },
-                    { label: 'Ship Date', value: 'Mar 25, 2024' },
-                    { label: 'Service', value: 'FedEx Freight Priority' },
+                    { label: 'Ship From', value: selected.shipFrom },
+                    { label: 'Ship To', value: selected.shipTo },
+                    { label: 'Weight', value: selected.weight },
+                    { label: 'Items', value: selected.items },
+                    { label: 'Ship Date', value: selected.shipDate },
+                    { label: 'Service', value: selected.service },
                   ].map((item) => (
                     <div key={item.label}>
                       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">{item.label}</p>
                       <p className="text-sm text-gray-800 dark:text-gray-200 font-medium">{item.value}</p>
-                      {item.sub && <p className="text-xs text-gray-400 mt-0.5">{item.sub}</p>}
                     </div>
                   ))}
                 </div>
