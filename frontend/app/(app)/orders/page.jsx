@@ -158,17 +158,27 @@ const mobileStatusStyles = {
   'On Hold': 'bg-red-500/15 text-red-400',
 }
 
-const tabs = ['All', 'Processing', 'Shipped', 'Delivered', 'On Hold']
-const mobileTabs = ['All', 'Processing', 'Shipped', 'Delivered']
+const orderKpis = [
+  { label: 'All', filter: 'All' },
+  { label: 'Processing', filter: 'Processing' },
+  { label: 'Shipped', filter: 'Shipped' },
+  { label: 'Delivered', filter: 'Delivered' },
+  { label: 'On Hold', filter: 'On Hold' },
+]
 
 export default function OrdersPage() {
-  const [activeTab, setActiveTab] = useState('All')
-  const [mobileTab, setMobileTab] = useState('All')
+  const [activeFilter, setActiveFilter] = useState('All')
   const [selectedOrder, setSelectedOrder] = useState(orders[0])
   const [mobileSelected, setMobileSelected] = useState(null)
 
-  const filtered = activeTab === 'All' ? orders : orders.filter((o) => o.status === activeTab)
-  const mobileFiltered = mobileTab === 'All' ? orders : orders.filter((o) => o.status === mobileTab)
+  const filtered = activeFilter === 'All' ? orders : orders.filter((o) => o.status === activeFilter)
+
+  const getCount = (filter) => filter === 'All' ? orders.length : orders.filter((o) => o.status === filter).length
+  const getValue = (filter) => {
+    const subset = filter === 'All' ? orders : orders.filter((o) => o.status === filter)
+    const sum = subset.reduce((acc, o) => acc + parseInt(o.total.replace(/[$,]/g, '')), 0)
+    return '$' + sum.toLocaleString()
+  }
 
   return (
     <>
@@ -295,24 +305,26 @@ export default function OrdersPage() {
               />
             </div>
 
-            <div className="flex gap-2 overflow-x-auto px-4 pb-2 mb-4 scrollbar-none">
-              {mobileTabs.map((tab) => (
+            <div className="flex gap-3 overflow-x-auto px-4 pb-2 mb-4 scrollbar-none">
+              {orderKpis.map((kpi) => (
                 <button
-                  key={tab}
-                  onClick={() => setMobileTab(tab)}
-                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    mobileTab === tab
-                      ? 'bg-[#0b1b3a] text-white'
-                      : 'bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10'
+                  key={kpi.filter}
+                  onClick={() => setActiveFilter(kpi.filter)}
+                  className={`flex-shrink-0 w-28 rounded-2xl p-3 text-left border transition-all ${
+                    activeFilter === kpi.filter
+                      ? 'bg-[#0b1b3a] border-[#0b1b3a]'
+                      : 'bg-white dark:bg-[#152035] border-gray-100 dark:border-white/5'
                   }`}
                 >
-                  {tab}
+                  <p className={`text-[10px] font-semibold uppercase tracking-wide mb-1.5 ${activeFilter === kpi.filter ? 'text-blue-200/70' : 'text-gray-400 dark:text-blue-300/50'}`}>{kpi.label}</p>
+                  <p className={`text-2xl font-bold leading-none mb-1 ${activeFilter === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
+                  <p className={`text-xs ${activeFilter === kpi.filter ? 'text-blue-200/60' : 'text-gray-400 dark:text-blue-300/50'}`}>{getValue(kpi.filter)}</p>
                 </button>
               ))}
             </div>
 
             <div className="px-4 space-y-3">
-              {mobileFiltered.map((order) => (
+              {filtered.map((order) => (
                 <button
                   key={order.id}
                   onClick={() => setMobileSelected(order)}
@@ -373,19 +385,21 @@ export default function OrdersPage() {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-1 mb-4">
-          {tabs.map((tab) => (
+        {/* KPI Filter Bar */}
+        <div className="grid grid-cols-5 gap-3 mb-4">
+          {orderKpis.map((kpi) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === tab
-                  ? 'bg-[#0b1b3a] text-white'
-                  : 'bg-white dark:bg-[#152035] border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]'
+              key={kpi.filter}
+              onClick={() => setActiveFilter(kpi.filter)}
+              className={`rounded-xl p-4 text-left border transition-all ${
+                activeFilter === kpi.filter
+                  ? 'bg-[#0b1b3a] border-[#0b1b3a] shadow-md'
+                  : 'bg-white dark:bg-[#152035] border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-sm'
               }`}
             >
-              {tab}
+              <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${activeFilter === kpi.filter ? 'text-blue-200/70' : 'text-gray-400 dark:text-gray-500'}`}>{kpi.label}</p>
+              <p className={`text-2xl font-bold leading-none mb-1 ${activeFilter === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
+              <p className={`text-xs ${activeFilter === kpi.filter ? 'text-blue-200/60' : 'text-gray-400 dark:text-gray-500'}`}>{getValue(kpi.filter)}</p>
             </button>
           ))}
         </div>

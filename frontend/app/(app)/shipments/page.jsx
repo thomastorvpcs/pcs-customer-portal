@@ -110,17 +110,30 @@ const mobileStatusStyles = {
   'Exception': 'bg-red-500/15 text-red-400',
 }
 
-const tabs = ['All', 'In Transit', 'Delivered', 'Exception', 'Pickup']
+const shipmentKpis = [
+  { label: 'All', filter: 'All' },
+  { label: 'In Transit', filter: 'In Transit' },
+  { label: 'Delivered', filter: 'Delivered' },
+  { label: 'Exception', filter: 'Exception' },
+  { label: 'Pickup', filter: 'Pickup' },
+]
 
 export default function ShipmentsPage() {
   const [activeTab, setActiveTab] = useState('All')
   const [selected, setSelected] = useState(shipments[0])
   const [mobileSelected, setMobileSelected] = useState(null)
 
-  const filtered = activeTab === 'All' ? shipments : shipments.filter((s) => {
-    if (activeTab === 'Pickup') return s.status === 'Pickup Ready'
-    return s.status === activeTab
+  const filterShipments = (tab) => tab === 'All' ? shipments : shipments.filter((s) => {
+    if (tab === 'Pickup') return s.status === 'Pickup Ready'
+    return s.status === tab
   })
+  const filtered = filterShipments(activeTab)
+
+  const getCount = (filter) => filterShipments(filter).length
+  const getDevices = (filter) => {
+    const sum = filterShipments(filter).reduce((acc, s) => acc + parseInt(s.items), 0)
+    return sum.toLocaleString() + ' devices'
+  }
 
   return (
     <>
@@ -231,17 +244,21 @@ export default function ShipmentsPage() {
               <input placeholder="Search by tracking number..." className="flex-1 bg-transparent text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none" />
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex gap-2 overflow-x-auto px-4 pb-2 mb-4 scrollbar-none">
-              {tabs.map((tab) => (
+            {/* KPI Filter Cards */}
+            <div className="flex gap-3 overflow-x-auto px-4 pb-2 mb-4 scrollbar-none">
+              {shipmentKpis.map((kpi) => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    activeTab === tab ? 'bg-[#0b1b3a] text-white' : 'bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10'
+                  key={kpi.filter}
+                  onClick={() => setActiveTab(kpi.filter)}
+                  className={`flex-shrink-0 w-28 rounded-2xl p-3 text-left border transition-all ${
+                    activeTab === kpi.filter
+                      ? 'bg-[#0b1b3a] border-[#0b1b3a]'
+                      : 'bg-white dark:bg-[#152035] border-gray-100 dark:border-white/5'
                   }`}
                 >
-                  {tab}
+                  <p className={`text-[10px] font-semibold uppercase tracking-wide mb-1.5 ${activeTab === kpi.filter ? 'text-blue-200/70' : 'text-gray-400 dark:text-blue-300/50'}`}>{kpi.label}</p>
+                  <p className={`text-2xl font-bold leading-none mb-1 ${activeTab === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
+                  <p className={`text-xs ${activeTab === kpi.filter ? 'text-blue-200/60' : 'text-gray-400 dark:text-blue-300/50'}`}>{getDevices(kpi.filter)}</p>
                 </button>
               ))}
             </div>
@@ -289,10 +306,21 @@ export default function ShipmentsPage() {
           </div>
         </div>
 
-        <div className="flex gap-1 mb-4">
-          {tabs.map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${activeTab === tab ? 'bg-[#0b1b3a] text-white' : 'bg-white dark:bg-[#152035] border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]'}`}>
-              {tab}
+        {/* KPI Filter Bar */}
+        <div className="grid grid-cols-5 gap-3 mb-4">
+          {shipmentKpis.map((kpi) => (
+            <button
+              key={kpi.filter}
+              onClick={() => setActiveTab(kpi.filter)}
+              className={`rounded-xl p-4 text-left border transition-all ${
+                activeTab === kpi.filter
+                  ? 'bg-[#0b1b3a] border-[#0b1b3a] shadow-md'
+                  : 'bg-white dark:bg-[#152035] border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-sm'
+              }`}
+            >
+              <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${activeTab === kpi.filter ? 'text-blue-200/70' : 'text-gray-400 dark:text-gray-500'}`}>{kpi.label}</p>
+              <p className={`text-2xl font-bold leading-none mb-1 ${activeTab === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
+              <p className={`text-xs ${activeTab === kpi.filter ? 'text-blue-200/60' : 'text-gray-400 dark:text-gray-500'}`}>{getDevices(kpi.filter)}</p>
             </button>
           ))}
         </div>
