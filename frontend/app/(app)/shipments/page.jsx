@@ -14,7 +14,7 @@ const shipments = [
     timeline: [
       { label: 'Label Created', date: 'Mar 25', done: true },
       { label: 'Picked Up', date: 'Mar 26', done: true },
-      { label: 'In Transit', date: 'Now', done: true, active: true },
+      { label: 'In Transit', date: 'Now', done: false, active: true },
       { label: 'Out for Delivery', date: 'Mar 28', done: false },
       { label: 'Delivered', date: 'ETA Mar 28', done: false },
     ],
@@ -59,7 +59,7 @@ const shipments = [
     timeline: [
       { label: 'Label Created', date: 'Mar 22', done: true },
       { label: 'Picked Up', date: 'Mar 22', done: true },
-      { label: 'In Transit', date: 'Now', done: true, active: true },
+      { label: 'In Transit', date: 'Now', done: false, active: true },
       { label: 'Out for Delivery', date: 'Mar 27', done: false },
       { label: 'Delivered', date: 'ETA Mar 27', done: false },
     ],
@@ -74,7 +74,7 @@ const shipments = [
     timeline: [
       { label: 'Label Created', date: 'Mar 25', done: true },
       { label: 'Packed', date: 'Mar 25', done: true },
-      { label: 'Ready', date: 'Now', done: true, active: true },
+      { label: 'Ready', date: 'Now', done: false, active: true },
       { label: 'Picked Up', date: 'Mar 26', done: false },
       { label: 'Complete', date: 'Est Mar 26', done: false },
     ],
