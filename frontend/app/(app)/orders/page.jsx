@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, SlidersHorizontal, Download, Truck, FileText, RotateCcw, Eye, CheckCircle2, CircleDot, Circle } from 'lucide-react'
+import { Search, SlidersHorizontal, Download, Truck, FileText, RotateCcw, Eye, CheckCircle2, CircleDot, Circle, ArrowLeft } from 'lucide-react'
 
 const orders = [
   {
@@ -165,6 +165,7 @@ export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState('All')
   const [mobileTab, setMobileTab] = useState('All')
   const [selectedOrder, setSelectedOrder] = useState(orders[0])
+  const [mobileSelected, setMobileSelected] = useState(null)
 
   const filtered = activeTab === 'All' ? orders : orders.filter((o) => o.status === activeTab)
   const mobileFiltered = mobileTab === 'All' ? orders : orders.filter((o) => o.status === mobileTab)
@@ -173,70 +174,181 @@ export default function OrdersPage() {
     <>
       {/* ── MOBILE ── */}
       <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
-        <div className="flex items-center justify-between px-4 pt-5 pb-4">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Orders</h1>
-          <button className="text-gray-500 dark:text-gray-400"><SlidersHorizontal size={18} /></button>
-        </div>
+        {mobileSelected ? (
+          /* Detail View */
+          <div>
+            <div className="flex items-center gap-3 px-4 pt-5 pb-4">
+              <button onClick={() => setMobileSelected(null)} className="text-blue-500">
+                <ArrowLeft size={20} />
+              </button>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white">{mobileSelected.id}</h1>
+              <span className={`ml-auto px-2.5 py-1 rounded-full text-xs font-medium ${mobileStatusStyles[mobileSelected.status]}`}>
+                {mobileSelected.status}
+              </span>
+            </div>
 
-        <div className="flex items-center gap-2 bg-white dark:bg-[#152035] rounded-xl mx-4 px-4 py-3 mb-4 border border-gray-100 dark:border-white/5">
-          <Search size={16} className="text-gray-400 flex-shrink-0" />
-          <input
-            placeholder="Search by order #, PO #..."
-            className="flex-1 bg-transparent text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none"
-          />
-        </div>
-
-        <div className="flex gap-2 overflow-x-auto px-4 pb-2 mb-4 scrollbar-none">
-          {mobileTabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setMobileTab(tab)}
-              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                mobileTab === tab
-                  ? 'bg-[#0b1b3a] text-white'
-                  : 'bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        <div className="px-4 space-y-3">
-          {mobileFiltered.map((order) => (
-            <div
-              key={order.id}
-              className="block bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5"
-            >
-              <div className="flex items-start justify-between mb-1">
-                <p className="text-base font-bold text-gray-900 dark:text-white">{order.id}</p>
-                <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${mobileStatusStyles[order.status]}`}>
-                  {order.status}
-                </span>
+            <div className="px-4 space-y-4">
+              {/* Order info */}
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <p className="text-xs text-gray-400 mb-1">PO Number</p>
+                <p className="text-sm font-semibold text-blue-600 mb-3">{mobileSelected.po}</p>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1">Items</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{mobileSelected.items}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1">Total</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{mobileSelected.total}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1">{mobileSelected.status === 'Delivered' ? 'Delivered' : 'ETA'}</p>
+                    <p className={`text-sm font-semibold ${mobileSelected.estimatedDelivery === 'TBD' ? 'text-red-500' : mobileSelected.status === 'Delivered' ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'}`}>{mobileSelected.estimatedDelivery}</p>
+                  </div>
+                </div>
               </div>
-              <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-3">PO: {order.po}</p>
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">Items</p>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">{order.items}</p>
+
+              {/* Order Status Timeline */}
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Order Status</h3>
+                <div className="flex items-start">
+                  {mobileSelected.timeline.map((step, i) => (
+                    <div key={step.label} className="flex items-start flex-1">
+                      <div className="flex flex-col items-center flex-1">
+                        <div className="flex items-center w-full">
+                          {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${mobileSelected.timeline[i - 1].done ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                          <div className="flex-shrink-0 z-10">
+                            {step.done ? (
+                              <CheckCircle2 size={20} className="text-green-500" fill="#f0fdf4" />
+                            ) : step.active ? (
+                              <CircleDot size={20} className="text-blue-500" fill="#eff6ff" />
+                            ) : (
+                              <Circle size={20} className="text-gray-300 dark:text-gray-600" fill="white" />
+                            )}
+                          </div>
+                          {i < mobileSelected.timeline.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
+                        </div>
+                        <p className={`text-[9px] font-medium mt-1.5 text-center leading-tight ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>{step.label}</p>
+                        <p className="text-[8px] text-gray-400 mt-0.5">{step.date}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">Total</p>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">{order.total}</p>
+
+                {/* Tracking box */}
+                {mobileSelected.tracking && (
+                  <div className="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl px-3 py-2.5 flex items-start gap-2">
+                    <Truck size={14} className="text-blue-500 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs font-medium text-gray-800 dark:text-gray-200">{mobileSelected.tracking.status}</p>
+                      <p className="text-[10px] text-gray-400 mt-0.5">{mobileSelected.tracking.carrier} · #{mobileSelected.tracking.number}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Order Details */}
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Order Details</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { label: 'Ship From', value: mobileSelected.shipFrom },
+                    { label: 'Ship To', value: mobileSelected.shipTo },
+                    { label: 'Order Date', value: mobileSelected.orderDate },
+                    { label: 'Total Value', value: mobileSelected.totalValue },
+                  ].map((item) => (
+                    <div key={item.label}>
+                      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">{item.label}</p>
+                      <p className="text-xs text-gray-800 dark:text-gray-200 font-medium">{item.value}</p>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">
-                    {order.status === 'Delivered' ? 'Delivered' : 'ETA'}
-                  </p>
-                  <p className={`text-sm font-bold ${
-                    order.estimatedDelivery === 'TBD' ? 'text-red-500 dark:text-red-400' :
-                    order.status === 'Delivered' ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'
-                  }`}>{order.estimatedDelivery}</p>
-                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2">
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]">
+                  <FileText size={14} /> Invoice
+                </button>
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]">
+                  <RotateCcw size={14} /> Reorder
+                </button>
+                <button className="flex-1 py-3 text-sm font-medium bg-[#0b1b3a] text-white rounded-xl flex items-center justify-center gap-1.5">
+                  <Truck size={14} /> Track
+                </button>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          /* List View */
+          <>
+            <div className="flex items-center justify-between px-4 pt-5 pb-4">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Orders</h1>
+              <button className="text-gray-500 dark:text-gray-400"><SlidersHorizontal size={18} /></button>
+            </div>
+
+            <div className="flex items-center gap-2 bg-white dark:bg-[#152035] rounded-xl mx-4 px-4 py-3 mb-4 border border-gray-100 dark:border-white/5">
+              <Search size={16} className="text-gray-400 flex-shrink-0" />
+              <input
+                placeholder="Search by order #, PO #..."
+                className="flex-1 bg-transparent text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto px-4 pb-2 mb-4 scrollbar-none">
+              {mobileTabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setMobileTab(tab)}
+                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    mobileTab === tab
+                      ? 'bg-[#0b1b3a] text-white'
+                      : 'bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            <div className="px-4 space-y-3">
+              {mobileFiltered.map((order) => (
+                <button
+                  key={order.id}
+                  onClick={() => setMobileSelected(order)}
+                  className="w-full text-left bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5"
+                >
+                  <div className="flex items-start justify-between mb-1">
+                    <p className="text-base font-bold text-gray-900 dark:text-white">{order.id}</p>
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${mobileStatusStyles[order.status]}`}>
+                      {order.status}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-3">PO: {order.po}</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">Items</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{order.items}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">Total</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{order.total}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-semibold text-gray-400 dark:text-blue-300/40 uppercase tracking-wide mb-1">
+                        {order.status === 'Delivered' ? 'Delivered' : 'ETA'}
+                      </p>
+                      <p className={`text-sm font-bold ${
+                        order.estimatedDelivery === 'TBD' ? 'text-red-500 dark:text-red-400' :
+                        order.status === 'Delivered' ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white'
+                      }`}>{order.estimatedDelivery}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* ── DESKTOP ── */}
