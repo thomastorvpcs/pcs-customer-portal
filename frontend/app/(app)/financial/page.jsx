@@ -119,28 +119,123 @@ const mobileInvoiceStatus = {
   'Paid': 'bg-green-500/15 text-green-400',
 }
 
-const payments = [
-  { ref: 'PAY-2024-0892', method: 'Wire', methodStyle: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400', date: 'Mar 25, 2024', appliedTo: ['INV-8821', 'INV-8819'], amount: '$75,400.00' },
-  { ref: 'PAY-2024-0891', method: 'ACH', methodStyle: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400', date: 'Mar 22, 2024', appliedTo: ['INV-8815'], amount: '$32,750.00' },
-  { ref: 'PAY-2024-0890', method: 'Check', methodStyle: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300', date: 'Mar 18, 2024', appliedTo: ['INV-8810', 'INV-8808', 'INV-8806'], amount: '$124,200.00' },
-  { ref: 'PAY-2024-0889', method: 'Wire', methodStyle: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400', date: 'Mar 15, 2024', appliedTo: ['INV-8802'], amount: '$56,800.00' },
-  { ref: 'PAY-2024-0888', method: 'ACH', methodStyle: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400', date: 'Mar 10, 2024', appliedTo: ['INV-8798', 'INV-8795'], amount: '$89,350.00' },
-  { ref: 'PAY-2024-0887', method: 'Wire', methodStyle: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400', date: 'Mar 5, 2024', appliedTo: ['INV-8790'], amount: '$41,600.00' },
-]
-
-const mobileMethodStyle = {
-  Wire: 'bg-blue-500/15 text-blue-400',
-  ACH: 'bg-green-500/15 text-green-400',
-  Check: 'bg-gray-500/15 text-gray-400',
+const methodStyle = {
+  Wire: { desktop: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400', mobile: 'bg-blue-500/15 text-blue-400' },
+  ACH:  { desktop: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400', mobile: 'bg-green-500/15 text-green-400' },
+  Check:{ desktop: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300', mobile: 'bg-gray-500/15 text-gray-400' },
 }
 
+const payments = [
+  {
+    ref: 'PAY-2024-0892', method: 'Wire', date: 'Mar 25, 2024', amount: '$75,400.00',
+    from: 'Wireless Depot Inc.', bank: 'Wells Fargo · ****4821', confirmationNo: 'WF20240325-4821',
+    appliedTo: [
+      { inv: 'INV-8821', amount: '$45,200.00' },
+      { inv: 'INV-8819', amount: '$30,200.00' },
+    ],
+  },
+  {
+    ref: 'PAY-2024-0891', method: 'ACH', date: 'Mar 22, 2024', amount: '$32,750.00',
+    from: 'T-Mobile Retail', bank: 'Bank of America · ****2209', confirmationNo: 'ACH20240322-2209',
+    appliedTo: [
+      { inv: 'INV-8815', amount: '$32,750.00' },
+    ],
+  },
+  {
+    ref: 'PAY-2024-0890', method: 'Check', date: 'Mar 18, 2024', amount: '$124,200.00',
+    from: 'Metro by T-Mobile', bank: 'Check #10492', confirmationNo: 'CHK-10492',
+    appliedTo: [
+      { inv: 'INV-8810', amount: '$56,800.00' },
+      { inv: 'INV-8808', amount: '$42,300.00' },
+      { inv: 'INV-8806', amount: '$25,100.00' },
+    ],
+  },
+  {
+    ref: 'PAY-2024-0889', method: 'Wire', date: 'Mar 15, 2024', amount: '$56,800.00',
+    from: 'AT&T Store', bank: 'Citibank · ****7734', confirmationNo: 'CB20240315-7734',
+    appliedTo: [
+      { inv: 'INV-8802', amount: '$56,800.00' },
+    ],
+  },
+  {
+    ref: 'PAY-2024-0888', method: 'ACH', date: 'Mar 10, 2024', amount: '$89,350.00',
+    from: 'Verizon Wireless', bank: 'JPMorgan Chase · ****6612', confirmationNo: 'ACH20240310-6612',
+    appliedTo: [
+      { inv: 'INV-8798', amount: '$51,200.00' },
+      { inv: 'INV-8795', amount: '$38,150.00' },
+    ],
+  },
+  {
+    ref: 'PAY-2024-0887', method: 'Wire', date: 'Mar 5, 2024', amount: '$41,600.00',
+    from: 'Wireless Depot Inc.', bank: 'Wells Fargo · ****4821', confirmationNo: 'WF20240305-4821',
+    appliedTo: [
+      { inv: 'INV-8790', amount: '$41,600.00' },
+    ],
+  },
+]
+
 const creditMemos = [
-  { id: 'CM-2024-0156', rma: 'RMA-4521', date: 'Mar 24, 2024', reason: 'Defective units', reasonStyle: 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400', mobileReasonStyle: 'bg-red-500/15 text-red-400', appliedTo: 'INV-8834', amount: '$4,250.00' },
-  { id: 'CM-2024-0155', rma: 'RMA-4518', date: 'Mar 20, 2024', reason: 'Pricing adjustment', reasonStyle: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', mobileReasonStyle: 'bg-yellow-500/15 text-yellow-400', appliedTo: 'INV-8821', amount: '$1,800.00' },
-  { id: 'CM-2024-0154', rma: 'RMA-4512', date: 'Mar 15, 2024', reason: 'Returned merchandise', reasonStyle: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300', mobileReasonStyle: 'bg-gray-500/15 text-gray-400', appliedTo: 'INV-8815', amount: '$8,750.00' },
-  { id: 'CM-2024-0153', rma: 'RMA-4508', date: 'Mar 10, 2024', reason: 'Shipping damage', reasonStyle: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300', mobileReasonStyle: 'bg-gray-500/15 text-gray-400', appliedTo: 'INV-8810', amount: '$2,400.00' },
-  { id: 'CM-2024-0152', rma: 'RMA-4502', date: 'Mar 5, 2024', reason: 'Defective units', reasonStyle: 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400', mobileReasonStyle: 'bg-red-500/15 text-red-400', appliedTo: 'INV-8802', amount: '$6,100.00' },
-  { id: 'CM-2024-0151', rma: 'RMA-4498', date: 'Feb 28, 2024', reason: 'Pricing adjustment', reasonStyle: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', mobileReasonStyle: 'bg-yellow-500/15 text-yellow-400', appliedTo: 'INV-8798', amount: '$3,200.00' },
+  {
+    id: 'CM-2024-0156', rma: 'RMA-4521', date: 'Mar 24, 2024',
+    reason: 'Defective units', reasonStyle: 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400', mobileReasonStyle: 'bg-red-500/15 text-red-400',
+    appliedTo: 'INV-8834', amount: '$4,250.00',
+    issuedTo: 'Wireless Depot Inc. · Dallas, TX 75201',
+    notes: '25 units returned with defective screens. Devices tested and confirmed non-functional.',
+    lineItems: [
+      { desc: 'iPhone 13 Pro – Defective screen (25 units)', qty: 25, unit: '$170.00', total: '$4,250.00' },
+    ],
+  },
+  {
+    id: 'CM-2024-0155', rma: 'RMA-4518', date: 'Mar 20, 2024',
+    reason: 'Pricing adjustment', reasonStyle: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', mobileReasonStyle: 'bg-yellow-500/15 text-yellow-400',
+    appliedTo: 'INV-8821', amount: '$1,800.00',
+    issuedTo: 'T-Mobile Retail · Dallas, TX 75202',
+    notes: 'Pricing correction applied per revised contract terms effective Mar 1, 2024.',
+    lineItems: [
+      { desc: 'Samsung Galaxy S23 – Price adjustment (600 units @ $3.00)', qty: 600, unit: '$3.00', total: '$1,800.00' },
+    ],
+  },
+  {
+    id: 'CM-2024-0154', rma: 'RMA-4512', date: 'Mar 15, 2024',
+    reason: 'Returned merchandise', reasonStyle: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300', mobileReasonStyle: 'bg-gray-500/15 text-gray-400',
+    appliedTo: 'INV-8815', amount: '$8,750.00',
+    issuedTo: 'Metro by T-Mobile · New York, NY 10001',
+    notes: '50 units returned in original packaging, unopened. Full credit issued.',
+    lineItems: [
+      { desc: 'iPhone 14 – 128GB Midnight (50 units returned)', qty: 50, unit: '$175.00', total: '$8,750.00' },
+    ],
+  },
+  {
+    id: 'CM-2024-0153', rma: 'RMA-4508', date: 'Mar 10, 2024',
+    reason: 'Shipping damage', reasonStyle: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300', mobileReasonStyle: 'bg-gray-500/15 text-gray-400',
+    appliedTo: 'INV-8810', amount: '$2,400.00',
+    issuedTo: 'AT&T Store · Chicago, IL 60601',
+    notes: '12 units damaged in transit. Carrier claim filed. Credit issued pending insurance resolution.',
+    lineItems: [
+      { desc: 'Google Pixel 8 – Shipping damage (12 units)', qty: 12, unit: '$200.00', total: '$2,400.00' },
+    ],
+  },
+  {
+    id: 'CM-2024-0152', rma: 'RMA-4502', date: 'Mar 5, 2024',
+    reason: 'Defective units', reasonStyle: 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400', mobileReasonStyle: 'bg-red-500/15 text-red-400',
+    appliedTo: 'INV-8802', amount: '$6,100.00',
+    issuedTo: 'Verizon Wireless · Chicago, IL 60602',
+    notes: '30 units with battery defects identified during customer QC inspection.',
+    lineItems: [
+      { desc: 'Samsung Galaxy A54 – Battery defect (30 units)', qty: 30, unit: '$165.00', total: '$4,950.00' },
+      { desc: 'Return shipping & processing fee', qty: 1, unit: '$1,150.00', total: '$1,150.00' },
+    ],
+  },
+  {
+    id: 'CM-2024-0151', rma: 'RMA-4498', date: 'Feb 28, 2024',
+    reason: 'Pricing adjustment', reasonStyle: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', mobileReasonStyle: 'bg-yellow-500/15 text-yellow-400',
+    appliedTo: 'INV-8798', amount: '$3,200.00',
+    issuedTo: 'Wireless Depot Inc. · Dallas, TX 75201',
+    notes: 'Volume discount applied retroactively for Q1 2024 purchasing milestone.',
+    lineItems: [
+      { desc: 'Q1 volume discount – 400 units @ $8.00', qty: 400, unit: '$8.00', total: '$3,200.00' },
+    ],
+  },
 ]
 
 const tabs = ['Invoices', 'Payments', 'Credit Memos']
@@ -148,6 +243,8 @@ const tabs = ['Invoices', 'Payments', 'Credit Memos']
 export default function FinancialPage() {
   const [activeTab, setActiveTab] = useState('Invoices')
   const [selectedInvoice, setSelectedInvoice] = useState(invoices[0])
+  const [selectedPayment, setSelectedPayment] = useState(payments[0])
+  const [selectedCM, setSelectedCM] = useState(creditMemos[0])
   const [mobileSelected, setMobileSelected] = useState(null)
 
   return (
@@ -155,48 +252,51 @@ export default function FinancialPage() {
       {/* ── MOBILE ── */}
       <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
         {mobileSelected ? (
-          /* Invoice Detail View */
+          /* Detail View */
           <div>
             <div className="flex items-center gap-3 px-4 pt-5 pb-4">
               <button onClick={() => setMobileSelected(null)} className="text-blue-500">
                 <ArrowLeft size={20} />
               </button>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white">{mobileSelected.id}</h1>
-              <span className={`ml-auto px-2.5 py-1 rounded-full text-xs font-medium ${mobileInvoiceStatus[mobileSelected.status]}`}>
-                {mobileSelected.status}
-              </span>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                {mobileSelected.type === 'invoice' ? mobileSelected.data.id
+                  : mobileSelected.type === 'payment' ? mobileSelected.data.ref
+                  : mobileSelected.data.id}
+              </h1>
+              {mobileSelected.type === 'invoice' && (
+                <span className={`ml-auto px-2.5 py-1 rounded-full text-xs font-medium ${mobileInvoiceStatus[mobileSelected.data.status]}`}>
+                  {mobileSelected.data.status}
+                </span>
+              )}
+              {mobileSelected.type === 'payment' && (
+                <span className={`ml-auto px-2.5 py-1 rounded-full text-xs font-medium ${methodStyle[mobileSelected.data.method].mobile}`}>
+                  {mobileSelected.data.method}
+                </span>
+              )}
+              {mobileSelected.type === 'cm' && (
+                <span className={`ml-auto px-2.5 py-1 rounded-full text-xs font-medium ${mobileSelected.data.mobileReasonStyle}`}>
+                  {mobileSelected.data.reason}
+                </span>
+              )}
             </div>
 
+            {/* Invoice detail */}
+            {mobileSelected.type === 'invoice' && (() => { const inv = mobileSelected.data; return (
             <div className="px-4 space-y-4">
-              {/* Key Info */}
               <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                 <p className="text-xs text-gray-400 mb-1">Order</p>
-                <p className="text-sm font-semibold text-blue-600 mb-3">{mobileSelected.order}</p>
+                <p className="text-sm font-semibold text-blue-600 mb-3">{inv.order}</p>
                 <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <p className="text-xs text-gray-400 mb-1">Invoice Date</p>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{mobileSelected.date}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-1">Due Date</p>
-                    <p className={`text-sm font-semibold ${mobileSelected.dueRed ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>{mobileSelected.due}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-1">Amount</p>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{mobileSelected.amount}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-1">Balance Due</p>
-                    <p className={`text-sm font-semibold ${mobileSelected.balanceRed ? 'text-red-500' : mobileSelected.balanceGreen ? 'text-green-500' : 'text-gray-900 dark:text-white'}`}>{mobileSelected.balance}</p>
-                  </div>
+                  <div><p className="text-xs text-gray-400 mb-1">Invoice Date</p><p className="text-sm font-semibold text-gray-900 dark:text-white">{inv.date}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Due Date</p><p className={`text-sm font-semibold ${inv.dueRed ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>{inv.due}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Amount</p><p className="text-sm font-semibold text-gray-900 dark:text-white">{inv.amount}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Balance Due</p><p className={`text-sm font-semibold ${inv.balanceRed ? 'text-red-500' : inv.balanceGreen ? 'text-green-500' : 'text-gray-900 dark:text-white'}`}>{inv.balance}</p></div>
                 </div>
               </div>
-
-              {/* Line Items */}
               <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Line Items</h3>
                 <div className="space-y-3">
-                  {mobileSelected.lineItems.map((item, i) => (
+                  {inv.lineItems.map((item, i) => (
                     <div key={i} className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium text-gray-800 dark:text-gray-200 leading-snug">{item.desc}</p>
@@ -208,43 +308,110 @@ export default function FinancialPage() {
                 </div>
                 <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5 flex justify-between">
                   <p className="text-sm font-bold text-gray-900 dark:text-white">Total</p>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">{mobileSelected.amount}</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">{inv.amount}</p>
                 </div>
               </div>
-
-              {/* Payment History */}
-              {mobileSelected.paymentHistory.length > 0 && (
+              {inv.paymentHistory.length > 0 && (
                 <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Payment History</h3>
                   <div className="space-y-2">
-                    {mobileSelected.paymentHistory.map((p, i) => (
+                    {inv.paymentHistory.map((p, i) => (
                       <div key={i} className="flex items-center justify-between">
-                        <div>
-                          <p className="text-xs font-medium text-gray-800 dark:text-gray-200">{p.method}</p>
-                          <p className="text-[10px] text-gray-400">{p.date}</p>
-                        </div>
+                        <div><p className="text-xs font-medium text-gray-800 dark:text-gray-200">{p.method}</p><p className="text-[10px] text-gray-400">{p.date}</p></div>
                         <p className="text-xs font-semibold text-green-500">{p.amount}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-
-              {/* Actions */}
               <div className="flex gap-2">
-                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]">
-                  <FileText size={14} /> PDF
-                </button>
-                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]">
-                  <RotateCcw size={14} /> Dispute
-                </button>
-                {mobileSelected.status !== 'Paid' && (
-                  <button className="flex-1 py-3 text-sm font-medium bg-[#0b1b3a] text-white rounded-xl flex items-center justify-center gap-1.5">
-                    <CreditCard size={14} /> Pay Now
-                  </button>
-                )}
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><FileText size={14} /> PDF</button>
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><RotateCcw size={14} /> Dispute</button>
+                {inv.status !== 'Paid' && <button className="flex-1 py-3 text-sm font-medium bg-[#0b1b3a] text-white rounded-xl flex items-center justify-center gap-1.5"><CreditCard size={14} /> Pay Now</button>}
               </div>
             </div>
+            )})()}
+
+            {/* Payment detail */}
+            {mobileSelected.type === 'payment' && (() => { const p = mobileSelected.data; return (
+            <div className="px-4 space-y-4">
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <p className="text-xs text-gray-400 mb-1">From</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">{p.from}</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div><p className="text-xs text-gray-400 mb-1">Date</p><p className="text-sm font-semibold text-gray-900 dark:text-white">{p.date}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Amount</p><p className="text-sm font-semibold text-green-500">{p.amount}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Method</p><p className="text-sm font-semibold text-gray-900 dark:text-white">{p.method}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Confirmation</p><p className="text-xs font-semibold text-gray-900 dark:text-white">{p.confirmationNo}</p></div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5">
+                  <p className="text-xs text-gray-400 mb-1">Bank / Account</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{p.bank}</p>
+                </div>
+              </div>
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Applied To</h3>
+                <div className="space-y-2">
+                  {p.appliedTo.map((a, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <p className="text-sm text-blue-600 font-medium">{a.inv}</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{a.amount}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5 flex justify-between">
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">Total</p>
+                  <p className="text-sm font-bold text-green-500">{p.amount}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><FileText size={14} /> Receipt</button>
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><Download size={14} /> Export</button>
+              </div>
+            </div>
+            )})()}
+
+            {/* Credit Memo detail */}
+            {mobileSelected.type === 'cm' && (() => { const cm = mobileSelected.data; return (
+            <div className="px-4 space-y-4">
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <p className="text-xs text-gray-400 mb-1">Issued To</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">{cm.issuedTo}</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div><p className="text-xs text-gray-400 mb-1">Date</p><p className="text-sm font-semibold text-gray-900 dark:text-white">{cm.date}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Amount</p><p className="text-sm font-semibold text-green-500">{cm.amount}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">RMA</p><p className="text-sm font-semibold text-blue-600">{cm.rma}</p></div>
+                  <div><p className="text-xs text-gray-400 mb-1">Applied To</p><p className="text-sm font-semibold text-blue-600">{cm.appliedTo}</p></div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5">
+                  <p className="text-xs text-gray-400 mb-1">Notes</p>
+                  <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">{cm.notes}</p>
+                </div>
+              </div>
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Line Items</h3>
+                <div className="space-y-3">
+                  {cm.lineItems.map((item, i) => (
+                    <div key={i} className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-gray-800 dark:text-gray-200 leading-snug">{item.desc}</p>
+                        <p className="text-[10px] text-gray-400 mt-0.5">Qty {item.qty} × {item.unit}</p>
+                      </div>
+                      <p className="text-xs font-semibold text-gray-900 dark:text-white flex-shrink-0">{item.total}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5 flex justify-between">
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">Total Credit</p>
+                  <p className="text-sm font-bold text-green-500">{cm.amount}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><FileText size={14} /> PDF</button>
+                <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><Download size={14} /> Export</button>
+              </div>
+            </div>
+            )})()}
           </div>
         ) : (
           /* List View */
@@ -291,7 +458,7 @@ export default function FinancialPage() {
                 {invoices.map((inv) => (
                   <button
                     key={inv.id}
-                    onClick={() => setMobileSelected(inv)}
+                    onClick={() => setMobileSelected({ type: 'invoice', data: inv })}
                     className="w-full text-left bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5"
                   >
                     <div className="flex items-start justify-between mb-2">
@@ -313,17 +480,18 @@ export default function FinancialPage() {
             {activeTab === 'Payments' && (
               <div className="px-4 space-y-3">
                 {payments.map((p) => (
-                  <div key={p.ref} className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                  <button key={p.ref} onClick={() => setMobileSelected({ type: 'payment', data: p })} className="w-full text-left bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                     <div className="flex items-start justify-between mb-2">
                       <p className="text-sm font-bold text-gray-900 dark:text-white">{p.ref}</p>
                       <p className="text-sm font-bold text-green-500">{p.amount}</p>
                     </div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${mobileMethodStyle[p.method]}`}>{p.method}</span>
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${methodStyle[p.method].mobile}`}>{p.method}</span>
                       <span className="text-xs text-gray-400">{p.date}</span>
                     </div>
-                    <p className="text-xs text-gray-400">Applied to: <span className="text-blue-500">{p.appliedTo.join(', ')}</span></p>
-                  </div>
+                    <p className="text-xs text-gray-400">From: <span className="text-gray-600 dark:text-gray-300">{p.from}</span></p>
+                    <p className="text-xs text-gray-400 mt-1">Applied to: <span className="text-blue-500">{p.appliedTo.map(a => a.inv).join(', ')}</span></p>
+                  </button>
                 ))}
               </div>
             )}
@@ -332,7 +500,7 @@ export default function FinancialPage() {
             {activeTab === 'Credit Memos' && (
               <div className="px-4 space-y-3">
                 {creditMemos.map((cm) => (
-                  <div key={cm.id} className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                  <button key={cm.id} onClick={() => setMobileSelected({ type: 'cm', data: cm })} className="w-full text-left bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                     <div className="flex items-start justify-between mb-2">
                       <p className="text-sm font-bold text-gray-900 dark:text-white">{cm.id}</p>
                       <p className="text-sm font-bold text-green-500">{cm.amount}</p>
@@ -342,7 +510,7 @@ export default function FinancialPage() {
                     </div>
                     <p className="text-xs text-gray-400">RMA: <span className="text-blue-500">{cm.rma}</span> · {cm.date}</p>
                     <p className="text-xs text-gray-400 mt-1">Applied to: <span className="text-blue-500">{cm.appliedTo}</span></p>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -563,68 +731,224 @@ export default function FinancialPage() {
           </div>
         )}
 
-        {/* Payments: full-width table */}
+        {/* Payments: list + detail split */}
         {activeTab === 'Payments' && (
-          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
-            <div className="flex-1 overflow-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-100 dark:border-gray-700">
-                    {['Reference', 'Method', 'Date', 'Applied To', 'Amount'].map((col) => (
-                      <th key={col} className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">{col}</th>
+          <div className="flex gap-4 flex-1 min-h-0">
+            <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
+              <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Reference</span>
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Method</span>
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Amount</span>
+              </div>
+              <div className="flex-1 overflow-auto divide-y divide-gray-50 dark:divide-gray-700">
+                {payments.map((p) => (
+                  <button
+                    key={p.ref}
+                    onClick={() => setSelectedPayment(p)}
+                    className={`w-full text-left px-4 py-3 grid grid-cols-[1fr_auto_auto] gap-2 items-center transition-colors ${
+                      selectedPayment?.ref === p.ref ? 'bg-[#0b1b3a] dark:bg-blue-900/40' : 'hover:bg-gray-50 dark:hover:bg-[#1a2540]'
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <p className={`text-sm font-semibold truncate ${selectedPayment?.ref === p.ref ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{p.ref}</p>
+                      <p className={`text-xs truncate mt-0.5 ${selectedPayment?.ref === p.ref ? 'text-blue-200/70' : 'text-gray-400'}`}>{p.from}</p>
+                      <p className={`text-xs mt-0.5 ${selectedPayment?.ref === p.ref ? 'text-blue-200/50' : 'text-gray-400'}`}>{p.date}</p>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${selectedPayment?.ref === p.ref ? 'bg-white/10 text-white' : methodStyle[p.method].desktop}`}>{p.method}</span>
+                    <span className={`text-sm font-medium whitespace-nowrap ${selectedPayment?.ref === p.ref ? 'text-white' : 'text-green-500'}`}>{p.amount}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                <span className="text-xs text-gray-400">Showing 1–{payments.length} of 24</span>
+                <button className="text-xs text-blue-600 hover:underline font-medium">Next</button>
+              </div>
+            </div>
+
+            {selectedPayment && (
+              <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-auto">
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-5">
+                    <div>
+                      <div className="flex items-center gap-3 mb-1">
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedPayment.ref}</h2>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${methodStyle[selectedPayment.method].desktop}`}>{selectedPayment.method}</span>
+                      </div>
+                      <p className="text-sm text-gray-400">From: <span className="text-gray-700 dark:text-gray-300 font-medium">{selectedPayment.from}</span> &nbsp;|&nbsp; {selectedPayment.bank}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-green-500">{selectedPayment.amount}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">Confirmation: {selectedPayment.confirmationNo}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mb-5">
+                    {[
+                      { label: 'Payment Date', value: selectedPayment.date },
+                      { label: 'Method', value: selectedPayment.method },
+                      { label: 'Bank / Account', value: selectedPayment.bank },
+                    ].map(({ label, value }) => (
+                      <div key={label}>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">{label}</p>
+                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{value}</p>
+                      </div>
                     ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
-                  {payments.map((p) => (
-                    <tr key={p.ref} className="hover:bg-gray-50/50 dark:hover:bg-[#1a2540] transition-colors">
-                      <td className="px-5 py-4 text-sm font-semibold text-gray-900 dark:text-white">{p.ref}</td>
-                      <td className="px-5 py-4"><span className={`px-2.5 py-1 rounded text-xs font-medium ${p.methodStyle}`}>{p.method}</span></td>
-                      <td className="px-5 py-4 text-sm text-gray-500 dark:text-gray-400">{p.date}</td>
-                      <td className="px-5 py-4 text-sm text-blue-600 font-medium">{p.appliedTo.join(', ')}</td>
-                      <td className="px-5 py-4 text-sm font-semibold text-green-500">{p.amount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-              <span className="text-sm text-gray-400">Showing 1–6 of 24 payments</span>
-              <button className="text-xs text-blue-600 hover:underline font-medium">Next</button>
-            </div>
+                  </div>
+
+                  <div className="mb-5">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Applied To</p>
+                    <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-gray-50/60 dark:bg-[#1a2540]/40 border-b border-gray-100 dark:border-gray-700">
+                            {['Invoice', 'Amount Applied'].map((col) => (
+                              <th key={col} className="px-4 py-2.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">{col}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
+                          {selectedPayment.appliedTo.map((a, i) => (
+                            <tr key={i}>
+                              <td className="px-4 py-3 text-sm text-blue-600 font-medium">{a.inv}</td>
+                              <td className="px-4 py-3 text-sm font-semibold text-green-500">{a.amount}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <div className="flex justify-end px-4 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50/40 dark:bg-[#1a2540]/20">
+                        <div className="text-right">
+                          <p className="text-xs text-gray-400 mb-0.5">Total</p>
+                          <p className="text-sm font-bold text-green-500">{selectedPayment.amount}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
+                      <FileText size={14} /> Receipt
+                    </button>
+                    <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
+                      <Download size={14} /> Export
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Credit Memos: full-width table */}
+        {/* Credit Memos: list + detail split */}
         {activeTab === 'Credit Memos' && (
-          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
-            <div className="flex-1 overflow-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-100 dark:border-gray-700">
-                    {['Credit Memo #', 'RMA', 'Date', 'Reason', 'Applied To', 'Amount'].map((col) => (
-                      <th key={col} className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">{col}</th>
+          <div className="flex gap-4 flex-1 min-h-0">
+            <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
+              <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Credit Memo</span>
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Reason</span>
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Amount</span>
+              </div>
+              <div className="flex-1 overflow-auto divide-y divide-gray-50 dark:divide-gray-700">
+                {creditMemos.map((cm) => (
+                  <button
+                    key={cm.id}
+                    onClick={() => setSelectedCM(cm)}
+                    className={`w-full text-left px-4 py-3 grid grid-cols-[1fr_auto_auto] gap-2 items-center transition-colors ${
+                      selectedCM?.id === cm.id ? 'bg-[#0b1b3a] dark:bg-blue-900/40' : 'hover:bg-gray-50 dark:hover:bg-[#1a2540]'
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <p className={`text-sm font-semibold truncate ${selectedCM?.id === cm.id ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{cm.id}</p>
+                      <p className={`text-xs truncate mt-0.5 ${selectedCM?.id === cm.id ? 'text-blue-200/70' : 'text-gray-400'}`}>RMA: {cm.rma}</p>
+                      <p className={`text-xs mt-0.5 ${selectedCM?.id === cm.id ? 'text-blue-200/50' : 'text-gray-400'}`}>{cm.date}</p>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${selectedCM?.id === cm.id ? 'bg-white/10 text-white' : cm.reasonStyle}`}>{cm.reason}</span>
+                    <span className={`text-sm font-medium whitespace-nowrap ${selectedCM?.id === cm.id ? 'text-white' : 'text-green-500'}`}>{cm.amount}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                <span className="text-xs text-gray-400">Showing 1–{creditMemos.length} of 18</span>
+                <button className="text-xs text-blue-600 hover:underline font-medium">Next</button>
+              </div>
+            </div>
+
+            {selectedCM && (
+              <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-auto">
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-5">
+                    <div>
+                      <div className="flex items-center gap-3 mb-1">
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedCM.id}</h2>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${selectedCM.reasonStyle}`}>{selectedCM.reason}</span>
+                      </div>
+                      <p className="text-sm text-gray-400">RMA: <span className="text-blue-600 font-medium">{selectedCM.rma}</span> &nbsp;|&nbsp; Applied to: <span className="text-blue-600 font-medium">{selectedCM.appliedTo}</span></p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-green-500">{selectedCM.amount}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">Credit Amount</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mb-5">
+                    {[
+                      { label: 'Date Issued', value: selectedCM.date },
+                      { label: 'Applied To', value: selectedCM.appliedTo },
+                      { label: 'Issued To', value: selectedCM.issuedTo },
+                    ].map(({ label, value }) => (
+                      <div key={label}>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">{label}</p>
+                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-snug">{value}</p>
+                      </div>
                     ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
-                  {creditMemos.map((cm) => (
-                    <tr key={cm.id} className="hover:bg-gray-50/50 dark:hover:bg-[#1a2540] transition-colors">
-                      <td className="px-5 py-4 text-sm font-semibold text-gray-900 dark:text-white">{cm.id}</td>
-                      <td className="px-5 py-4 text-sm text-blue-600 font-medium">{cm.rma}</td>
-                      <td className="px-5 py-4 text-sm text-gray-500 dark:text-gray-400">{cm.date}</td>
-                      <td className="px-5 py-4"><span className={`px-2.5 py-1 rounded text-xs font-medium ${cm.reasonStyle}`}>{cm.reason}</span></td>
-                      <td className="px-5 py-4 text-sm text-blue-600 font-medium">{cm.appliedTo}</td>
-                      <td className="px-5 py-4 text-sm font-semibold text-green-500">{cm.amount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-              <span className="text-sm text-gray-400">Showing 1–6 of 18 credit memos</span>
-              <button className="text-xs text-blue-600 hover:underline font-medium">Next</button>
-            </div>
+                  </div>
+
+                  <div className="mb-5 bg-gray-50 dark:bg-[#1a2540]/40 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-3">
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Notes</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{selectedCM.notes}</p>
+                  </div>
+
+                  <div className="mb-5">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Line Items</p>
+                    <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-gray-50/60 dark:bg-[#1a2540]/40 border-b border-gray-100 dark:border-gray-700">
+                            {['Description', 'Qty', 'Unit Price', 'Total'].map((col) => (
+                              <th key={col} className="px-4 py-2.5 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">{col}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
+                          {selectedCM.lineItems.map((item, i) => (
+                            <tr key={i}>
+                              <td className="px-4 py-3 text-sm text-gray-800 dark:text-gray-200">{item.desc}</td>
+                              <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{item.qty}</td>
+                              <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{item.unit}</td>
+                              <td className="px-4 py-3 text-sm font-medium text-gray-800 dark:text-gray-200">{item.total}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <div className="flex justify-end px-4 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50/40 dark:bg-[#1a2540]/20">
+                        <div className="text-right">
+                          <p className="text-xs text-gray-400 mb-0.5">Total Credit</p>
+                          <p className="text-sm font-bold text-green-500">{selectedCM.amount}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
+                      <Download size={14} /> Download PDF
+                    </button>
+                    <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
+                      <RotateCcw size={14} /> View RMA
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
