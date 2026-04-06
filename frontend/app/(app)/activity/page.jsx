@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Search, SlidersHorizontal, CheckCircle2, Package, CreditCard, AlertTriangle, FileText, MessageSquare, Calendar } from 'lucide-react'
 
 const stats = [
@@ -37,6 +38,7 @@ const activities = [
         iconColor: 'text-green-500',
         category: 'Orders',
         action: null,
+        href: '/orders',
       },
       {
         id: 'SHP-8834',
@@ -50,6 +52,7 @@ const activities = [
         iconColor: 'text-blue-500',
         category: 'Shipments',
         action: null,
+        href: '/shipments',
       },
       {
         id: 'INV-8821',
@@ -63,6 +66,7 @@ const activities = [
         iconColor: 'text-teal-500',
         category: 'Payments',
         action: null,
+        href: '/financial',
       },
       {
         id: 'RMA-4525',
@@ -76,6 +80,7 @@ const activities = [
         iconColor: 'text-red-500',
         category: 'Support',
         action: 'Action Needed',
+        href: '/support',
       },
     ],
   },
@@ -95,6 +100,7 @@ const activities = [
         iconColor: 'text-green-500',
         category: 'Shipments',
         action: null,
+        href: '/shipments',
       },
       {
         id: 'CM-2024-0156',
@@ -108,6 +114,7 @@ const activities = [
         iconColor: 'text-gray-500',
         category: 'Payments',
         action: null,
+        href: '/financial',
       },
       {
         id: 'TKT-1892',
@@ -121,6 +128,7 @@ const activities = [
         iconColor: 'text-purple-500',
         category: 'Support',
         action: null,
+        href: '/support',
       },
     ],
   },
@@ -186,7 +194,7 @@ export default function ActivityPage() {
               </div>
               <div className="bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 divide-y divide-gray-50 dark:divide-white/5">
                 {group.items.map((item) => (
-                  <div key={item.id} className="flex items-start gap-3 px-4 py-3">
+                  <Link key={item.id} href={item.href} className="flex items-start gap-3 px-4 py-3">
                     <div className={`w-9 h-9 rounded-xl ${item.iconBg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
                       <item.icon size={16} className={item.iconColor} />
                     </div>
@@ -204,7 +212,7 @@ export default function ActivityPage() {
                         </span>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -265,7 +273,7 @@ export default function ActivityPage() {
                   <p className="text-xs text-gray-400 dark:text-gray-500">{group.date}</p>
                 </div>
                 {group.items.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50/50 dark:hover:bg-[#1a2540] transition-colors">
+                  <Link key={item.id} href={item.href} className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50/50 dark:hover:bg-[#1a2540] transition-colors">
                     <div className={`w-10 h-10 rounded-xl ${item.iconBg} flex items-center justify-center flex-shrink-0`}>
                       <item.icon size={18} className={item.iconColor} />
                     </div>
@@ -281,7 +289,7 @@ export default function ActivityPage() {
                       )}
                       {item.time && <span className="text-sm text-gray-400 dark:text-gray-500 w-16 text-right">{item.time}</span>}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ))}

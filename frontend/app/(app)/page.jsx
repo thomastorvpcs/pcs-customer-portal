@@ -16,11 +16,11 @@ const quickActions = [
 ]
 
 const recentActivity = [
-  { title: 'Order #PCS-2024-1847 shipped', desc: '500 units iPhone 13 Pro via FedEx Ground', time: '2 hours ago', dot: 'bg-teal-500', icon: TruckIcon, iconBg: 'bg-teal-500/20', iconColor: 'text-teal-400' },
-  { title: 'Payment received - $32,750', desc: 'Applied to INV-8815', time: 'Yesterday', dot: 'bg-blue-500', icon: CheckCircle, iconBg: 'bg-green-500/20', iconColor: 'text-green-400' },
-  { title: 'Invoice INV-8821 generated', desc: '$34,750.00 · Due April 15, 2024', time: '2 days ago', dot: 'bg-blue-500', icon: FileText, iconBg: 'bg-red-500/20', iconColor: 'text-red-400' },
-  { title: 'Support ticket #4521 resolved', desc: 'Shipping address update completed', time: '3 days ago', dot: 'bg-purple-500', icon: Headphones, iconBg: 'bg-purple-500/20', iconColor: 'text-purple-400' },
-  { title: 'Shipment SHP-78429 delivered', desc: '250 units · Dallas, TX', time: '4 days ago', dot: 'bg-teal-500', icon: Package, iconBg: 'bg-teal-500/20', iconColor: 'text-teal-400' },
+  { title: 'Order #PCS-2024-1847 shipped', desc: '500 units iPhone 13 Pro via FedEx Ground', time: '2 hours ago', dot: 'bg-teal-500', icon: TruckIcon, iconBg: 'bg-teal-500/20', iconColor: 'text-teal-400', href: '/orders' },
+  { title: 'Payment received - $32,750', desc: 'Applied to INV-8815', time: 'Yesterday', dot: 'bg-blue-500', icon: CheckCircle, iconBg: 'bg-green-500/20', iconColor: 'text-green-400', href: '/financial' },
+  { title: 'Invoice INV-8821 generated', desc: '$34,750.00 · Due April 15, 2024', time: '2 days ago', dot: 'bg-blue-500', icon: FileText, iconBg: 'bg-red-500/20', iconColor: 'text-red-400', href: '/financial' },
+  { title: 'Support ticket #4521 resolved', desc: 'Shipping address update completed', time: '3 days ago', dot: 'bg-purple-500', icon: Headphones, iconBg: 'bg-purple-500/20', iconColor: 'text-purple-400', href: '/support' },
+  { title: 'Shipment SHP-78429 delivered', desc: '250 units · Dallas, TX', time: '4 days ago', dot: 'bg-teal-500', icon: Package, iconBg: 'bg-teal-500/20', iconColor: 'text-teal-400', href: '/shipments' },
 ]
 
 const mobileQuickActions = [
@@ -85,11 +85,11 @@ export default function DashboardPage() {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Recent Activity</h2>
-            <button className="text-xs text-blue-600 dark:text-blue-400">View All</button>
+            <Link href="/activity" className="text-xs text-blue-600 dark:text-blue-400">View All</Link>
           </div>
           <div className="bg-white dark:bg-[#152035] rounded-2xl divide-y divide-gray-100 dark:divide-white/5 border border-gray-100 dark:border-white/5">
             {recentActivity.map((a) => (
-              <div key={a.title} className="flex items-center gap-3 px-4 py-3">
+              <Link key={a.title} href={a.href} className="flex items-center gap-3 px-4 py-3">
                 <div className={`w-9 h-9 rounded-xl ${a.iconBg} flex items-center justify-center flex-shrink-0`}>
                   <a.icon size={16} className={a.iconColor} />
                 </div>
@@ -97,7 +97,7 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-900 dark:text-white font-medium truncate">{a.title}</p>
                   <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{a.time}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -164,18 +164,18 @@ export default function DashboardPage() {
           <div className="col-span-2 bg-white dark:bg-[#152035] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Recent Activity</h2>
-              <a href="#" className="text-xs text-blue-600 hover:underline">View all</a>
+              <Link href="/activity" className="text-xs text-blue-600 hover:underline">View all</Link>
             </div>
             <div className="space-y-5">
               {recentActivity.map((a) => (
-                <div key={a.title} className="flex items-start gap-3">
+                <Link key={a.title} href={a.href} className="flex items-start gap-3 hover:opacity-70 transition-opacity">
                   <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${a.dot}`}></span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{a.title}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{a.desc}</p>
                   </div>
                   <span className="text-xs text-gray-400 whitespace-nowrap">{a.time}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
