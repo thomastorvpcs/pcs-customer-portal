@@ -170,7 +170,7 @@ export default function ShipmentsPage() {
                           </div>
                           {i < mobileSelected.timeline.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                         </div>
-                        <p className={`text-[9px] font-medium mt-1.5 text-center leading-tight ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>{step.label}</p>
+                        <p className={`text-[9px] font-medium mt-1.5 text-center leading-tight ${step.done ? 'text-gray-700 dark:text-gray-300' : step.active ? 'text-blue-600' : 'text-gray-400'}`}>{step.label}</p>
                         <p className="text-[8px] text-gray-400 mt-0.5">{step.date}</p>
                       </div>
                     </div>
@@ -358,7 +358,7 @@ export default function ShipmentsPage() {
                           </div>
                           {i < selected.timeline.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'progress-line-animated' : 'bg-gray-200 dark:bg-gray-600'}`} />}
                         </div>
-                        <p className={`text-xs font-medium mt-2 text-center ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>{step.label}</p>
+                        <p className={`text-xs font-medium mt-2 text-center ${step.done ? 'text-gray-700 dark:text-gray-300' : step.active ? 'text-blue-600' : 'text-gray-400'}`}>{step.label}</p>
                         <p className="text-[10px] text-gray-400 mt-0.5">{step.date}</p>
                       </div>
                     </div>
