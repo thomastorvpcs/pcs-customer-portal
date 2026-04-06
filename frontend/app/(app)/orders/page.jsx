@@ -145,17 +145,17 @@ const orders = [
 ]
 
 const statusStyles = {
-  Shipped: 'bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
-  Processing: 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  Delivered: 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  Shipped: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400',
+  Processing: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+  Delivered: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400',
   'On Hold': 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400',
 }
 
 const mobileStatusStyles = {
-  Shipped: 'bg-teal-500/20 text-teal-400',
-  Processing: 'bg-blue-500/20 text-blue-400',
-  Delivered: 'bg-green-500/20 text-green-400',
-  'On Hold': 'bg-red-500/20 text-red-400',
+  Shipped: 'bg-teal-500/15 text-teal-400',
+  Processing: 'bg-blue-500/15 text-blue-400',
+  Delivered: 'bg-green-500/15 text-green-400',
+  'On Hold': 'bg-red-500/15 text-red-400',
 }
 
 const tabs = ['All', 'Processing', 'Shipped', 'Delivered', 'On Hold']
