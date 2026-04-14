@@ -519,20 +519,20 @@ export default function FinancialPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:flex flex-col p-8 h-full min-h-0">
+      <div className="hidden md:flex flex-col md:p-4 xl:p-8 h-full min-h-0">
         {/* Account Summary KPIs */}
-        <div className="grid grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-4 md:gap-3 xl:gap-4 md:mb-3 xl:mb-4">
           {accountSummary.map((item) => (
-            <div key={item.label} className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5">
-              <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-2">{item.label}</p>
-              <p className={`text-2xl font-bold ${item.valueColor || 'text-gray-900 dark:text-white'}`}>{item.value}</p>
+            <div key={item.label} className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:p-3 xl:p-5">
+              <p className="text-xs text-gray-400 uppercase tracking-wide font-medium md:mb-1 xl:mb-2">{item.label}</p>
+              <p className={`md:text-xl xl:text-2xl font-bold ${item.valueColor || 'text-gray-900 dark:text-white'}`}>{item.value}</p>
               <p className={`text-xs mt-1 ${item.subColor || 'text-gray-400'}`}>{item.sub}</p>
             </div>
           ))}
         </div>
 
         {/* Aging Summary */}
-        <div className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-6 py-4 mb-4 flex items-center gap-10">
+        <div className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:px-4 xl:px-6 md:py-2.5 xl:py-4 md:mb-3 xl:mb-4 flex items-center md:gap-5 xl:gap-10">
           <p className="text-sm font-semibold text-gray-900 dark:text-white">Aging Summary</p>
           {agingSummary.map((item) => (
             <div key={item.label} className="flex items-center gap-2">
@@ -544,13 +544,13 @@ export default function FinancialPage() {
         </div>
 
         {/* Tab Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between md:mb-3 xl:mb-4">
           <div className="flex gap-1">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`md:px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === tab ? 'bg-[#0b1b3a] text-white' : 'bg-white dark:bg-[#152035] border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#1a2540]'
                 }`}
               >
@@ -561,7 +561,7 @@ export default function FinancialPage() {
           <div className="flex gap-2">
             <div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input placeholder="Search invoices..." className="pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg w-56 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input placeholder="Search invoices..." className="pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg md:w-44 xl:w-56 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <button className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
               <Download size={14} /> Statement
@@ -571,9 +571,9 @@ export default function FinancialPage() {
 
         {/* Invoices: list + detail split */}
         {activeTab === 'Invoices' && (
-          <div className="flex gap-4 flex-1 min-h-0">
+          <div className="flex md:gap-3 xl:gap-4 flex-1 min-h-0">
             {/* Left: Invoice List */}
-            <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
+            <div className="md:w-[300px] xl:w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
               <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Invoice</span>
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</span>
@@ -611,18 +611,18 @@ export default function FinancialPage() {
             {/* Right: Invoice Detail */}
             {selectedInvoice && (
               <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-auto">
-                <div className="p-6">
+                <div className="md:p-4 xl:p-6">
                   {/* Header */}
-                  <div className="flex items-start justify-between mb-5">
+                  <div className="flex items-start justify-between md:mb-3 xl:mb-5">
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedInvoice.id}</h2>
+                        <h2 className="md:text-base xl:text-xl font-bold text-gray-900 dark:text-white">{selectedInvoice.id}</h2>
                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${invoiceStatusStyles[selectedInvoice.status]}`}>{selectedInvoice.status}</span>
                       </div>
                       <p className="text-sm text-gray-400">Order: <span className="text-blue-600 font-medium">{selectedInvoice.order}</span> &nbsp;|&nbsp; {selectedInvoice.billTo}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{selectedInvoice.amount}</p>
+                      <p className="md:text-xl xl:text-2xl font-bold text-gray-900 dark:text-white">{selectedInvoice.amount}</p>
                       <p className={`text-sm mt-0.5 font-medium ${selectedInvoice.balanceRed ? 'text-red-500' : selectedInvoice.balanceGreen ? 'text-green-500' : 'text-gray-500'}`}>
                         Balance: {selectedInvoice.balance}
                       </p>
@@ -630,7 +630,7 @@ export default function FinancialPage() {
                   </div>
 
                   {/* Key Details */}
-                  <div className="grid grid-cols-4 gap-4 mb-5">
+                  <div className="grid grid-cols-4 md:gap-3 xl:gap-4 md:mb-3 xl:mb-5">
                     {[
                       { label: 'Invoice Date', value: selectedInvoice.date },
                       { label: 'Due Date', value: selectedInvoice.due, red: selectedInvoice.dueRed },
@@ -645,7 +645,7 @@ export default function FinancialPage() {
                   </div>
 
                   {/* Line Items */}
-                  <div className="mb-5">
+                  <div className="md:mb-3 xl:mb-5">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Line Items</p>
                     <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
                       <table className="w-full">
@@ -686,7 +686,7 @@ export default function FinancialPage() {
 
                   {/* Payment History */}
                   {selectedInvoice.paymentHistory.length > 0 && (
-                    <div className="mb-5">
+                    <div className="md:mb-3 xl:mb-5">
                       <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Payment History</p>
                       <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
                         <table className="w-full">
@@ -733,8 +733,8 @@ export default function FinancialPage() {
 
         {/* Payments: list + detail split */}
         {activeTab === 'Payments' && (
-          <div className="flex gap-4 flex-1 min-h-0">
-            <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
+          <div className="flex md:gap-3 xl:gap-4 flex-1 min-h-0">
+            <div className="md:w-[300px] xl:w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
               <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Reference</span>
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Method</span>
@@ -767,22 +767,22 @@ export default function FinancialPage() {
 
             {selectedPayment && (
               <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-auto">
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-5">
+                <div className="md:p-4 xl:p-6">
+                  <div className="flex items-start justify-between md:mb-3 xl:mb-5">
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedPayment.ref}</h2>
+                        <h2 className="md:text-base xl:text-xl font-bold text-gray-900 dark:text-white">{selectedPayment.ref}</h2>
                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${methodStyle[selectedPayment.method].desktop}`}>{selectedPayment.method}</span>
                       </div>
                       <p className="text-sm text-gray-400">From: <span className="text-gray-700 dark:text-gray-300 font-medium">{selectedPayment.from}</span> &nbsp;|&nbsp; {selectedPayment.bank}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-green-500">{selectedPayment.amount}</p>
+                      <p className="md:text-xl xl:text-2xl font-bold text-green-500">{selectedPayment.amount}</p>
                       <p className="text-xs text-gray-400 mt-0.5">Confirmation: {selectedPayment.confirmationNo}</p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 mb-5">
+                  <div className="grid grid-cols-3 md:gap-3 xl:gap-4 md:mb-3 xl:mb-5">
                     {[
                       { label: 'Payment Date', value: selectedPayment.date },
                       { label: 'Method', value: selectedPayment.method },
@@ -795,7 +795,7 @@ export default function FinancialPage() {
                     ))}
                   </div>
 
-                  <div className="mb-5">
+                  <div className="md:mb-3 xl:mb-5">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Applied To</p>
                     <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
                       <table className="w-full">
@@ -840,8 +840,8 @@ export default function FinancialPage() {
 
         {/* Credit Memos: list + detail split */}
         {activeTab === 'Credit Memos' && (
-          <div className="flex gap-4 flex-1 min-h-0">
-            <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
+          <div className="flex md:gap-3 xl:gap-4 flex-1 min-h-0">
+            <div className="md:w-[300px] xl:w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
               <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Credit Memo</span>
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Reason</span>
@@ -874,22 +874,22 @@ export default function FinancialPage() {
 
             {selectedCM && (
               <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-auto">
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-5">
+                <div className="md:p-4 xl:p-6">
+                  <div className="flex items-start justify-between md:mb-3 xl:mb-5">
                     <div>
                       <div className="flex items-center gap-3 mb-1">
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedCM.id}</h2>
+                        <h2 className="md:text-base xl:text-xl font-bold text-gray-900 dark:text-white">{selectedCM.id}</h2>
                         <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${selectedCM.reasonStyle}`}>{selectedCM.reason}</span>
                       </div>
                       <p className="text-sm text-gray-400">RMA: <span className="text-blue-600 font-medium">{selectedCM.rma}</span> &nbsp;|&nbsp; Applied to: <span className="text-blue-600 font-medium">{selectedCM.appliedTo}</span></p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-green-500">{selectedCM.amount}</p>
+                      <p className="md:text-xl xl:text-2xl font-bold text-green-500">{selectedCM.amount}</p>
                       <p className="text-xs text-gray-400 mt-0.5">Credit Amount</p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 mb-5">
+                  <div className="grid grid-cols-3 md:gap-3 xl:gap-4 md:mb-3 xl:mb-5">
                     {[
                       { label: 'Date Issued', value: selectedCM.date },
                       { label: 'Applied To', value: selectedCM.appliedTo },
@@ -902,12 +902,12 @@ export default function FinancialPage() {
                     ))}
                   </div>
 
-                  <div className="mb-5 bg-gray-50 dark:bg-[#1a2540]/40 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-3">
+                  <div className="md:mb-3 xl:mb-5 bg-gray-50 dark:bg-[#1a2540]/40 border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-3">
                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Notes</p>
                     <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{selectedCM.notes}</p>
                   </div>
 
-                  <div className="mb-5">
+                  <div className="md:mb-3 xl:mb-5">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Line Items</p>
                     <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
                       <table className="w-full">
