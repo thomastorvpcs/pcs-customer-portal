@@ -364,15 +364,15 @@ export default function OrdersPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:flex flex-col p-8 h-full min-h-0">
+      <div className="hidden md:flex flex-col md:p-4 xl:p-8 h-full min-h-0">
 
         {/* Search + actions */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between md:mb-3 xl:mb-4">
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               placeholder="Search by order #, PO #..."
-              className="pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg w-80 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg md:w-60 xl:w-80 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="flex gap-2">
@@ -386,28 +386,28 @@ export default function OrdersPage() {
         </div>
 
         {/* KPI Filter Bar */}
-        <div className="grid grid-cols-5 gap-3 mb-4">
+        <div className="grid grid-cols-5 md:gap-2 xl:gap-3 md:mb-3 xl:mb-4">
           {orderKpis.map((kpi) => (
             <button
               key={kpi.filter}
               onClick={() => setActiveFilter(kpi.filter)}
-              className={`rounded-xl p-4 text-left border transition-all ${
+              className={`rounded-xl md:p-3 xl:p-4 text-left border transition-all ${
                 activeFilter === kpi.filter
                   ? 'bg-[#0b1b3a] border-[#0b1b3a] shadow-md'
                   : 'bg-white dark:bg-[#152035] border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-sm'
               }`}
             >
               <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${activeFilter === kpi.filter ? 'text-blue-200/70' : 'text-gray-400 dark:text-gray-500'}`}>{kpi.label}</p>
-              <p className={`text-2xl font-bold leading-none mb-1 ${activeFilter === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
+              <p className={`md:text-xl xl:text-2xl font-bold leading-none md:mb-0.5 xl:mb-1 ${activeFilter === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
               <p className={`text-xs ${activeFilter === kpi.filter ? 'text-blue-200/60' : 'text-gray-400 dark:text-gray-500'}`}>{getValue(kpi.filter)}</p>
             </button>
           ))}
         </div>
 
-        <div className="flex gap-4 flex-1 min-h-0">
+        <div className="flex md:gap-3 xl:gap-4 flex-1 min-h-0">
 
         {/* Left: Order List */}
-        <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
+        <div className="md:w-[300px] xl:w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col min-h-0">
 
           {/* Column headers */}
           <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
@@ -463,13 +463,13 @@ export default function OrdersPage() {
         {/* Right: Order Detail */}
         {selectedOrder && (
           <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-auto">
-            <div className="p-6">
+            <div className="md:p-4 xl:p-6">
 
               {/* Order header */}
               <div className="flex items-start justify-between mb-1">
                 <div>
                   <div className="flex items-center gap-3 mb-1">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedOrder.id}</h2>
+                    <h2 className="md:text-base xl:text-xl font-bold text-gray-900 dark:text-white">{selectedOrder.id}</h2>
                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusStyles[selectedOrder.status]}`}>
                       {selectedOrder.status}
                     </span>
@@ -479,7 +479,7 @@ export default function OrdersPage() {
               </div>
 
               {/* Order Status timeline */}
-              <div className="mt-5 mb-5">
+              <div className="md:mt-3 md:mb-3 xl:mt-5 xl:mb-5">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Order Status</p>
                 <div className="flex items-start">
                   {selectedOrder.timeline.map((step, i) => (
@@ -508,7 +508,7 @@ export default function OrdersPage() {
 
               {/* Tracking box */}
               {selectedOrder.tracking && (
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/40 rounded-lg px-4 py-3 flex items-center gap-3 mb-5">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/40 rounded-lg px-4 py-3 flex items-center gap-3 md:mb-3 xl:mb-5">
                   <Truck size={16} className="text-blue-500 flex-shrink-0" />
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{selectedOrder.tracking.status}</p>
@@ -518,7 +518,7 @@ export default function OrdersPage() {
               )}
 
               {/* Order Details grid */}
-              <div className="grid grid-cols-3 gap-4 mb-5">
+              <div className="grid grid-cols-3 md:gap-3 xl:gap-4 md:mb-3 xl:mb-5">
                 {[
                   { label: 'Ship From', value: selectedOrder.shipFrom },
                   { label: 'Ship To', value: selectedOrder.shipTo },
@@ -535,7 +535,7 @@ export default function OrdersPage() {
               </div>
 
               {/* Action buttons */}
-              <div className="flex items-center gap-2 mb-5">
+              <div className="flex items-center gap-2 md:mb-3 xl:mb-5">
                 <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
                   <Eye size={14} /> View All
                 </button>

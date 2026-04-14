@@ -104,7 +104,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:block flex-1 p-8">
+      <div className="hidden md:block flex-1 md:p-4 xl:p-8">
         {/* Alert Banner */}
         <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg px-4 py-3 flex items-center justify-between mb-6">
           <div className="flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-300">
@@ -119,14 +119,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-4 md:gap-3 xl:gap-4 md:mb-4 xl:mb-6">
           {stats.map((s) => (
-            <Link key={s.label} href={s.href} className="bg-white dark:bg-[#152035] rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-md transition-all block">
-              <div className="flex items-start justify-between mb-3">
+            <Link key={s.label} href={s.href} className="bg-white dark:bg-[#152035] rounded-xl md:p-3 xl:p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-md transition-all block">
+              <div className="flex items-start justify-between md:mb-2 xl:mb-3">
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">{s.label}</p>
                 <s.icon size={17} className={s.iconColor} />
               </div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{s.value}</p>
+              <p className="md:text-xl xl:text-2xl font-bold text-gray-900 dark:text-white">{s.value}</p>
               {s.sub && (
                 <p className={`text-xs mt-0.5 ${s.subRed ? 'text-red-500' : 'text-gray-400'}`}>{s.sub}</p>
               )}
@@ -135,15 +135,15 @@ export default function DashboardPage() {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 md:gap-4 xl:gap-6">
           {/* Quick Actions */}
-          <div className="col-span-1 bg-white dark:bg-[#152035] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+          <div className="col-span-1 bg-white dark:bg-[#152035] rounded-xl md:p-4 xl:p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-white md:mb-3 xl:mb-4">Quick Actions</h2>
             <div className="space-y-2">
               {quickActions.map((a) => (
                 <button
                   key={a.label}
-                  className="w-full flex items-center justify-between px-4 py-6 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors text-left"
+                  className="w-full flex items-center justify-between px-4 md:py-3 xl:py-6 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors text-left"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-lg ${a.bg} flex items-center justify-center flex-shrink-0`}>
@@ -161,12 +161,12 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Activity */}
-          <div className="col-span-2 bg-white dark:bg-[#152035] rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-            <div className="flex justify-between items-center mb-4">
+          <div className="col-span-2 bg-white dark:bg-[#152035] rounded-xl md:p-4 xl:p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex justify-between items-center md:mb-3 xl:mb-4">
               <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Recent Activity</h2>
               <Link href="/activity" className="text-xs text-blue-600 hover:underline">View all</Link>
             </div>
-            <div className="space-y-5">
+            <div className="md:space-y-3 xl:space-y-5">
               {recentActivity.map((a) => (
                 <Link key={a.title} href={a.href} className="flex items-start gap-3 hover:opacity-70 transition-opacity">
                   <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${a.dot}`}></span>

@@ -290,11 +290,11 @@ export default function ShipmentsPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:block flex-1 p-8">
-        <div className="flex items-center justify-between mb-4">
+      <div className="hidden md:block flex-1 md:p-4 xl:p-8">
+        <div className="flex items-center justify-between md:mb-3 xl:mb-4">
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input placeholder="Search by tracking number..." className="pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg w-80 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input placeholder="Search by tracking number..." className="pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg md:w-60 xl:w-80 bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div className="flex gap-2">
             <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">
@@ -306,27 +306,26 @@ export default function ShipmentsPage() {
           </div>
         </div>
 
-        {/* KPI Filter Bar */}
-        <div className="grid grid-cols-5 gap-3 mb-4">
+        <div className="grid grid-cols-5 md:gap-2 xl:gap-3 md:mb-3 xl:mb-4">
           {shipmentKpis.map((kpi) => (
             <button
               key={kpi.filter}
               onClick={() => setActiveTab(kpi.filter)}
-              className={`rounded-xl p-4 text-left border transition-all ${
+              className={`rounded-xl md:p-3 xl:p-4 text-left border transition-all ${
                 activeTab === kpi.filter
                   ? 'bg-[#0b1b3a] border-[#0b1b3a] shadow-md'
                   : 'bg-white dark:bg-[#152035] border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-sm'
               }`}
             >
               <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${activeTab === kpi.filter ? 'text-blue-200/70' : 'text-gray-400 dark:text-gray-500'}`}>{kpi.label}</p>
-              <p className={`text-2xl font-bold leading-none mb-1 ${activeTab === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
+              <p className={`md:text-xl xl:text-2xl font-bold leading-none md:mb-0.5 xl:mb-1 ${activeTab === kpi.filter ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{getCount(kpi.filter)}</p>
               <p className={`text-xs ${activeTab === kpi.filter ? 'text-blue-200/60' : 'text-gray-400 dark:text-gray-500'}`}>{getDevices(kpi.filter)}</p>
             </button>
           ))}
         </div>
 
-        <div className="flex gap-4">
-          <div className="w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+        <div className="flex md:gap-3 xl:gap-4">
+          <div className="md:w-[300px] xl:w-[380px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-gray-700">
@@ -358,10 +357,10 @@ export default function ShipmentsPage() {
           </div>
 
           {selected && (
-            <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-6 space-y-6">
+            <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:p-4 xl:p-6 md:space-y-4 xl:space-y-6">
               <div>
                 <div className="flex items-center gap-3 mb-1">
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-white">{selected.id}</h2>
+                  <h2 className="md:text-base xl:text-lg font-bold text-gray-900 dark:text-white">{selected.id}</h2>
                   <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusStyles[selected.status]}`}>{selected.status}</span>
                 </div>
                 <p className="text-xs text-gray-400">Order: {selected.order} &nbsp;|&nbsp; {selected.carrier}{selected.tracking ? ` | ${selected.tracking}` : ''}</p>
@@ -403,7 +402,7 @@ export default function ShipmentsPage() {
 
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Shipment Details</h3>
-                <div className="grid grid-cols-3 gap-x-8 gap-y-4">
+                <div className="grid grid-cols-3 md:gap-x-4 xl:gap-x-8 md:gap-y-3 xl:gap-y-4">
                   {[
                     { label: 'Ship From', value: selected.shipFrom },
                     { label: 'Ship To', value: selected.shipTo },
