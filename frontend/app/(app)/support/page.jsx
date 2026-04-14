@@ -129,10 +129,10 @@ export default function SupportPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:flex flex-1 p-8 flex-col">
-        <div className="flex gap-4 flex-1 min-h-0">
+      <div className="hidden md:flex flex-1 md:p-4 xl:p-8 flex-col">
+        <div className="flex md:gap-3 xl:gap-4 flex-1 min-h-0">
           {/* Left: Ticket List */}
-          <div className="w-[340px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col">
+          <div className="md:w-[280px] xl:w-[340px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
               <select className="text-sm border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-1.5 text-gray-600 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-[#1e2d45]">
                 <option>All Status</option>
@@ -180,8 +180,8 @@ export default function SupportPage() {
           {/* Right: Ticket Detail */}
           {selected && (
             <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col overflow-hidden">
-              <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-700">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{selected.title}</h2>
+              <div className="md:px-4 xl:px-6 md:py-3 xl:py-5 border-b border-gray-100 dark:border-gray-700">
+                <h2 className="md:text-base xl:text-lg font-bold text-gray-900 dark:text-white mb-2">{selected.title}</h2>
                 <div className="flex items-center gap-2 flex-wrap mb-2">
                   <span className={`px-2 py-0.5 rounded text-xs font-medium ${priorityStyles[selected.priority]}`}>{selected.priority}</span>
                   <span className="px-2 py-0.5 rounded text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
@@ -196,7 +196,7 @@ export default function SupportPage() {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+              <div className="flex-1 overflow-y-auto md:px-4 xl:px-6 md:py-4 xl:py-5 md:space-y-4 xl:space-y-5">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Conversation</h3>
                 {conversation.map((msg, i) => (
                   <div key={i} className="flex items-start gap-3">
@@ -217,7 +217,7 @@ export default function SupportPage() {
                 ))}
               </div>
 
-              <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+              <div className="md:px-4 xl:px-6 md:py-3 xl:py-4 border-t border-gray-100 dark:border-gray-700">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Reply</p>
                 <textarea
                   value={reply}

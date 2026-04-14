@@ -228,13 +228,13 @@ export default function ActivityPage() {
       </div>
 
       {/* ── DESKTOP ── */}
-      <div className="hidden md:block flex-1 p-8">
+      <div className="hidden md:block flex-1 md:p-4 xl:p-8">
         {/* Stat Cards */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-4 md:gap-3 xl:gap-4 md:mb-4 xl:mb-6">
           {stats.map((s) => (
-            <div key={s.label} className="bg-white dark:bg-[#152035] rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium mb-2">{s.label}</p>
-              <p className={`text-2xl font-bold ${s.valueColor || 'text-gray-900 dark:text-white'}`}>{s.value}</p>
+            <div key={s.label} className="bg-white dark:bg-[#152035] rounded-xl md:p-3 xl:p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium md:mb-1 xl:mb-2">{s.label}</p>
+              <p className={`md:text-xl xl:text-2xl font-bold ${s.valueColor || 'text-gray-900 dark:text-white'}`}>{s.value}</p>
               <p className={`text-xs mt-0.5 ${s.subColor}`}>{s.sub}</p>
             </div>
           ))}

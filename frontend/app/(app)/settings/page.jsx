@@ -213,10 +213,10 @@ export default function SettingsPage() {
     </div>
 
     {/* ── DESKTOP ── */}
-    <div className="hidden md:block flex-1 p-8 bg-[#f1f5f9] dark:bg-[#0d1829]">
-      <div className="flex gap-5">
+    <div className="hidden md:block flex-1 md:p-4 xl:p-8 bg-[#f1f5f9] dark:bg-[#0d1829]">
+      <div className="flex md:gap-3 xl:gap-5">
         {/* Left Nav */}
-        <div className="w-[220px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-2 self-start">
+        <div className="md:w-[190px] xl:w-[220px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-2 self-start">
           {navItems.map(({ key, label, sub, icon: Icon }) => (
             <button
               key={key}
@@ -236,9 +236,9 @@ export default function SettingsPage() {
 
         {/* Company Panel */}
         {active === 'company' && (
-          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:px-5 xl:px-8 md:py-5 xl:py-7 md:space-y-5 xl:space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Company Information</h2>
+              <h2 className="md:text-lg xl:text-xl font-bold text-gray-900 dark:text-white">Company Information</h2>
               <p className="text-sm text-gray-400 mt-1">Manage your business details and tax information</p>
             </div>
             <div>
@@ -297,15 +297,15 @@ export default function SettingsPage() {
             <div>
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Account Status</h3>
               <div className="grid grid-cols-3 gap-4">
-                <div className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4">
+                <div className="border border-gray-200 dark:border-gray-600 rounded-xl md:px-3 xl:px-5 md:py-3 xl:py-4">
                   <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Account ID</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">TM-2024-0482</p>
+                  <p className="md:text-base xl:text-lg font-bold text-gray-900 dark:text-white">TM-2024-0482</p>
                 </div>
-                <div className="border border-gray-200 dark:border-gray-600 rounded-xl px-5 py-4">
+                <div className="border border-gray-200 dark:border-gray-600 rounded-xl md:px-3 xl:px-5 md:py-3 xl:py-4">
                   <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Member Since</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">March 2019</p>
+                  <p className="md:text-base xl:text-lg font-bold text-gray-900 dark:text-white">March 2019</p>
                 </div>
-                <div className="border border-blue-200 dark:border-blue-700 rounded-xl px-5 py-4">
+                <div className="border border-blue-200 dark:border-blue-700 rounded-xl md:px-3 xl:px-5 md:py-3 xl:py-4">
                   <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Account Tier</p>
                   <p className="text-lg font-bold text-blue-700 dark:text-blue-400">Gold Partner</p>
                 </div>
@@ -316,10 +316,10 @@ export default function SettingsPage() {
 
         {/* Users Panel */}
         {active === 'users' && (
-          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:px-5 xl:px-8 md:py-5 xl:py-7">
             <div className="flex items-center justify-between mb-2">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">User Management</h2>
+                <h2 className="md:text-lg xl:text-xl font-bold text-gray-900 dark:text-white">User Management</h2>
                 <p className="text-sm text-gray-400 mt-1">Manage team members and their access levels</p>
               </div>
               <button className="px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#112654] transition-colors">
@@ -412,9 +412,9 @@ export default function SettingsPage() {
 
         {/* Preferences Panel */}
         {active === 'preferences' && (
-          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:px-5 xl:px-8 md:py-5 xl:py-7 md:space-y-5 xl:space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Preferences</h2>
+              <h2 className="md:text-lg xl:text-xl font-bold text-gray-900 dark:text-white">Preferences</h2>
               <p className="text-sm text-gray-400 mt-1">Customize your notification and display settings</p>
             </div>
 
@@ -516,9 +516,9 @@ export default function SettingsPage() {
 
         {/* Integrations Panel */}
         {active === 'integrations' && (
-          <div className="flex-1 min-w-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 min-w-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:px-5 xl:px-8 md:py-5 xl:py-7 md:space-y-5 xl:space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Integrations</h2>
+              <h2 className="md:text-lg xl:text-xl font-bold text-gray-900 dark:text-white">Integrations</h2>
               <p className="text-sm text-gray-400 mt-1">Manage API keys, webhooks, and third-party connections</p>
             </div>
 
@@ -628,9 +628,9 @@ export default function SettingsPage() {
 
         {/* Security Panel */}
         {active === 'security' && (
-          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-8 py-7 space-y-8">
+          <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:px-5 xl:px-8 md:py-5 xl:py-7 md:space-y-5 xl:space-y-8">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Security</h2>
+              <h2 className="md:text-lg xl:text-xl font-bold text-gray-900 dark:text-white">Security</h2>
               <p className="text-sm text-gray-400 mt-1">Manage your password, two-factor authentication, and active sessions</p>
             </div>
 
