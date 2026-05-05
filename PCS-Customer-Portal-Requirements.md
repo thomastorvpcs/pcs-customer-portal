@@ -62,11 +62,11 @@ Please review each section and indicate:
 
 **US-03** — As a customer, I want a "Forgot Password" link on the login page so that I can reset my password if I've forgotten it.
 
-**US-04** — As a new customer whose account has been approved by PCS, I want to receive login credentials and access the portal so that I can begin managing my orders and account.
+**US-04** — As an existing PCS customer, I want to receive portal login credentials from PCS staff so that I can begin managing my orders and account online.
 
 **US-05** — As a customer, I want the portal to prevent access to all pages unless I am logged in, so that my account data is protected.
 
-> **Note:** The self-service New Customer Application wizard (multi-step registration, document upload, and application reference number) is scoped for **Stage 3**. In Stage 1, customer accounts are provisioned by PCS staff following an offline or email-based application process.
+> **Note:** The portal is initially being rolled out to **existing PCS customers**. In Stage 1, portal access is provisioned by PCS staff for customers who already have an account with PCS. The self-service New Customer Application wizard — allowing prospective customers to apply for a new PCS account online — is scoped for **Stage 3**.
 
 ### Use Cases
 
@@ -75,7 +75,7 @@ Please review each section and indicate:
 | UC-01 | Log in with email/password | Customer | User is authenticated and directed to the Dashboard |
 | UC-02 | Log in via SSO | Customer | User is authenticated via Google, Microsoft, or Apple and directed to the Dashboard |
 | UC-03 | Reset forgotten password | Customer | User clicks "Forgot Password", receives a reset email, and can set a new password |
-| UC-04 | Receive portal access | New customer | PCS provisions account; customer receives credentials and can log in |
+| UC-04 | Receive portal access | Existing customer | PCS staff provisions portal access for an existing customer; customer receives credentials and can log in |
 | UC-05 | Access protected page without login | Unauthenticated user | User is redirected to the login page |
 
 ---
