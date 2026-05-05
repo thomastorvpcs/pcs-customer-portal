@@ -1,6 +1,6 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.2  
+**Document Version:** 1.3  
 **Date:** May 4, 2026  
 **Stage:** Stage 1 — Core Functionality  
 **Status:** Draft — Pending Business Sign-Off  
@@ -94,7 +94,7 @@ Please review each section and indicate:
 
 **US-10** — As a customer, I want to see a recent activity feed on the dashboard so that I can catch up on account events since my last visit.
 
-**US-76** — As a customer, I want to see a promotional offers section on the dashboard highlighting current deals and featured inventory so that I am aware of special pricing available to me.
+**US-11** — As a customer, I want to see a promotional offers section on the dashboard highlighting current deals and featured inventory so that I am aware of special pricing available to me.
 
 ### Use Cases
 
@@ -104,7 +104,7 @@ Please review each section and indicate:
 | UC-07 | View past-due alert | Customer | A banner alerts the customer to past-due invoice amounts with a link to the Financial page |
 | UC-08 | Use Quick Action | Customer | Customer clicks Contact Support and is taken to the Support page to raise a ticket |
 | UC-09 | View recent activity | Customer | The last several account events are displayed in chronological order with links to related records |
-| UC-71 | View promotional offers | Customer | A "Hottest Offers" banner displays featured deals with savings highlighted; clicking a deal navigates to the Catalog page with relevant filters pre-applied (available in Stage 5) |
+| UC-10 | View promotional offers | Customer | A "Hottest Offers" banner displays featured deals with savings highlighted; clicking a deal navigates to the Catalog page with relevant filters pre-applied (available in Stage 5) |
 
 ### Dashboard KPI Definitions
 
@@ -123,34 +123,34 @@ Please review each section and indicate:
 
 ### User Stories
 
-**US-11** — As a customer, I want to see a list of all my orders so that I can track what I have purchased.
+**US-12** — As a customer, I want to see a list of all my orders so that I can track what I have purchased.
 
-**US-12** — As a customer, I want to filter my orders by status (All, Processing, Shipped, Delivered, On Hold) so that I can focus on the orders that need attention.
+**US-13** — As a customer, I want to filter my orders by status (All, Processing, Shipped, Delivered, On Hold) so that I can focus on the orders that need attention.
 
-**US-13** — As a customer, I want to search my orders by Order ID or PO Number so that I can quickly find a specific order.
+**US-14** — As a customer, I want to search my orders by Order ID or PO Number so that I can quickly find a specific order.
 
-**US-14** — As a customer, I want to view full details for a specific order — including line items, pricing, shipping details, and status timeline — so that I have complete visibility into each purchase.
+**US-15** — As a customer, I want to view full details for a specific order — including line items, pricing, shipping details, and status timeline — so that I have complete visibility into each purchase.
 
-**US-15** — As a customer, I want to see an order status timeline (Confirmed → Credit Approved → QC/Diagnostics → Packed → Shipped → Delivered) so that I can understand exactly where my order is in the process.
+**US-16** — As a customer, I want to see an order status timeline (Confirmed → Credit Approved → QC/Diagnostics → Packed → Shipped → Delivered) so that I can understand exactly where my order is in the process.
 
-**US-16** — As a customer, I want to download documents associated with an order (Invoice, Packing List, Bill of Lading) so that I have records for my internal use.
+**US-17** — As a customer, I want to download documents associated with an order (Invoice, Packing List, Bill of Lading) so that I have records for my internal use.
 
-**US-17** — As a customer, I want to reorder a previous order so that I can quickly repeat a purchase without re-entering all the details.
+**US-18** — As a customer, I want to reorder a previous order so that I can quickly repeat a purchase without re-entering all the details.
 
-**US-18** — As a customer, I want to export my order list so that I can use the data in my own systems.
+**US-19** — As a customer, I want to export my order list so that I can use the data in my own systems.
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-10 | View order list | Customer | All orders displayed with Order ID, PO Number, date, status, item count, and total value |
-| UC-11 | Filter orders by status | Customer | List is filtered to show only orders of the selected status; KPI cards show count and value per status |
-| UC-12 | Search orders | Customer | List is filtered in real-time to orders matching the entered Order ID or PO Number |
-| UC-13 | View order detail | Customer | Full order record shown including: dates, addresses, line items table, status timeline, tracking info, and associated documents |
-| UC-14 | Download order documents | Customer | Invoice, Packing List, or Bill of Lading file is downloaded to the user's device |
-| UC-15 | Download all order documents | Customer | All documents for the order are downloaded together |
-| UC-16 | Reorder | Customer | A new order request is initiated pre-populated with the same items as the selected order |
-| UC-17 | Export order list | Customer | Order data is exported as a file (e.g. CSV) |
+| UC-11 | View order list | Customer | All orders displayed with Order ID, PO Number, date, status, item count, and total value |
+| UC-12 | Filter orders by status | Customer | List is filtered to show only orders of the selected status; KPI cards show count and value per status |
+| UC-13 | Search orders | Customer | List is filtered in real-time to orders matching the entered Order ID or PO Number |
+| UC-14 | View order detail | Customer | Full order record shown including: dates, addresses, line items table, status timeline, tracking info, and associated documents |
+| UC-15 | Download order documents | Customer | Invoice, Packing List, or Bill of Lading file is downloaded to the user's device |
+| UC-16 | Download all order documents | Customer | All documents for the order are downloaded together |
+| UC-17 | Reorder | Customer | A new order request is initiated pre-populated with the same items as the selected order |
+| UC-18 | Export order list | Customer | Order data is exported as a file (e.g. CSV) |
 
 ### Order Data Fields
 
@@ -188,40 +188,40 @@ Each order record includes the following information:
 
 ### User Stories
 
-**US-19** — As a customer, I want to see all shipments associated with my account so that I can monitor the delivery of my orders.
+**US-20** — As a customer, I want to see all shipments associated with my account so that I can monitor the delivery of my orders.
 
-**US-20** — As a customer, I want to filter shipments by status (In Transit, Delivered, Pickup Ready, Exception) so that I can focus on shipments needing action.
+**US-21** — As a customer, I want to filter shipments by status (In Transit, Delivered, Pickup Ready, Exception) so that I can focus on shipments needing action.
 
-**US-21** — As a customer, I want to view a shipment tracking timeline so that I can see exactly where a shipment is in the delivery process.
+**US-22** — As a customer, I want to view a shipment tracking timeline so that I can see exactly where a shipment is in the delivery process.
 
-**US-22** — As a customer, I want to see the last tracking event with a timestamp so that I have the most up-to-date status of a shipment.
+**US-23** — As a customer, I want to see the last tracking event with a timestamp so that I have the most up-to-date status of a shipment.
 
-**US-23** — As a customer, I want to access shipment documents (Bill of Lading, Packing List) so that I have the paperwork I need for receiving.
+**US-24** — As a customer, I want to access shipment documents (Bill of Lading, Packing List) so that I have the paperwork I need for receiving.
 
-**US-24** — As a customer, I want to track a shipment on the carrier's website so that I can get real-time carrier-level updates.
+**US-25** — As a customer, I want to track a shipment on the carrier's website so that I can get real-time carrier-level updates.
 
-**US-25** — As a customer arranging a customer pickup, I want to view the pickup authorization status and register my driver's details so that I can coordinate collection of my order.
+**US-26** — As a customer arranging a customer pickup, I want to view the pickup authorization status and register my driver's details so that I can coordinate collection of my order.
 
-**US-77** — As a customer arranging a pickup, I want to enter my driver's name, ID number, and vehicle information so that PCS can verify the person collecting the shipment.
+**US-27** — As a customer arranging a pickup, I want to enter my driver's name, ID number, and vehicle information so that PCS can verify the person collecting the shipment.
 
-**US-78** — As a customer, I want to select from previously saved pickup contacts so that I do not need to re-enter driver details for repeat collections.
+**US-28** — As a customer, I want to select from previously saved pickup contacts so that I do not need to re-enter driver details for repeat collections.
 
-**US-79** — As a customer, I want to generate a pickup authorization document so that my driver has the official paperwork required to collect the shipment at the PCS facility.
+**US-29** — As a customer, I want to generate a pickup authorization document so that my driver has the official paperwork required to collect the shipment at the PCS facility.
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-18 | View shipment list | Customer | All shipments shown with Shipment ID, associated Order ID, carrier, status, and ETA |
-| UC-19 | Filter shipments by status | Customer | List filtered to the selected status type |
-| UC-20 | View shipment detail | Customer | Full shipment record shown: tracking timeline, last event, ship from/to, weight, item count, carrier, service type |
-| UC-21 | Download Bill of Lading | Customer | BOL document downloaded to user's device |
-| UC-22 | Download Packing List | Customer | Packing List document downloaded |
-| UC-23 | Track on carrier website | Customer | User is linked to the carrier's tracking page with the tracking number pre-populated |
-| UC-24 | View pickup authorization status | Customer | Pickup status shown (Pending / Authorized); driver registration form available for Pickup Ready shipments |
-| UC-72 | Register driver for pickup | Customer | Customer enters driver name, ID number, and vehicle info; form submitted; pickup status changes to Authorized |
-| UC-73 | Select saved pickup contact | Customer | Customer selects a previously saved driver from a dropdown; their details pre-fill the registration form |
-| UC-74 | Generate pickup authorization document | Customer | Authorization document generated and available to download; driver presents it at the PCS facility for collection |
+| UC-19 | View shipment list | Customer | All shipments shown with Shipment ID, associated Order ID, carrier, status, and ETA |
+| UC-20 | Filter shipments by status | Customer | List filtered to the selected status type |
+| UC-21 | View shipment detail | Customer | Full shipment record shown: tracking timeline, last event, ship from/to, weight, item count, carrier, service type |
+| UC-22 | Download Bill of Lading | Customer | BOL document downloaded to user's device |
+| UC-23 | Download Packing List | Customer | Packing List document downloaded |
+| UC-24 | Track on carrier website | Customer | User is linked to the carrier's tracking page with the tracking number pre-populated |
+| UC-25 | View pickup authorization status | Customer | Pickup status shown (Pending / Authorized); driver registration form available for Pickup Ready shipments |
+| UC-26 | Register driver for pickup | Customer | Customer enters driver name, ID number, and vehicle info; form submitted; pickup status changes to Authorized |
+| UC-27 | Select saved pickup contact | Customer | Customer selects a previously saved driver from a dropdown; their details pre-fill the registration form |
+| UC-28 | Generate pickup authorization document | Customer | Authorization document generated and available to download; driver presents it at the PCS facility for collection |
 
 ### Shipment Status Definitions
 
@@ -243,44 +243,44 @@ Label Created → Picked Up → In Transit → Out for Delivery → Delivered
 
 ### User Stories
 
-**US-26** — As a customer, I want to see a summary of my account financial position — total outstanding, past due, credit limit, and payment terms — so that I can manage my payments effectively.
+**US-30** — As a customer, I want to see a summary of my account financial position — total outstanding, past due, credit limit, and payment terms — so that I can manage my payments effectively.
 
-**US-27** — As a customer, I want to see an aging breakdown of my outstanding balance (Current, 30, 60, 90+ days) so that I can prioritize which invoices to pay.
+**US-31** — As a customer, I want to see an aging breakdown of my outstanding balance (Current, 30, 60, 90+ days) so that I can prioritize which invoices to pay.
 
-**US-28** — As a customer, I want to view all my invoices with their status so that I can track what is paid and what is owed.
+**US-32** — As a customer, I want to view all my invoices with their status so that I can track what is paid and what is owed.
 
-**US-29** — As a customer, I want to view the full details of an invoice — including line items and payment history — so that I can verify charges and reconcile my records.
+**US-33** — As a customer, I want to view the full details of an invoice — including line items and payment history — so that I can verify charges and reconcile my records.
 
-**US-30** — As a customer, I want to download an invoice as a PDF so that I can share or store it.
+**US-34** — As a customer, I want to download an invoice as a PDF so that I can share or store it.
 
-**US-31** — As a customer, I want to download a full account statement so that I can reconcile my account.
+**US-35** — As a customer, I want to download a full account statement so that I can reconcile my account.
 
-**US-32** — As a customer, I want to initiate payment on an outstanding invoice so that I can settle my balance.
+**US-36** — As a customer, I want to initiate payment on an outstanding invoice so that I can settle my balance.
 
-**US-33** — As a customer, I want to dispute an invoice so that I can flag incorrect charges for review.
+**US-37** — As a customer, I want to dispute an invoice so that I can flag incorrect charges for review.
 
-**US-34** — As a customer, I want to view all payments I have made, including method, date, amount, and which invoices they were applied to, so that I can maintain accurate payment records.
+**US-38** — As a customer, I want to view all payments I have made, including method, date, amount, and which invoices they were applied to, so that I can maintain accurate payment records.
 
-**US-35** — As a customer, I want to view all credit memos on my account, including the reason, any associated RMA reference number, and applied invoice, so that I understand any credits I have received.
+**US-39** — As a customer, I want to view all credit memos on my account, including the reason, any associated RMA reference number, and applied invoice, so that I understand any credits I have received.
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-25 | View financial summary | Customer | Dashboard KPIs show: total outstanding, past due, credit limit, available credit, and payment terms |
-| UC-26 | View aging summary | Customer | Outstanding balance broken down into aging buckets: Current, 30, 60, 90+ days |
-| UC-27 | View invoice list | Customer | All invoices shown with ID, order, date, due date, amount, balance, and status |
-| UC-28 | Filter invoices by status | Customer | List filtered to Open, Past Due, or Paid invoices |
-| UC-29 | View invoice detail | Customer | Full invoice shown: bill-to address, line items, subtotal, tax, total, payment terms, payment history |
-| UC-30 | Download invoice PDF | Customer | Invoice downloaded as a PDF file |
-| UC-31 | Download account statement | Customer | Full account statement downloaded |
-| UC-32 | Initiate payment | Customer | Customer is able to initiate payment against an unpaid invoice |
-| UC-33 | Dispute an invoice | Customer | Customer can flag an invoice for review; support is notified |
-| UC-34 | View payment list | Customer | All payments shown with reference ID, date, amount, method, and applied invoices |
-| UC-35 | View payment detail | Customer | Full payment record: company, bank, confirmation number, applied-to invoice list |
-| UC-36 | View credit memo list | Customer | All credit memos shown with ID, date, amount, reason, and status |
-| UC-37 | View credit memo detail | Customer | Full credit memo: issued to, RMA reference, applied invoice, notes, line items |
-| UC-38 | View RMA reference on credit memo | Customer | The RMA reference number is displayed on the credit memo as a read-only field (full RMA module is Stage 2) |
+| UC-29 | View financial summary | Customer | Dashboard KPIs show: total outstanding, past due, credit limit, available credit, and payment terms |
+| UC-30 | View aging summary | Customer | Outstanding balance broken down into aging buckets: Current, 30, 60, 90+ days |
+| UC-31 | View invoice list | Customer | All invoices shown with ID, order, date, due date, amount, balance, and status |
+| UC-32 | Filter invoices by status | Customer | List filtered to Open, Past Due, or Paid invoices |
+| UC-33 | View invoice detail | Customer | Full invoice shown: bill-to address, line items, subtotal, tax, total, payment terms, payment history |
+| UC-34 | Download invoice PDF | Customer | Invoice downloaded as a PDF file |
+| UC-35 | Download account statement | Customer | Full account statement downloaded |
+| UC-36 | Initiate payment | Customer | Customer is able to initiate payment against an unpaid invoice |
+| UC-37 | Dispute an invoice | Customer | Customer can flag an invoice for review; support is notified |
+| UC-38 | View payment list | Customer | All payments shown with reference ID, date, amount, method, and applied invoices |
+| UC-39 | View payment detail | Customer | Full payment record: company, bank, confirmation number, applied-to invoice list |
+| UC-40 | View credit memo list | Customer | All credit memos shown with ID, date, amount, reason, and status |
+| UC-41 | View credit memo detail | Customer | Full credit memo: issued to, RMA reference, applied invoice, notes, line items |
+| UC-42 | View RMA reference on credit memo | Customer | The RMA reference number is displayed on the credit memo as a read-only field (full RMA module is Stage 2) |
 
 ### Invoice Status Definitions
 
@@ -310,25 +310,25 @@ Wire Transfer, ACH, Check
 
 ### User Stories
 
-**US-36** — As a customer, I want to see a chronological log of all activity on my account so that I have a full audit trail.
+**US-40** — As a customer, I want to see a chronological log of all activity on my account so that I have a full audit trail.
 
-**US-37** — As a customer, I want to filter the activity log by category (Orders, Shipments, Payments, Support) so that I can find relevant events quickly.
+**US-41** — As a customer, I want to filter the activity log by category (Orders, Shipments, Payments, Support) so that I can find relevant events quickly.
 
-**US-38** — As a customer, I want activities that require my attention to be visually flagged so that I don't miss important actions.
+**US-42** — As a customer, I want activities that require my attention to be visually flagged so that I don't miss important actions.
 
-**US-39** — As a customer, I want each activity entry to link to the related record (order, invoice, ticket) so that I can navigate directly to the relevant page.
+**US-43** — As a customer, I want each activity entry to link to the related record (order, invoice, ticket) so that I can navigate directly to the relevant page.
 
-**US-40** — As a customer, I want activity entries grouped by date so that I can easily scan by time period.
+**US-44** — As a customer, I want activity entries grouped by date so that I can easily scan by time period.
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-39 | View full activity log | Customer | All account events shown in reverse-chronological order, grouped by date |
-| UC-40 | Filter by category | Customer | Log filtered to the selected category (All, Orders, Shipments, Payments, Support) |
-| UC-41 | View items requiring action | Customer | Activities with pending actions are badged; customer can click through to take action |
-| UC-42 | Navigate from activity to record | Customer | Clicking an activity entry navigates to the related order, invoice, or ticket |
-| UC-43 | Load more activities | Customer | Additional activities are loaded on demand ("Load More") |
+| UC-43 | View full activity log | Customer | All account events shown in reverse-chronological order, grouped by date |
+| UC-44 | Filter by category | Customer | Log filtered to the selected category (All, Orders, Shipments, Payments, Support) |
+| UC-45 | View items requiring action | Customer | Activities with pending actions are badged; customer can click through to take action |
+| UC-46 | Navigate from activity to record | Customer | Clicking an activity entry navigates to the related order, invoice, or ticket |
+| UC-47 | Load more activities | Customer | Additional activities are loaded on demand ("Load More") |
 
 ### Activity Types
 
@@ -345,42 +345,42 @@ Wire Transfer, ACH, Check
 
 ### User Stories
 
-**US-41** — As a customer, I want to submit a support ticket so that I can get help from the PCS team.
+**US-45** — As a customer, I want to submit a support ticket so that I can get help from the PCS team.
 
-**US-42** — As a customer, I want to view all my open and historical support tickets so that I can track the status of my requests.
+**US-46** — As a customer, I want to view all my open and historical support tickets so that I can track the status of my requests.
 
-**US-43** — As a customer, I want to filter tickets by status and category so that I can find specific tickets quickly.
+**US-47** — As a customer, I want to filter tickets by status and category so that I can find specific tickets quickly.
 
-**US-44** — As a customer, I want to read the full conversation thread for a support ticket so that I can follow the dialogue between myself and the support team.
+**US-48** — As a customer, I want to read the full conversation thread for a support ticket so that I can follow the dialogue between myself and the support team.
 
-**US-45** — As a customer, I want to reply to a ticket so that I can provide additional information or follow up on a request.
+**US-49** — As a customer, I want to reply to a ticket so that I can provide additional information or follow up on a request.
 
-**US-46** — As a customer, I want to attach files to a support message so that I can share relevant documents or images with the support team.
+**US-50** — As a customer, I want to attach files to a support message so that I can share relevant documents or images with the support team.
 
-**US-47** — As a customer, I want to see which PCS team member is assigned to my ticket so that I know who is handling my issue.
+**US-51** — As a customer, I want to see which PCS team member is assigned to my ticket so that I know who is handling my issue.
 
-**US-48** — As a customer, I want to see if a ticket is linked to a specific order so that I can understand the context of the issue.
+**US-52** — As a customer, I want to see if a ticket is linked to a specific order so that I can understand the context of the issue.
 
-**US-80** — As a customer, I want to set the priority of a new support ticket (Normal or Urgent) so that urgent issues are flagged to the support team immediately.
+**US-53** — As a customer, I want to set the priority of a new support ticket (Normal or Urgent) so that urgent issues are flagged to the support team immediately.
 
-**US-81** — As a customer, I want to optionally link a support ticket to an Order ID or Quote ID so that the support team has the relevant context without needing to ask for it.
+**US-54** — As a customer, I want to optionally link a support ticket to an Order ID or Quote ID so that the support team has the relevant context without needing to ask for it.
 
-**US-82** — As a customer, I want to rate my experience after a support ticket is resolved so that I can provide feedback on the service I received.
+**US-55** — As a customer, I want to rate my experience after a support ticket is resolved so that I can provide feedback on the service I received.
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-44 | View ticket list | Customer | All tickets shown with ID, title, category, priority, status, and last updated time |
-| UC-45 | Filter tickets by status | Customer | Ticket list filtered to the selected status |
-| UC-46 | Filter tickets by category | Customer | Ticket list filtered to the selected category |
-| UC-47 | View ticket detail | Customer | Full ticket shown: title, priority, status, category, created date, assigned team, related order, and full conversation thread |
-| UC-48 | Reply to ticket | Customer | Customer types a reply and submits it; message is added to the conversation thread |
-| UC-49 | Attach file to reply | Customer | Customer can attach a file to a support message |
-| UC-50 | Create new ticket | Customer | Customer submits a new support request with category, subject, description, priority, optional linked record, and optional file attachments |
-| UC-75 | Set ticket priority | Customer | Customer selects Normal or Urgent when creating a ticket; priority is visible to the support team |
-| UC-76 | Link ticket to order or quote | Customer | Customer optionally enters an Order ID or Quote ID; reference displayed in the ticket detail for the support team |
-| UC-77 | Rate resolved ticket | Customer | After a ticket is marked Resolved, customer is presented with a star rating; rating is submitted and recorded |
+| UC-48 | View ticket list | Customer | All tickets shown with ID, title, category, priority, status, and last updated time |
+| UC-49 | Filter tickets by status | Customer | Ticket list filtered to the selected status |
+| UC-50 | Filter tickets by category | Customer | Ticket list filtered to the selected category |
+| UC-51 | View ticket detail | Customer | Full ticket shown: title, priority, status, category, created date, assigned team, related order, and full conversation thread |
+| UC-52 | Reply to ticket | Customer | Customer types a reply and submits it; message is added to the conversation thread |
+| UC-53 | Attach file to reply | Customer | Customer can attach a file to a support message |
+| UC-54 | Create new ticket | Customer | Customer submits a new support request with category, subject, description, priority, optional linked record, and optional file attachments |
+| UC-55 | Set ticket priority | Customer | Customer selects Normal or Urgent when creating a ticket; priority is visible to the support team |
+| UC-56 | Link ticket to order or quote | Customer | Customer optionally enters an Order ID or Quote ID; reference displayed in the ticket detail for the support team |
+| UC-57 | Rate resolved ticket | Customer | After a ticket is marked Resolved, customer is presented with a star rating; rating is submitted and recorded |
 
 ### Ticket Priority Definitions
 
@@ -403,45 +403,45 @@ Order Issue, Shipping, RMA Enquiry, Billing
 
 ### User Stories
 
-**US-49** — As an Admin, I want to update my company's business information (name, address, phone, email) so that our account details are accurate.
+**US-56** — As an Admin, I want to update my company's business information (name, address, phone, email) so that our account details are accurate.
 
-**US-50** — As an Admin, I want to manage our tax exemption status and upload a tax certificate so that our orders are processed correctly.
+**US-57** — As an Admin, I want to manage our tax exemption status and upload a tax certificate so that our orders are processed correctly.
 
-**US-51** — As an Admin, I want to invite new users to our account so that my team members can access the portal.
+**US-58** — As an Admin, I want to invite new users to our account so that my team members can access the portal.
 
-**US-52** — As an Admin, I want to assign roles to team members (Admin, Buyer, Viewer) so that each person has the appropriate level of access.
+**US-59** — As an Admin, I want to assign roles to team members (Admin, Buyer, Viewer) so that each person has the appropriate level of access.
 
-**US-53** — As an Admin, I want to activate or deactivate user accounts so that I can control who has access.
+**US-60** — As an Admin, I want to activate or deactivate user accounts so that I can control who has access.
 
-**US-54** — As a customer, I want to choose my preferred theme (Light, Dark, or System) so that the portal is comfortable to use.
+**US-61** — As a customer, I want to choose my preferred theme (Light, Dark, or System) so that the portal is comfortable to use.
 
-**US-55** — As a customer, I want to control which email and SMS notifications I receive so that I am only alerted about the things that matter to me.
+**US-62** — As a customer, I want to control which email and SMS notifications I receive so that I am only alerted about the things that matter to me.
 
-**US-56** — As a customer, I want to set my regional preferences (currency, timezone, date format) so that information is displayed in a format familiar to me.
+**US-63** — As a customer, I want to set my regional preferences (currency, timezone, date format) so that information is displayed in a format familiar to me.
 
-**US-57** — As a customer, I want to change my password so that I can maintain account security.
+**US-64** — As a customer, I want to change my password so that I can maintain account security.
 
-**US-58** — As a customer, I want to enable Two-Factor Authentication (via Authenticator App or SMS) so that my account is more secure.
+**US-65** — As a customer, I want to enable Two-Factor Authentication (via Authenticator App or SMS) so that my account is more secure.
 
-**US-59** — As a customer, I want to view and revoke active sessions so that I can ensure no unauthorized devices are logged in.
+**US-66** — As a customer, I want to view and revoke active sessions so that I can ensure no unauthorized devices are logged in.
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-51 | Edit company details | Admin | Company name, address, phone, and email updated and saved |
-| UC-52 | Upload tax certificate | Admin | Tax certificate file uploaded; exemption status updated |
-| UC-53 | Invite user | Admin | Invitation email sent to new user; they appear as pending in the user list |
-| UC-54 | Assign/change user role | Admin | User's role updated to Admin, Buyer, or Viewer |
-| UC-55 | Deactivate user | Admin | User's access is suspended; they cannot log in |
-| UC-56 | Reactivate user | Admin | User's access is restored |
-| UC-57 | Change theme | Customer | Selected theme (Light/Dark/System) applied and persisted |
-| UC-58 | Toggle email notification | Customer | Notification preference saved; emails sent or suppressed accordingly |
-| UC-59 | Toggle SMS notification | Customer | SMS notification preference saved |
-| UC-60 | Update regional settings | Customer | Currency, timezone, and date format preferences saved and applied to display |
-| UC-61 | Change password | Customer | Password updated after verifying current password |
-| UC-62 | Enable 2FA | Customer | Two-Factor Authentication activated via Authenticator App or SMS |
-| UC-63 | Revoke active session | Customer | Selected device session is terminated |
+| UC-58 | Edit company details | Admin | Company name, address, phone, and email updated and saved |
+| UC-59 | Upload tax certificate | Admin | Tax certificate file uploaded; exemption status updated |
+| UC-60 | Invite user | Admin | Invitation email sent to new user; they appear as pending in the user list |
+| UC-61 | Assign/change user role | Admin | User's role updated to Admin, Buyer, or Viewer |
+| UC-62 | Deactivate user | Admin | User's access is suspended; they cannot log in |
+| UC-63 | Reactivate user | Admin | User's access is restored |
+| UC-64 | Change theme | Customer | Selected theme (Light/Dark/System) applied and persisted |
+| UC-65 | Toggle email notification | Customer | Notification preference saved; emails sent or suppressed accordingly |
+| UC-66 | Toggle SMS notification | Customer | SMS notification preference saved |
+| UC-67 | Update regional settings | Customer | Currency, timezone, and date format preferences saved and applied to display |
+| UC-68 | Change password | Customer | Password updated after verifying current password |
+| UC-69 | Enable 2FA | Customer | Two-Factor Authentication activated via Authenticator App or SMS |
+| UC-70 | Revoke active session | Customer | Selected device session is terminated |
 
 ### Notification Types
 
@@ -460,13 +460,13 @@ Order Issue, Shipping, RMA Enquiry, Billing
 
 ### User Stories
 
-**US-63** — As a customer on desktop, I want a persistent sidebar navigation so that I can move between sections of the portal quickly.
+**US-67** — As a customer on desktop, I want a persistent sidebar navigation so that I can move between sections of the portal quickly.
 
-**US-64** — As a customer on mobile, I want a bottom tab bar and a hamburger menu drawer so that navigation is accessible and familiar on a small screen.
+**US-68** — As a customer on mobile, I want a bottom tab bar and a hamburger menu drawer so that navigation is accessible and familiar on a small screen.
 
-**US-65** — As a customer, I want to see the name and contact details of my PCS Sales Representative in the navigation so that I can reach them easily.
+**US-69** — As a customer, I want to see the name and contact details of my PCS Sales Representative in the navigation so that I can reach them easily.
 
-**US-66** — As a customer, I want the portal to work well on both mobile and desktop screens so that I can use it from any device.
+**US-70** — As a customer, I want the portal to work well on both mobile and desktop screens so that I can use it from any device.
 
 ### Navigation Structure
 
@@ -502,11 +502,11 @@ Dashboard
 
 ### User Stories
 
-**US-67** — As a customer, I want to receive email notifications for key account events so that I am kept informed without needing to log in.
+**US-71** — As a customer, I want to receive email notifications for key account events so that I am kept informed without needing to log in.
 
-**US-68** — As a customer, I want to receive SMS notifications for urgent events such as delivery confirmations and upcoming payment due dates so that I can act quickly.
+**US-72** — As a customer, I want to receive SMS notifications for urgent events such as delivery confirmations and upcoming payment due dates so that I can act quickly.
 
-**US-69** — As a customer, I want to see a notification bell in the portal so that I can view in-app alerts.
+**US-73** — As a customer, I want to see a notification bell in the portal so that I can view in-app alerts.
 
 ---
 
@@ -594,13 +594,13 @@ New customers can complete a self-service application wizard to register their b
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-64 | Start application | Prospective customer | Customer lands on the public registration page and begins the wizard |
-| UC-65 | Enter company info | Prospective customer | Step 1 validated; customer proceeds to Step 2 |
-| UC-66 | Enter contact details | Prospective customer | Step 2 validated; customer proceeds to Step 3 |
-| UC-67 | Complete business profile | Prospective customer | Step 3 validated; customer proceeds to Step 4 |
-| UC-68 | Upload documents | Prospective customer | Files accepted and stored; customer proceeds to Step 5 |
-| UC-69 | Review and submit | Prospective customer | Application submitted; confirmation screen shows unique application reference number |
-| UC-70 | Track application status | Prospective customer | Customer can return to the portal using the reference number to view status (Submitted / Under Review / Approved / Rejected) |
+| UC-71 | Start application | Prospective customer | Customer lands on the public registration page and begins the wizard |
+| UC-72 | Enter company info | Prospective customer | Step 1 validated; customer proceeds to Step 2 |
+| UC-73 | Enter contact details | Prospective customer | Step 2 validated; customer proceeds to Step 3 |
+| UC-74 | Complete business profile | Prospective customer | Step 3 validated; customer proceeds to Step 4 |
+| UC-75 | Upload documents | Prospective customer | Files accepted and stored; customer proceeds to Step 5 |
+| UC-76 | Review and submit | Prospective customer | Application submitted; confirmation screen shows unique application reference number |
+| UC-77 | Track application status | Prospective customer | Customer can return to the portal using the reference number to view status (Submitted / Under Review / Approved / Rejected) |
 
 ---
 
