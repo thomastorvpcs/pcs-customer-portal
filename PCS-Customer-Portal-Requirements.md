@@ -590,18 +590,6 @@ New customers can complete a self-service application wizard to register their b
 | Professional | 501–2 000 units/month |
 | Enterprise | 2 001+ units/month |
 
-#### Use Cases
-
-| ID | Use Case | Actor | Outcome |
-|----|----------|-------|---------|
-| UC-71 | Start application | Prospective customer | Customer lands on the public registration page and begins the wizard |
-| UC-72 | Enter company info | Prospective customer | Step 1 validated; customer proceeds to Step 2 |
-| UC-73 | Enter contact details | Prospective customer | Step 2 validated; customer proceeds to Step 3 |
-| UC-74 | Complete business profile | Prospective customer | Step 3 validated; customer proceeds to Step 4 |
-| UC-75 | Upload documents | Prospective customer | Files accepted and stored; customer proceeds to Step 5 |
-| UC-76 | Review and submit | Prospective customer | Application submitted; confirmation screen shows unique application reference number |
-| UC-77 | Track application status | Prospective customer | Customer can return to the portal using the reference number to view status (Submitted / Under Review / Approved / Rejected) |
-
 ---
 
 ### Stage 4 — Integrations
