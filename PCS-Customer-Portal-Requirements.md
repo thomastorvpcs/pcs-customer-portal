@@ -1,7 +1,7 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.3  
-**Date:** May 4, 2026  
+**Document Version:** 1.5  
+**Date:** May 6, 2026  
 **Stage:** Stage 1 — Core Functionality  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
@@ -26,7 +26,7 @@ Please review each section and indicate:
 
 | Stage | Scope | Status |
 |-------|-------|--------|
-| **Stage 1** | Core functionality: Dashboard, Orders, Shipments, Financial, Support, Settings & Profile | **This document** |
+| **Stage 1** | Authentication (Auth0), Dashboard, Orders, Shipments, Financial, Support, Settings & Profile | **This document** |
 | Future | Feature areas listed in Section 12 — not yet assigned to delivery stages | Upcoming |
 
 ---
@@ -64,7 +64,7 @@ Please review each section and indicate:
 
 > **Note:** The portal is initially being rolled out to **existing PCS customers**. In Stage 1, portal access is provisioned by PCS staff for customers who already have an account with PCS. The self-service New Customer Application wizard — allowing prospective customers to apply for a new PCS account online — is out of scope for Stage 1.
 
-> **Note on Authentication:** Additional authentication schemes — including passwordless login and passkeys — are under consideration for a future stage. Auth0 supports a wide range of modern authentication methods and these options will be evaluated as part of the authentication roadmap.
+> **Note on Authentication:** The portal uses **Auth0** as the authentication provider for Stage 1. Auth0 handles login (email/password and SSO), password reset, Two-Factor Authentication, and session management natively. Passwordless login and passkey authentication are supported by Auth0 but are not enabled in Stage 1.
 
 ### Use Cases
 
@@ -630,7 +630,7 @@ New customers can complete a self-service application wizard to register their b
 - Custom reporting or data analytics dashboard
 - Multi-currency billing
 - Native mobile app (iOS / Android)
-- Passwordless login and passkey authentication
+- Passwordless login and passkey authentication (Auth0-supported; not enabled in Stage 1)
 
 ---
 
