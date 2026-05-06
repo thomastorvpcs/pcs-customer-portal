@@ -13,7 +13,7 @@
 
 This document describes all functionality included in **Stage 1** of the PCS Wireless Customer Portal. It is intended for business stakeholder review to confirm the Stage 1 feature set is complete and accurate before development of the live backend is finalized.
 
-Subsequent stages are summarised in Section 13 for visibility but are **not** in scope for this sign-off.
+Out of scope items are listed in Section 12 for visibility but are **not** in scope for this sign-off.
 
 Please review each section and indicate:
 - **Approved** — functionality is correct as described
@@ -27,11 +27,7 @@ Please review each section and indicate:
 | Stage | Scope | Status |
 |-------|-------|--------|
 | **Stage 1** | Core functionality: Dashboard, Orders, Shipments, Financial, Support, Settings & Profile | **This document** |
-| Stage 2 | RMA / Returns | Upcoming |
-| Stage 3 | New Customer Application (self-service registration wizard) | Upcoming |
-| Stage 4 | Integrations (API Keys, Webhooks, ERP/WMS) | Upcoming |
-| Stage 5 | Catalog, Quotes & Promotional Banners | Upcoming |
-| Stage 6 | Meeting Scheduler | Upcoming |
+| Future | Feature areas listed in Section 12 — not yet assigned to delivery stages | Upcoming |
 
 ---
 
@@ -48,7 +44,7 @@ Please review each section and indicate:
 9. [Navigation & Global UI](#9-navigation--global-ui)
 10. [Notifications](#10-notifications)
 11. [User Roles & Permissions](#11-user-roles--permissions)
-12. [Out of Scope / Upcoming Stages](#12-out-of-scope--upcoming-stages)
+12. [Out of Scope](#12-out-of-scope)
 
 ---
 
@@ -66,7 +62,9 @@ Please review each section and indicate:
 
 **US-05** — As a customer, I want the portal to prevent access to all pages unless I am logged in, so that my account data is protected.
 
-> **Note:** The portal is initially being rolled out to **existing PCS customers**. In Stage 1, portal access is provisioned by PCS staff for customers who already have an account with PCS. The self-service New Customer Application wizard — allowing prospective customers to apply for a new PCS account online — is scoped for **Stage 3**.
+> **Note:** The portal is initially being rolled out to **existing PCS customers**. In Stage 1, portal access is provisioned by PCS staff for customers who already have an account with PCS. The self-service New Customer Application wizard — allowing prospective customers to apply for a new PCS account online — is out of scope for Stage 1.
+
+> **Note on Authentication:** Additional authentication schemes — including passwordless login and passkeys — are under consideration for a future stage. Auth0 supports a wide range of modern authentication methods and these options will be evaluated as part of the authentication roadmap.
 
 ### Use Cases
 
@@ -94,8 +92,6 @@ Please review each section and indicate:
 
 **US-10** — As a customer, I want to see a recent activity feed on the dashboard so that I can catch up on account events since my last visit.
 
-**US-11** — As a customer, I want to see a promotional offers section on the dashboard highlighting current deals and featured inventory so that I am aware of special pricing available to me.
-
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
@@ -104,7 +100,6 @@ Please review each section and indicate:
 | UC-07 | View past-due alert | Customer | A banner alerts the customer to past-due invoice amounts with a link to the Financial page |
 | UC-08 | Use Quick Action | Customer | Customer clicks Contact Support and is taken to the Support page to raise a ticket |
 | UC-09 | View recent activity | Customer | The last several account events are displayed in chronological order with links to related records |
-| UC-10 | View promotional offers | Customer | A "Hottest Offers" banner displays featured deals with savings highlighted; clicking a deal navigates to the Catalog page with relevant filters pre-applied (available in Stage 5) |
 
 ### Dashboard KPI Definitions
 
@@ -131,13 +126,13 @@ Please review each section and indicate:
 
 **US-15** — As a customer, I want to view full details for a specific order — including line items, pricing, shipping details, and status timeline — so that I have complete visibility into each purchase.
 
-**US-16** — As a customer, I want to see an order status timeline (Confirmed → Credit Approved → QC/Diagnostics → Packed → Shipped → Delivered) so that I can understand exactly where my order is in the process.
+**US-16** — As a customer, I want to see an order status timeline so that I can understand exactly where my order is in the fulfillment process.
+
+> **Note:** The specific statuses shown in the order timeline are subject to confirmation with Operations. Steps such as Credit Approved and QC/Diagnostics will be included only if they reflect PCS's actual fulfillment workflow.
 
 **US-17** — As a customer, I want to download documents associated with an order (Invoice, Packing List, Bill of Lading) so that I have records for my internal use.
 
-**US-18** — As a customer, I want to reorder a previous order so that I can quickly repeat a purchase without re-entering all the details.
-
-**US-19** — As a customer, I want to export my order list so that I can use the data in my own systems.
+**US-18** — As a customer, I want to export my order list so that I can use the data in my own systems. — As a customer, I want to export my order list so that I can use the data in my own systems.
 
 ### Use Cases
 
@@ -149,8 +144,7 @@ Please review each section and indicate:
 | UC-14 | View order detail | Customer | Full order record shown including: dates, addresses, line items table, status timeline, tracking info, and associated documents |
 | UC-15 | Download order documents | Customer | Invoice, Packing List, or Bill of Lading file is downloaded to the user's device |
 | UC-16 | Download all order documents | Customer | All documents for the order are downloaded together |
-| UC-17 | Reorder | Customer | A new order request is initiated pre-populated with the same items as the selected order |
-| UC-18 | Export order list | Customer | Order data is exported as a file (e.g. CSV) |
+| UC-17 | Export order list | Customer | Order data is exported as a file (e.g. CSV) |
 
 ### Order Data Fields
 
@@ -192,21 +186,13 @@ Each order record includes the following information:
 
 **US-21** — As a customer, I want to filter shipments by status (In Transit, Delivered, Pickup Ready, Exception) so that I can focus on shipments needing action.
 
-**US-22** — As a customer, I want to view a shipment tracking timeline so that I can see exactly where a shipment is in the delivery process.
+**US-22** — As a customer, I want to view the current status of my shipments so that I can see where they are and whether any action is needed.
 
-**US-23** — As a customer, I want to see the last tracking event with a timestamp so that I have the most up-to-date status of a shipment.
+**US-23** — As a customer, I want to see the most recent status update for a shipment so that I have the latest information available.
 
 **US-24** — As a customer, I want to access shipment documents (Bill of Lading, Packing List) so that I have the paperwork I need for receiving.
 
-**US-25** — As a customer, I want to track a shipment on the carrier's website so that I can get real-time carrier-level updates.
-
-**US-26** — As a customer arranging a customer pickup, I want to view the pickup authorization status and register my driver's details so that I can coordinate collection of my order.
-
-**US-27** — As a customer arranging a pickup, I want to enter my driver's name, ID number, and vehicle information so that PCS can verify the person collecting the shipment.
-
-**US-28** — As a customer, I want to select from previously saved pickup contacts so that I do not need to re-enter driver details for repeat collections.
-
-**US-29** — As a customer, I want to generate a pickup authorization document so that my driver has the official paperwork required to collect the shipment at the PCS facility.
+> **Note:** Real-time carrier tracking integration and customer pickup authorization workflows require operational readiness and carrier agreements not yet in place for Stage 1. Shipment status will reflect information available from PCS's internal systems. These capabilities will be revisited for a future stage.
 
 ### Use Cases
 
@@ -214,28 +200,18 @@ Each order record includes the following information:
 |----|----------|-------|---------|
 | UC-19 | View shipment list | Customer | All shipments shown with Shipment ID, associated Order ID, carrier, status, and ETA |
 | UC-20 | Filter shipments by status | Customer | List filtered to the selected status type |
-| UC-21 | View shipment detail | Customer | Full shipment record shown: tracking timeline, last event, ship from/to, weight, item count, carrier, service type |
+| UC-21 | View shipment detail | Customer | Shipment record shown with current status, last update, shipping details, and associated documents |
 | UC-22 | Download Bill of Lading | Customer | BOL document downloaded to user's device |
 | UC-23 | Download Packing List | Customer | Packing List document downloaded |
-| UC-24 | Track on carrier website | Customer | User is linked to the carrier's tracking page with the tracking number pre-populated |
-| UC-25 | View pickup authorization status | Customer | Pickup status shown (Pending / Authorized); driver registration form available for Pickup Ready shipments |
-| UC-26 | Register driver for pickup | Customer | Customer enters driver name, ID number, and vehicle info; form submitted; pickup status changes to Authorized |
-| UC-27 | Select saved pickup contact | Customer | Customer selects a previously saved driver from a dropdown; their details pre-fill the registration form |
-| UC-28 | Generate pickup authorization document | Customer | Authorization document generated and available to download; driver presents it at the PCS facility for collection |
 
 ### Shipment Status Definitions
 
 | Status | Meaning |
 |--------|---------|
 | In Transit | Shipment is with the carrier and moving toward destination |
-| Out for Delivery | Shipment is on the final delivery vehicle |
 | Delivered | Shipment has been received at the destination |
-| Pickup Ready | Shipment is available for customer pickup at PCS facility |
-| Exception | A delivery exception has occurred and requires follow-up |
-
-### Shipment Tracking Timeline Steps
-
-Label Created → Picked Up → In Transit → Out for Delivery → Delivered
+| Pickup Ready | Shipment is available for customer pickup at a PCS facility |
+| Exception | A delivery issue has occurred and requires follow-up |
 
 ---
 
@@ -255,13 +231,11 @@ Label Created → Picked Up → In Transit → Out for Delivery → Delivered
 
 **US-35** — As a customer, I want to download a full account statement so that I can reconcile my account.
 
-**US-36** — As a customer, I want to initiate payment on an outstanding invoice so that I can settle my balance.
+**US-36** — As a customer, I want to dispute an invoice so that I can flag incorrect charges for review.
 
-**US-37** — As a customer, I want to dispute an invoice so that I can flag incorrect charges for review.
+**US-37** — As a customer, I want to view all payments I have made, including method, date, amount, and which invoices they were applied to, so that I can maintain accurate payment records.
 
-**US-38** — As a customer, I want to view all payments I have made, including method, date, amount, and which invoices they were applied to, so that I can maintain accurate payment records.
-
-**US-39** — As a customer, I want to view all credit memos on my account, including the reason, any associated RMA reference number, and applied invoice, so that I understand any credits I have received.
+**US-38** — As a customer, I want to view all credit memos on my account, including the reason, any associated RMA reference number, and applied invoice, so that I understand any credits I have received.
 
 ### Use Cases
 
@@ -274,13 +248,12 @@ Label Created → Picked Up → In Transit → Out for Delivery → Delivered
 | UC-33 | View invoice detail | Customer | Full invoice shown: bill-to address, line items, subtotal, tax, total, payment terms, payment history |
 | UC-34 | Download invoice PDF | Customer | Invoice downloaded as a PDF file |
 | UC-35 | Download account statement | Customer | Full account statement downloaded |
-| UC-36 | Initiate payment | Customer | Customer is able to initiate payment against an unpaid invoice |
-| UC-37 | Dispute an invoice | Customer | Customer can flag an invoice for review; support is notified |
-| UC-38 | View payment list | Customer | All payments shown with reference ID, date, amount, method, and applied invoices |
-| UC-39 | View payment detail | Customer | Full payment record: company, bank, confirmation number, applied-to invoice list |
-| UC-40 | View credit memo list | Customer | All credit memos shown with ID, date, amount, reason, and status |
-| UC-41 | View credit memo detail | Customer | Full credit memo: issued to, RMA reference, applied invoice, notes, line items |
-| UC-42 | View RMA reference on credit memo | Customer | The RMA reference number is displayed on the credit memo as a read-only field (full RMA module is Stage 2) |
+| UC-36 | Dispute an invoice | Customer | Customer can flag an invoice for review; support is notified |
+| UC-37 | View payment list | Customer | All payments shown with reference ID, date, amount, method, and applied invoices |
+| UC-38 | View payment detail | Customer | Full payment record: company, bank, confirmation number, applied-to invoice list |
+| UC-39 | View credit memo list | Customer | All credit memos shown with ID, date, amount, reason, and status |
+| UC-40 | View credit memo detail | Customer | Full credit memo: issued to, RMA reference, applied invoice, notes, line items |
+| UC-41 | View RMA reference on credit memo | Customer | The RMA reference number is displayed on the credit memo as a read-only field (full RMA module is out of scope for Stage 1) |
 
 ### Invoice Status Definitions
 
@@ -289,10 +262,6 @@ Label Created → Picked Up → In Transit → Out for Delivery → Delivered
 | Open | Invoice is within payment terms and has an unpaid balance |
 | Past Due | Invoice payment is overdue |
 | Paid | Invoice has been fully paid |
-
-### Payment Methods Supported
-
-Wire Transfer, ACH, Check
 
 ### Account Summary KPIs
 
@@ -468,6 +437,15 @@ Order Issue, Shipping, RMA Enquiry, Billing
 
 **US-70** — As a customer, I want the portal to work well on both mobile and desktop screens so that I can use it from any device.
 
+### Use Cases
+
+| ID | Use Case | Actor | Outcome |
+|----|----------|-------|---------|
+| UC-71 | Use sidebar navigation | Customer (desktop) | Persistent sidebar displays all navigation links; active page is highlighted; clicking any link navigates to that section |
+| UC-72 | Use mobile navigation | Customer (mobile) | Bottom tab bar shows primary navigation items; hamburger menu opens a full drawer with all navigation links |
+| UC-73 | View sales rep details | Customer | Sales rep name, phone, and email are displayed in the navigation panel; customer can click to initiate contact |
+| UC-74 | Use portal on mobile device | Customer | All pages render correctly on mobile screen sizes; layout adapts to the viewport without loss of functionality |
+
 ### Navigation Structure
 
 ```
@@ -504,9 +482,17 @@ Dashboard
 
 **US-71** — As a customer, I want to receive email notifications for key account events so that I am kept informed without needing to log in.
 
-**US-72** — As a customer, I want to receive SMS notifications for urgent events such as delivery confirmations and upcoming payment due dates so that I can act quickly.
+**US-72** — As a customer, I want to receive SMS notifications for urgent account events such as upcoming payment due dates so that I can act quickly.
 
 **US-73** — As a customer, I want to see a notification bell in the portal so that I can view in-app alerts.
+
+### Use Cases
+
+| ID | Use Case | Actor | Outcome |
+|----|----------|-------|---------|
+| UC-75 | Receive email notification | Customer | When a key account event occurs (order confirmed, shipment update, invoice generated), customer receives a formatted email notification |
+| UC-76 | Receive SMS notification | Customer | When an urgent account event occurs (e.g. payment due reminder), customer receives an SMS alert |
+| UC-77 | View in-app notifications | Customer | Notification bell in the portal header shows an unread count badge; clicking opens a panel listing recent alerts; clicking an alert navigates to the relevant record |
 
 ---
 
@@ -526,10 +512,8 @@ Dashboard
 |---------|-------|-------|--------|
 | View Dashboard | ✓ | ✓ | ✓ |
 | View Orders | ✓ | ✓ | ✓ |
-| Reorder | ✓ | ✓ | — |
 | View Shipments | ✓ | ✓ | ✓ |
 | View Financial | ✓ | ✓ | ✓ |
-| Pay Invoice | ✓ | ✓ | — |
 | Dispute Invoice | ✓ | ✓ | — |
 | View Activity Log | ✓ | ✓ | ✓ |
 | Submit Support Ticket | ✓ | ✓ | ✓ |
@@ -542,94 +526,70 @@ Dashboard
 
 ---
 
-## 12. Out of Scope / Upcoming Stages
+## 12. Out of Scope
 
-The following functionality is **not** included in Stage 1. Each item is assigned to a future delivery stage and will require its own requirements and sign-off process before development begins.
+The following functionality is not included in Stage 1. Items have not been committed to specific future stages; prioritisation and scheduling will be decided separately.
 
 ---
 
-### Stage 2 — RMA / Returns
+### RMA / Returns
 
 | Feature | Description |
 |---------|-------------|
-| Submit RMA request | Customer selects an order, enters device IMEIs (one per line), selects a complaint reason from 18 categories, optionally uploads evidence files (up to 25MB), and submits |
-| Complaint categories | 18 options including: Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Port, Speaker/Mic, Face ID, Touch ID, Camera, Water Damage, Cosmetic Damage, Wrong Item, Missing Accessories, Software Issue, Carrier Lock, IMEI Mismatch, Other |
-| RMA status tracking | Customer tracks progress through 7 stages: Submitted → Under Review → Approved → Shipped → Received → Diagnostic → Complete |
-| RMA detail view | Full RMA record showing IMEIs, models, complaint reasons, resolution (Credited / Replaced / Returned), and linked credit memo |
+| Submit RMA request | Customer selects an order, enters device IMEIs, selects a complaint reason, optionally uploads evidence, and submits |
+| Complaint categories | Options including: Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Port, Speaker/Mic, Face ID, Touch ID, Camera, Water Damage, Cosmetic Damage, Wrong Item, Missing Accessories, Software Issue, Carrier Lock, IMEI Mismatch, Other |
+| RMA status tracking | Customer tracks progress: Submitted → Under Review → Approved → Shipped → Received → Diagnostic → Complete |
+| RMA detail view | Full RMA record showing IMEIs, models, complaint reasons, and resolution |
 | RMA list | Customer can view all open and historical RMA requests with status filtering |
-| RMA analytics | Summary cards showing return rate %, average resolution time, and open RMA count |
 | Credit memo download | Customer can download the credit memo generated from an approved RMA |
 | Return shipping labels | Customer can download or request a pre-paid return shipping label |
 | RMA notifications | Email/SMS alerts for RMA status changes |
 | Dashboard KPI | Open RMAs KPI card added to the dashboard |
-| Activity log events | "RMA submitted" and "RMA credit issued" events added to the activity log |
-| Support ticket category | "RMA" ticket category linked to active RMA records |
 
 ---
 
-### Stage 3 — New Customer Application
+### New Customer Application
 
-New customers can complete a self-service application wizard to register their business and request a PCS account. The application is submitted for PCS staff review; the customer receives a reference number to track progress.
-
-#### Wizard Steps
+New customers can complete a self-service application wizard to register their business and request a PCS account.
 
 | Step | Title | Key Fields / Actions |
 |------|-------|----------------------|
 | 1 | Company Information | Legal business name, trading name, company registration number, VAT/tax ID, industry vertical, website URL |
 | 2 | Contact Details | Primary contact name, job title, email, phone; billing address; optional shipping address toggle |
-| 3 | Business Profile | Years in operation, estimated monthly device volume (tier selector), device types of interest (multiselect), countries of operation |
-| 4 | Document Upload | Upload certificate of incorporation, proof of address, photo ID (drag-and-drop or file picker; PDF/JPG/PNG; max 10 MB each) |
-| 5 | Review & Submit | Summary of all entered data; checkbox to confirm T&Cs and Privacy Policy; Submit Application button |
-
-#### Monthly Volume Tiers
-
-| Tier | Range |
-|------|-------|
-| Starter | 1–100 units/month |
-| Growth | 101–500 units/month |
-| Professional | 501–2 000 units/month |
-| Enterprise | 2 001+ units/month |
+| 3 | Business Profile | Years in operation, estimated monthly volume, device types of interest, countries of operation |
+| 4 | Document Upload | Certificate of incorporation, proof of address, photo ID |
+| 5 | Review & Submit | Summary, T&Cs confirmation, Submit Application; customer receives a reference number |
 
 ---
 
-### Stage 4 — Integrations
+### Integrations
 
 | Feature | Description |
 |---------|-------------|
 | API key management | Admins can view, copy, and regenerate production and test API keys |
-| Webhook configuration | Admins can add and manage webhook endpoints with event subscriptions (order.created, order.shipped, invoice.created, invoice.paid) |
+| Webhook configuration | Admins can manage webhook endpoints with event subscriptions |
 | ERP/WMS integration | Connect SAP or NetSuite; view sync status and trigger manual syncs |
-| Custom integrations | Admins can configure additional third-party integrations beyond SAP and NetSuite |
-| Integrations settings tab | Dedicated Integrations section added to the Settings page |
+| Custom integrations | Configure additional third-party integrations |
 
 ---
 
-### Stage 5 — Catalog, Quotes & Promotional Banners
+### Catalog, Quotes & Promotional Banners
 
 | Feature | Description |
 |---------|-------------|
-| Device catalog | Browse available devices in a product grid with filter sidebar (Brand, Grade, Storage, Price Range, Colour, Deals, Availability) and sort options |
-| Search | Search catalog by product name |
-| Active filter pills | Removable filter pills displayed above the grid; Clear All resets all filters |
-| Product cards | Each card shows device image, brand badge, stock indicator, specs, price, quantity selector (+/−), and Add to Quote button |
-| Quote cart | Right-panel cart showing selected items with quantities, catalog price, custom offer price input, price difference indicator, and line totals |
-| Offer pricing | Customer can propose a custom per-unit price on any cart item; the difference from catalog price is shown in real time |
-| Submit quote | Customer submits quote for PCS review; quote appears in My Quotes with Submitted status |
-| Save as template | Customer can save a cart configuration as a reusable quote template |
-| Use template | Customer can populate the cart from a previously saved template |
-| My Quotes table | Customer views all submitted quotes with status (Draft / Submitted / Under Review / Approved / Counter-Offered / Accepted / Rejected / Expired) |
-| Quote detail | Full quote record with line items, pricing, validity period, and Accept / Request Revision / Reject actions |
-| Promotional banners | Full-width banners on dashboard and catalog surfacing featured deals; clicking a banner card filters the catalog to the relevant products |
-| Quick actions | "Request Quote" and "Device Lookup" added to navigation quick actions |
-| Support ticket categories | "Quote" ticket category added |
+| Promotional offers on dashboard | A "Hottest Offers" section highlighting current deals and featured inventory |
+| Device catalog | Browse available devices with filter sidebar and sort options |
+| Quote cart | Build a quote with custom per-unit pricing; submit for PCS review |
+| My Quotes | View and manage submitted quotes with full status history |
+| Promotional banners | Full-width banners on dashboard and catalog surfacing featured deals |
 
 ---
 
-### Stage 6 — Meeting Scheduler
+### Meeting Scheduler
 
 | Feature | Description |
 |---------|-------------|
-| Book a meeting | Customer can schedule a call or meeting with their assigned PCS Sales Representative |
+| Book a meeting | Customer schedules a call or meeting with their assigned PCS Sales Representative |
 | Calendar availability | Available time slots pulled from the sales rep's calendar |
 | Meeting confirmation | Confirmation email and calendar invite sent to both parties |
 | Meeting history | Customer can view upcoming and past meetings |
@@ -637,15 +597,40 @@ New customers can complete a self-service application wizard to register their b
 
 ---
 
-### General Items Not Assigned to a Stage
+### Shipment Enhancements
 
-The following items are noted as out of scope but do not yet have a confirmed delivery stage:
+| Feature | Description |
+|---------|-------------|
+| Carrier tracking link | Direct link to the carrier's tracking page for real-time updates (requires carrier integration agreements) |
+| Customer pickup authorization | Driver registration, saved pickup contacts, and pickup authorization document generation (requires Operations process definition) |
+| Delivery SMS notifications | SMS alerts for shipment delivery events (requires carrier integration) |
 
-- Online payment processing (credit card payments directly in the portal)
+---
+
+### Orders
+
+| Feature | Description |
+|---------|-------------|
+| Reorder | Repeat a previous order pre-populated with the same items |
+
+---
+
+### Financial
+
+| Feature | Description |
+|---------|-------------|
+| Invoice payment initiation | Customer initiates payment against an outstanding invoice directly in the portal |
+| Online payment processing | Credit card and other direct payment methods |
+
+---
+
+### General
+
 - Real-time / live chat with support
 - Custom reporting or data analytics dashboard
 - Multi-currency billing
 - Native mobile app (iOS / Android)
+- Passwordless login and passkey authentication
 
 ---
 
