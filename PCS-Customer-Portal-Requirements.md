@@ -1,7 +1,7 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.5  
-**Date:** May 6, 2026  
+**Document Version:** 1.6  
+**Date:** May 7, 2026  
 **Stage:** Stage 1 — Core Functionality  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
@@ -52,29 +52,24 @@ Please review each section and indicate:
 
 ### User Stories
 
-**US-01** — As a customer, I want to log in with my email and password so that I can securely access my account.
+**US-01** — As a customer, I want to log in to the portal so that I can securely access my account.
 
-**US-02** — As a customer, I want to log in using Single Sign-On (Google, Microsoft, or Apple) so that I don't need to manage a separate password.
+**US-02** — As a customer, I want to be able to reset my password if I have forgotten it so that I can regain access to my account.
 
-**US-03** — As a customer, I want a "Forgot Password" link on the login page so that I can reset my password if I've forgotten it.
+**US-03** — As an existing PCS customer, I want to receive portal login credentials from PCS staff so that I can begin managing my orders and account online.
 
-**US-04** — As an existing PCS customer, I want to receive portal login credentials from PCS staff so that I can begin managing my orders and account online.
-
-**US-05** — As a customer, I want the portal to prevent access to all pages unless I am logged in, so that my account data is protected.
+**US-04** — As a customer, I want the portal to prevent access to all pages unless I am logged in, so that my account data is protected.
 
 > **Note:** The portal is initially being rolled out to **existing PCS customers**. In Stage 1, portal access is provisioned by PCS staff for customers who already have an account with PCS. The self-service New Customer Application wizard — allowing prospective customers to apply for a new PCS account online — is out of scope for Stage 1.
-
-> **Note on Authentication:** The portal uses **Auth0** as the authentication provider for Stage 1. Auth0 handles login (email/password and SSO), password reset, Two-Factor Authentication, and session management natively. Passwordless login and passkey authentication are supported by Auth0 but are not enabled in Stage 1.
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-01 | Log in with email/password | Customer | User is authenticated and directed to the Dashboard |
-| UC-02 | Log in via SSO | Customer | User is authenticated via Google, Microsoft, or Apple and directed to the Dashboard |
-| UC-03 | Reset forgotten password | Customer | User clicks "Forgot Password", receives a reset email, and can set a new password |
-| UC-04 | Receive portal access | Existing customer | PCS staff provisions portal access for an existing customer; customer receives credentials and can log in |
-| UC-05 | Access protected page without login | Unauthenticated user | User is redirected to the login page |
+| UC-01 | Log in | Customer | User is authenticated and directed to the Dashboard |
+| UC-02 | Reset forgotten password | Customer | User requests a password reset and receives an email to set a new password |
+| UC-03 | Receive portal access | Existing customer | PCS staff provisions portal access for an existing customer; customer receives credentials and can log in |
+| UC-04 | Access protected page without login | Unauthenticated user | User is redirected to the login page |
 
 ---
 
@@ -101,17 +96,6 @@ Please review each section and indicate:
 | UC-08 | Use Quick Action | Customer | Customer clicks Contact Support and is taken to the Support page to raise a ticket |
 | UC-09 | View recent activity | Customer | The last several account events are displayed in chronological order with links to related records |
 
-### Dashboard KPI Definitions
-
-| Metric | Definition |
-|--------|------------|
-| Open Orders | Count of orders in any non-delivered, non-cancelled status |
-| Pending Shipments | Count of shipments currently in transit |
-| Outstanding Balance | Total of unpaid invoice balances |
-| Open Support Tickets | Count of tickets not in Resolved status |
-
-> **Note:** A 5th KPI card — **Open RMAs** — will be added to the dashboard in Stage 2.
-
 ---
 
 ## 3. Order Management
@@ -127,8 +111,6 @@ Please review each section and indicate:
 **US-15** — As a customer, I want to view full details for a specific order — including line items, pricing, shipping details, and status timeline — so that I have complete visibility into each purchase.
 
 **US-16** — As a customer, I want to see an order status timeline so that I can understand exactly where my order is in the fulfillment process.
-
-> **Note:** The specific statuses shown in the order timeline are subject to confirmation with Operations. Steps such as Credit Approved and QC/Diagnostics will be included only if they reflect PCS's actual fulfillment workflow.
 
 **US-17** — As a customer, I want to download documents associated with an order (Invoice, Packing List, Bill of Lading) so that I have records for my internal use.
 
@@ -164,18 +146,6 @@ Each order record includes the following information:
 | Tracking | Carrier, tracking number, and ETA (when available) |
 | Documents | Invoice, Packing List, Bill of Lading |
 
-### Order Status Definitions
-
-| Status | Meaning |
-|--------|---------|
-| Confirmed | Order received and confirmed by PCS |
-| Credit Approved | Customer's credit has been verified and approved for the order value |
-| QC / Diagnostics | Devices are undergoing quality control and diagnostic testing |
-| Packed | Order has been packed and is ready for collection by the carrier |
-| Shipped | Order is in transit with a carrier |
-| Delivered | Order has been received at the destination |
-| On Hold | Order requires attention before it can proceed |
-
 ---
 
 ## 4. Shipment Tracking
@@ -203,15 +173,6 @@ Each order record includes the following information:
 | UC-21 | View shipment detail | Customer | Shipment record shown with current status, last update, shipping details, and associated documents |
 | UC-22 | Download Bill of Lading | Customer | BOL document downloaded to user's device |
 | UC-23 | Download Packing List | Customer | Packing List document downloaded |
-
-### Shipment Status Definitions
-
-| Status | Meaning |
-|--------|---------|
-| In Transit | Shipment is with the carrier and moving toward destination |
-| Delivered | Shipment has been received at the destination |
-| Pickup Ready | Shipment is available for customer pickup at a PCS facility |
-| Exception | A delivery issue has occurred and requires follow-up |
 
 ---
 
@@ -255,24 +216,6 @@ Each order record includes the following information:
 | UC-40 | View credit memo detail | Customer | Full credit memo: issued to, RMA reference, applied invoice, notes, line items |
 | UC-41 | View RMA reference on credit memo | Customer | The RMA reference number is displayed on the credit memo as a read-only field (full RMA module is out of scope for Stage 1) |
 
-### Invoice Status Definitions
-
-| Status | Meaning |
-|--------|---------|
-| Open | Invoice is within payment terms and has an unpaid balance |
-| Past Due | Invoice payment is overdue |
-| Paid | Invoice has been fully paid |
-
-### Account Summary KPIs
-
-| KPI | Definition |
-|-----|------------|
-| Total Outstanding | Sum of all unpaid invoice balances |
-| Past Due | Sum of balances on invoices past their due date |
-| Credit Limit | Maximum credit extended to the customer |
-| Available Credit | Credit Limit minus Total Outstanding |
-| Payment Terms | Default payment terms (e.g. Net 30) |
-
 ---
 
 ## 6. Activity Log
@@ -298,15 +241,6 @@ Each order record includes the following information:
 | UC-45 | View items requiring action | Customer | Activities with pending actions are badged; customer can click through to take action |
 | UC-46 | Navigate from activity to record | Customer | Clicking an activity entry navigates to the related order, invoice, or ticket |
 | UC-47 | Load more activities | Customer | Additional activities are loaded on demand ("Load More") |
-
-### Activity Types
-
-| Category | Event Types |
-|----------|-------------|
-| Orders | Order confirmed, Order shipped, Order delivered |
-| Shipments | Out for delivery, Delivered |
-| Payments | Payment received, Credit memo applied, Invoice generated |
-| Support | Support ticket created, Ticket resolved |
 
 ---
 
@@ -350,21 +284,6 @@ Each order record includes the following information:
 | UC-55 | Set ticket priority | Customer | Customer selects Normal or Urgent when creating a ticket; priority is visible to the support team |
 | UC-56 | Link ticket to order or quote | Customer | Customer optionally enters an Order ID or Quote ID; reference displayed in the ticket detail for the support team |
 | UC-57 | Rate resolved ticket | Customer | After a ticket is marked Resolved, customer is presented with a star rating; rating is submitted and recorded |
-
-### Ticket Priority Definitions
-
-| Priority | Meaning |
-|----------|---------|
-| Urgent | Critical issue requiring immediate attention |
-| In Progress | Issue is actively being worked on |
-| Waiting | Awaiting customer or third-party response |
-| Resolved | Issue has been resolved |
-
-### Ticket Categories (Stage 1)
-
-Order Issue, Shipping, RMA Enquiry, Billing
-
-> **Note:** RMA Enquiry tickets allow customers to raise a return-related question via support. The full RMA workflow (submitting, tracking, and managing returns) is covered in Stage 2. Quote and Certificate categories will be added in Stage 5.
 
 ---
 
@@ -412,17 +331,6 @@ Order Issue, Shipping, RMA Enquiry, Billing
 | UC-69 | Enable 2FA | Customer | Two-Factor Authentication activated via Authenticator App or SMS |
 | UC-70 | Revoke active session | Customer | Selected device session is terminated |
 
-### Notification Types
-
-| Type | Channel | Default |
-|------|---------|---------|
-| Order Confirmations | Email | On |
-| Shipment Updates | Email | On |
-| Invoice Reminders | Email | On |
-| Support Ticket Updates | Email | Off |
-| Shipment Delivered | SMS | On |
-| Payment Due Alerts | SMS | Off |
-
 ---
 
 ## 9. Navigation & Global UI
@@ -465,14 +373,6 @@ Dashboard
     ├── Preferences
     └── Security
 ```
-
-### Quick Actions (Stage 1)
-
-| Action | Description |
-|--------|-------------|
-| Contact Support | Open a new support ticket or contact PCS directly |
-
-> **Note:** Request Quote (Stage 5), Create RMA (Stage 2), and Device Lookup (Stage 5) will be added as quick actions in their respective stages.
 
 ---
 
