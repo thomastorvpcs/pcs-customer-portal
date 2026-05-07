@@ -1,4 +1,4 @@
-# PCS Operations and Sales Portal — Business Requirements
+# PCS Sales Portal — Business Requirements
 
 **Document Version:** 1.0  
 **Date:** May 7, 2026  
@@ -10,7 +10,7 @@
 
 ## Purpose
 
-This document describes the functionality of the PCS Wireless Operations and Sales Portal. **Stage 1** is fully scoped with user stories and use cases for business sign-off. Remaining features are summarised by feature area for visibility; each will receive its own full requirements and sign-off process before entering development.
+This document describes the functionality of the PCS Wireless Sales Portal. **Stage 1** is fully scoped with user stories and use cases for business sign-off. Remaining features are summarised by feature area for visibility; each will receive its own full requirements and sign-off process before entering development.
 
 Please review Stage 1 and indicate:
 - **Approved** — functionality is correct as described
@@ -38,7 +38,7 @@ Please review Stage 1 and indicate:
 
 ## 1. Stage 1 — Core Functionality
 
-Stage 1 delivers the foundational layer of the Operations and Sales Portal: authentication, the support ticket agent view, and core customer account management. These features provide immediate operational value and establish the data and access patterns used by all future stages.
+Stage 1 delivers the foundational layer of the Sales Portal: authentication, the support ticket agent view, and core customer account management. These features provide immediate operational value and establish the data and access patterns used by all future stages.
 
 ---
 
@@ -48,7 +48,7 @@ Authentication is powered by Auth0 integrated with Microsoft Entra ID. Staff log
 
 #### User Stories
 
-**US-B-01** — As a staff member, I want to log in to the Operations and Sales Portal using my PCS Microsoft account so that I do not need a separate username and password.
+**US-B-01** — As a staff member, I want to log in to the Sales Portal using my PCS Microsoft account so that I do not need a separate username and password.
 
 #### Use Cases
 
