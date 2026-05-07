@@ -1,7 +1,7 @@
 # PCS Operations and Sales Portal — Business Requirements
 
-**Document Version:** 1.2  
-**Date:** May 6, 2026  
+**Document Version:** 1.0  
+**Date:** May 7, 2026  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
 **Review Required From:** Business Stakeholders
