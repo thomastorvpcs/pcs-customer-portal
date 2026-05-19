@@ -15,100 +15,74 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 ---
 
-## Technology Stack
-
-| Layer | Technology |
-|-------|------------|
-| Frontend & Backend | Next.js 14 (App Router) with Tailwind CSS |
-| Database | PostgreSQL |
-| Authentication | Auth0 with Microsoft Entra ID |
-| Hosting | Render (Node.js web service) |
-| Source Control | GitHub — thomastorvpcs/pcs-customer-portal |
-
----
-
 ## Delivery Timeline
 
-<div style="margin:24px 0 8px; font-family:'Inter',Arial,sans-serif; font-size:9pt;">
+<div style="break-inside:avoid;page-break-inside:avoid;margin:20px 0 8px;font-family:'Inter',Arial,sans-serif;font-size:9pt;">
 
-<div style="display:flex; margin-bottom:6px;">
-  <div style="width:148px; flex-shrink:0;"></div>
-  <div style="flex:1; position:relative; height:18px;">
-    <span style="position:absolute;left:0%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">May 12</span>
-    <span style="position:absolute;left:10%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">May 19</span>
-    <span style="position:absolute;left:20%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">May 26</span>
-    <span style="position:absolute;left:30%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jun 2</span>
-    <span style="position:absolute;left:40%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jun 9</span>
-    <span style="position:absolute;left:50%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jun 16</span>
-    <span style="position:absolute;left:60%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jun 23</span>
-    <span style="position:absolute;left:70%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jun 30</span>
-    <span style="position:absolute;left:80%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jul 7</span>
-    <span style="position:absolute;left:90%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jul 14</span>
-    <span style="position:absolute;left:100%;transform:translateX(-50%);font-size:7pt;color:#888;white-space:nowrap;">Jul 18</span>
+<div style="display:flex;margin-bottom:4px;">
+  <div style="width:148px;flex-shrink:0;"></div>
+  <div style="flex:1;position:relative;height:18px;">
+    <span style="position:absolute;left:0%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">May 18</span>
+    <span style="position:absolute;left:20%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">Jun 1</span>
+    <span style="position:absolute;left:40%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">Jun 15</span>
+    <span style="position:absolute;left:60%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">Jun 29</span>
+    <span style="position:absolute;left:80%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">Jul 13</span>
+    <span style="position:absolute;left:100%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">Jul 24</span>
   </div>
 </div>
 
-<div style="display:flex; align-items:center; margin-bottom:6px;">
-  <div style="width:148px; flex-shrink:0; font-size:8pt; color:#64748b; text-align:right; padding-right:12px;">Infrastructure</div>
-  <div style="flex:1; position:relative; height:34px;">
-    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(10% - 1px),#e2e8f0 calc(10% - 1px),#e2e8f0 10%);"></div>
-    <div style="position:absolute;left:0%;width:20%;height:24px;top:5px;background:#94a3b8;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">CI/CD · DB · Project Scaffold</div>
-    <div style="position:absolute;left:10%;top:50%;transform:translate(-50%,-50%);font-size:13px;color:#475569;line-height:1;" title="M0">◆</div>
+<div style="display:flex;align-items:center;margin-bottom:7px;">
+  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#1e40af;text-align:right;padding-right:14px;">Sprint 1</div>
+  <div style="flex:1;position:relative;height:36px;">
+    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
+    <div style="position:absolute;left:0%;width:20%;height:26px;top:5px;background:#2563eb;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Authentication · Navigation · Orders</div>
+    <div style="position:absolute;left:20%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#1d4ed8;line-height:1;">◆</div>
   </div>
 </div>
 
-<div style="display:flex; align-items:center; margin-bottom:6px;">
-  <div style="width:148px; flex-shrink:0; font-size:8pt; font-weight:700; color:#1e40af; text-align:right; padding-right:12px;">Sprint 1</div>
-  <div style="flex:1; position:relative; height:34px;">
-    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(10% - 1px),#e2e8f0 calc(10% - 1px),#e2e8f0 10%);"></div>
-    <div style="position:absolute;left:0%;width:20%;height:24px;top:5px;background:#2563eb;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Authentication · Navigation · Orders</div>
-    <div style="position:absolute;left:20%;top:50%;transform:translate(-50%,-50%);font-size:13px;color:#1d4ed8;line-height:1;" title="M1">◆</div>
+<div style="display:flex;align-items:center;margin-bottom:7px;">
+  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#0e7490;text-align:right;padding-right:14px;">Sprint 2</div>
+  <div style="flex:1;position:relative;height:36px;">
+    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
+    <div style="position:absolute;left:20%;width:20%;height:26px;top:5px;background:#0891b2;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Shipments</div>
+    <div style="position:absolute;left:40%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#0e7490;line-height:1;">◆</div>
   </div>
 </div>
 
-<div style="display:flex; align-items:center; margin-bottom:6px;">
-  <div style="width:148px; flex-shrink:0; font-size:8pt; font-weight:700; color:#0e7490; text-align:right; padding-right:12px;">Sprint 2</div>
-  <div style="flex:1; position:relative; height:34px;">
-    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(10% - 1px),#e2e8f0 calc(10% - 1px),#e2e8f0 10%);"></div>
-    <div style="position:absolute;left:20%;width:20%;height:24px;top:5px;background:#0891b2;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Shipments</div>
-    <div style="position:absolute;left:40%;top:50%;transform:translate(-50%,-50%);font-size:13px;color:#0e7490;line-height:1;" title="M2">◆</div>
+<div style="display:flex;align-items:center;margin-bottom:7px;">
+  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#15803d;text-align:right;padding-right:14px;">Sprint 3</div>
+  <div style="flex:1;position:relative;height:36px;">
+    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
+    <div style="position:absolute;left:40%;width:20%;height:26px;top:5px;background:#16a34a;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Financial Management</div>
+    <div style="position:absolute;left:60%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#15803d;line-height:1;">◆</div>
   </div>
 </div>
 
-<div style="display:flex; align-items:center; margin-bottom:6px;">
-  <div style="width:148px; flex-shrink:0; font-size:8pt; font-weight:700; color:#15803d; text-align:right; padding-right:12px;">Sprint 3</div>
-  <div style="flex:1; position:relative; height:34px;">
-    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(10% - 1px),#e2e8f0 calc(10% - 1px),#e2e8f0 10%);"></div>
-    <div style="position:absolute;left:40%;width:20%;height:24px;top:5px;background:#16a34a;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Financial Management</div>
-    <div style="position:absolute;left:60%;top:50%;transform:translate(-50%,-50%);font-size:13px;color:#15803d;line-height:1;" title="M3">◆</div>
+<div style="display:flex;align-items:center;margin-bottom:7px;">
+  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#c2410c;text-align:right;padding-right:14px;">Sprint 4</div>
+  <div style="flex:1;position:relative;height:36px;">
+    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
+    <div style="position:absolute;left:60%;width:20%;height:26px;top:5px;background:#ea580c;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Support Tickets</div>
+    <div style="position:absolute;left:80%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#c2410c;line-height:1;">◆</div>
   </div>
 </div>
 
-<div style="display:flex; align-items:center; margin-bottom:6px;">
-  <div style="width:148px; flex-shrink:0; font-size:8pt; font-weight:700; color:#c2410c; text-align:right; padding-right:12px;">Sprint 4</div>
-  <div style="flex:1; position:relative; height:34px;">
-    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(10% - 1px),#e2e8f0 calc(10% - 1px),#e2e8f0 10%);"></div>
-    <div style="position:absolute;left:60%;width:20%;height:24px;top:5px;background:#ea580c;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Support Tickets</div>
-    <div style="position:absolute;left:80%;top:50%;transform:translate(-50%,-50%);font-size:13px;color:#c2410c;line-height:1;" title="M4">◆</div>
+<div style="display:flex;align-items:center;margin-bottom:7px;">
+  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#6d28d9;text-align:right;padding-right:14px;">Sprint 5</div>
+  <div style="flex:1;position:relative;height:36px;">
+    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
+    <div style="position:absolute;left:80%;width:20%;height:26px;top:5px;background:#7c3aed;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Activity Log · Settings · Notifications</div>
+    <div style="position:absolute;left:100%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#6d28d9;line-height:1;">◆</div>
   </div>
 </div>
 
-<div style="display:flex; align-items:center; margin-bottom:6px;">
-  <div style="width:148px; flex-shrink:0; font-size:8pt; font-weight:700; color:#6d28d9; text-align:right; padding-right:12px;">Sprint 5</div>
-  <div style="flex:1; position:relative; height:34px;">
-    <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(10% - 1px),#e2e8f0 calc(10% - 1px),#e2e8f0 10%);"></div>
-    <div style="position:absolute;left:80%;width:20%;height:24px;top:5px;background:#7c3aed;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Activity Log · Settings · Notifications</div>
-    <div style="position:absolute;left:100%;top:50%;transform:translate(-50%,-50%);font-size:13px;color:#6d28d9;line-height:1;" title="M5">◆</div>
-  </div>
-</div>
-
-<div style="display:flex; align-items:center; gap:16px; margin-top:10px; padding-top:8px; border-top:1px solid #e2e8f0; font-size:7.5pt; color:#64748b; flex-wrap:wrap;">
-  <span><span style="color:#475569;">◆</span> M0 Infrastructure Ready — May 22</span>
-  <span><span style="color:#1d4ed8;">◆</span> M1 Auth + Orders — May 23</span>
-  <span><span style="color:#0e7490;">◆</span> M2 Shipments — Jun 6</span>
-  <span><span style="color:#15803d;">◆</span> M3 Financials — Jun 20</span>
-  <span><span style="color:#c2410c;">◆</span> M4 Support — Jul 4</span>
-  <span><span style="color:#6d28d9;">◆</span> M5 Stage 1 Complete — Jul 18</span>
+<div style="display:flex;align-items:center;gap:14px;margin-top:10px;padding-top:8px;border-top:1px solid #e2e8f0;font-size:7.5pt;color:#64748b;flex-wrap:wrap;">
+  <span><span style="color:#1d4ed8;">◆</span> M0 Infrastructure Ready — May 29</span>
+  <span><span style="color:#1d4ed8;">◆</span> M1 Auth + Orders Live — May 29</span>
+  <span><span style="color:#0e7490;">◆</span> M2 Shipments Live — Jun 12</span>
+  <span><span style="color:#15803d;">◆</span> M3 Financial Live — Jun 26</span>
+  <span><span style="color:#c2410c;">◆</span> M4 Support Live — Jul 10</span>
+  <span><span style="color:#6d28d9;">◆</span> M5 Stage 1 Complete — Jul 24</span>
 </div>
 
 </div>
@@ -119,12 +93,12 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 | ID | Milestone | Date |
 |----|-----------|------|
-| M0 | Deploy pipelines and infrastructure ready | May 22, 2026 |
-| M1 | Authentication and Order Management live — portal accessible to customers | May 23, 2026 |
-| M2 | Shipment Tracking live | Jun 6, 2026 |
-| M3 | Financial Management live | Jun 20, 2026 |
-| M4 | Customer Support live | Jul 4, 2026 |
-| M5 | Stage 1 complete — all features live | Jul 18, 2026 |
+| M0 | Deploy pipelines and infrastructure ready | May 29, 2026 |
+| M1 | Authentication and Order Management live — portal accessible to customers | May 29, 2026 |
+| M2 | Shipment Tracking live | Jun 12, 2026 |
+| M3 | Financial Management live | Jun 26, 2026 |
+| M4 | Customer Support live | Jul 10, 2026 |
+| M5 | Stage 1 complete — all features live | Jul 24, 2026 |
 
 ---
 
@@ -140,8 +114,8 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 ## 1. Sprint 1 — Infrastructure, Authentication & Orders
 
-**Dates:** May 12 – May 23, 2026
-**Milestone:** M0 (May 22) — Infrastructure ready · M1 (May 23) — Portal accessible
+**Dates:** May 18 – May 29, 2026
+**Milestones:** M0 (May 29) — Infrastructure ready · M1 (May 29) — Portal accessible
 
 ### Infrastructure & Deploy Pipelines
 
@@ -191,8 +165,8 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 ## 2. Sprint 2 — Shipments
 
-**Dates:** May 26 – Jun 6, 2026
-**Milestone:** M2 (Jun 6) — Shipment Tracking live
+**Dates:** Jun 1 – Jun 12, 2026
+**Milestone:** M2 (Jun 12) — Shipment Tracking live
 
 ### Shipment Tracking (US-20–24)
 
@@ -214,8 +188,8 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 ## 3. Sprint 3 — Financial Management
 
-**Dates:** Jun 9 – Jun 20, 2026
-**Milestone:** M3 (Jun 20) — Financial Management live
+**Dates:** Jun 15 – Jun 26, 2026
+**Milestone:** M3 (Jun 26) — Financial Management live
 
 ### Financial Management (US-30–38)
 
@@ -243,8 +217,8 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 ## 4. Sprint 4 — Support Tickets
 
-**Dates:** Jun 23 – Jul 4, 2026
-**Milestone:** M4 (Jul 4) — Customer Support live
+**Dates:** Jun 29 – Jul 10, 2026
+**Milestone:** M4 (Jul 10) — Customer Support live
 
 ### Support Tickets (US-45–55)
 
@@ -273,8 +247,8 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 ## 5. Sprint 5 — Activity Log, Account Settings & Notifications
 
-**Dates:** Jul 7 – Jul 18, 2026
-**Milestone:** M5 (Jul 18) — Stage 1 Complete
+**Dates:** Jul 13 – Jul 24, 2026
+**Milestone:** M5 (Jul 24) — Stage 1 Complete
 
 ### Activity Log (US-40–44)
 
@@ -322,18 +296,6 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 |----------|-------------|
 | Recent activity feed | The last several account events shown with links to related records |
 | Notification bell in header | Unread count badge; clicking opens the alert panel |
-
----
-
-## Sign-Off
-
-| Reviewer | Role | Decision | Date | Comments |
-|----------|------|----------|------|----------|
-| | | | | |
-| | | | | |
-| | | | | |
-
-**Decision options:** Approved / Approved with Changes / Not Approved
 
 ---
 
