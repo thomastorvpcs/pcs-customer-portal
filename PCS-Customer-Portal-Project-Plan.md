@@ -3,9 +3,7 @@
 **Document Version:** 1.0
 **Date:** May 7, 2026
 **Stage:** Stage 1 — Core Functionality
-**Status:** Draft — Pending Business Sign-Off
-**Prepared by:** Development Team
-**Review Required From:** Business Stakeholders
+**Prepared by:** Business Analysis & Solutions Architecture
 
 ---
 
@@ -77,7 +75,6 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 </div>
 
 <div style="display:flex;align-items:center;gap:14px;margin-top:10px;padding-top:8px;border-top:1px solid #e2e8f0;font-size:7.5pt;color:#64748b;flex-wrap:wrap;">
-  <span><span style="color:#1d4ed8;">◆</span> M0 Infrastructure Ready — May 29</span>
   <span><span style="color:#1d4ed8;">◆</span> M1 Auth + Orders Live — May 29</span>
   <span><span style="color:#0e7490;">◆</span> M2 Shipments Live — Jun 12</span>
   <span><span style="color:#15803d;">◆</span> M3 Financial Live — Jun 26</span>
@@ -93,7 +90,6 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 | ID | Milestone | Date |
 |----|-----------|------|
-| M0 | Deploy pipelines and infrastructure ready | May 29, 2026 |
 | M1 | Authentication and Order Management live — portal accessible to customers | May 29, 2026 |
 | M2 | Shipment Tracking live | Jun 12, 2026 |
 | M3 | Financial Management live | Jun 26, 2026 |
@@ -115,7 +111,7 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 ## 1. Sprint 1 — Infrastructure, Authentication & Orders
 
 **Dates:** May 18 – May 29, 2026
-**Milestones:** M0 (May 29) — Infrastructure ready · M1 (May 29) — Portal accessible
+**Milestone:** M1 (May 29) — Portal accessible
 
 ### Infrastructure & Deploy Pipelines
 
@@ -299,4 +295,3 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 
 ---
 
-*End of Document*
