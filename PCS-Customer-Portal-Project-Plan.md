@@ -113,16 +113,6 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 **Dates:** May 18 – May 29, 2026
 **Milestone:** M1 (May 29) — Portal accessible
 
-### Infrastructure & Deploy Pipelines
-
-| Task | Description |
-|------|-------------|
-| CI/CD pipeline | GitHub Actions workflow deploying to Render on merge to main |
-| Staging environment | Dedicated staging instance on Render for QA before production releases |
-| Production environment | Production web service on Render with environment variable management |
-| PostgreSQL database | Database provisioned on Render with staging and production instances |
-| Next.js scaffold | Project initialised with Next.js 14 App Router, Tailwind CSS, and TypeScript |
-
 ### Authentication (US-01–04)
 
 | Task | User Story |
