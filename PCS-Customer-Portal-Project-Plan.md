@@ -20,7 +20,7 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 <div style="break-inside:avoid;page-break-inside:avoid;margin:20px 0 8px;font-family:'Inter',Arial,sans-serif;font-size:9pt;">
 
 <div style="display:flex;margin-bottom:4px;">
-  <div style="width:148px;flex-shrink:0;"></div>
+  <div style="width:76px;flex-shrink:0;"></div>
   <div style="flex:1;position:relative;height:18px;">
     <span style="position:absolute;left:0%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">May 18</span>
     <span style="position:absolute;left:20%;transform:translateX(-50%);font-size:7.5pt;color:#64748b;white-space:nowrap;font-weight:600;">Jun 1</span>
@@ -32,46 +32,46 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 </div>
 
 <div style="display:flex;align-items:center;margin-bottom:7px;">
-  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#1e40af;text-align:right;padding-right:14px;">Sprint 1</div>
+  <div style="width:76px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#1e40af;text-align:right;padding-right:10px;">Sprint 1</div>
   <div style="flex:1;position:relative;height:36px;">
     <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
-    <div style="position:absolute;left:0%;width:20%;height:26px;top:5px;background:#2563eb;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Authentication · Navigation · Orders</div>
+    <div style="position:absolute;left:0%;width:20%;height:26px;top:5px;background:#2563eb;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7pt;white-space:nowrap;overflow:hidden;">Auth · Navigation · Orders</div>
     <div style="position:absolute;left:20%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#1d4ed8;line-height:1;">◆</div>
   </div>
 </div>
 
 <div style="display:flex;align-items:center;margin-bottom:7px;">
-  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#0e7490;text-align:right;padding-right:14px;">Sprint 2</div>
+  <div style="width:76px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#0e7490;text-align:right;padding-right:10px;">Sprint 2</div>
   <div style="flex:1;position:relative;height:36px;">
     <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
-    <div style="position:absolute;left:20%;width:20%;height:26px;top:5px;background:#0891b2;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Shipments</div>
+    <div style="position:absolute;left:20%;width:20%;height:26px;top:5px;background:#0891b2;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7pt;white-space:nowrap;overflow:hidden;">Shipments</div>
     <div style="position:absolute;left:40%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#0e7490;line-height:1;">◆</div>
   </div>
 </div>
 
 <div style="display:flex;align-items:center;margin-bottom:7px;">
-  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#15803d;text-align:right;padding-right:14px;">Sprint 3</div>
+  <div style="width:76px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#15803d;text-align:right;padding-right:10px;">Sprint 3</div>
   <div style="flex:1;position:relative;height:36px;">
     <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
-    <div style="position:absolute;left:40%;width:20%;height:26px;top:5px;background:#16a34a;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Financial Management</div>
+    <div style="position:absolute;left:40%;width:20%;height:26px;top:5px;background:#16a34a;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7pt;white-space:nowrap;overflow:hidden;">Financial Management</div>
     <div style="position:absolute;left:60%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#15803d;line-height:1;">◆</div>
   </div>
 </div>
 
 <div style="display:flex;align-items:center;margin-bottom:7px;">
-  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#c2410c;text-align:right;padding-right:14px;">Sprint 4</div>
+  <div style="width:76px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#c2410c;text-align:right;padding-right:10px;">Sprint 4</div>
   <div style="flex:1;position:relative;height:36px;">
     <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
-    <div style="position:absolute;left:60%;width:20%;height:26px;top:5px;background:#ea580c;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Support Tickets</div>
+    <div style="position:absolute;left:60%;width:20%;height:26px;top:5px;background:#ea580c;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7pt;white-space:nowrap;overflow:hidden;">Support Tickets</div>
     <div style="position:absolute;left:80%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#c2410c;line-height:1;">◆</div>
   </div>
 </div>
 
 <div style="display:flex;align-items:center;margin-bottom:7px;">
-  <div style="width:148px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#6d28d9;text-align:right;padding-right:14px;">Sprint 5</div>
+  <div style="width:76px;flex-shrink:0;font-size:8.5pt;font-weight:700;color:#6d28d9;text-align:right;padding-right:10px;">Sprint 5</div>
   <div style="flex:1;position:relative;height:36px;">
     <div style="position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(to right,transparent,transparent calc(20% - 1px),#e2e8f0 calc(20% - 1px),#e2e8f0 20%);"></div>
-    <div style="position:absolute;left:80%;width:20%;height:26px;top:5px;background:#7c3aed;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7.5pt;white-space:nowrap;overflow:hidden;">Activity Log · Settings · Notifications</div>
+    <div style="position:absolute;left:80%;width:20%;height:26px;top:5px;background:#7c3aed;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:7pt;white-space:nowrap;overflow:hidden;">Activity · Settings · Notifications</div>
     <div style="position:absolute;left:100%;top:50%;transform:translate(-50%,-50%);font-size:14px;color:#6d28d9;line-height:1;">◆</div>
   </div>
 </div>
