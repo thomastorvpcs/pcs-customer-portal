@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "generate:docs": "node generate-docs.js",
+    "generate:pdf": "node generate-docs.js pdf",
+    "generate:pptx": "node generate-docs.js pptx"
+  },
+  "devDependencies": {
+    "marked": "^18.0.3",
+    "puppeteer": "^24.42.0"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}
