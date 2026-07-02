@@ -107,7 +107,7 @@ Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Po
 
 ## 2. Catalog, Quotes & Promotional Offers
 
-Customers can browse available inventory, build a quote with custom per-unit pricing, and submit it to PCS for review. Featured deals are surfaced on the dashboard and catalog. Quote review and approval are handled by PCS staff through the Sales Portal.
+Customers can browse available inventory, build a quote with custom per-unit pricing, and submit it to PCS for review. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Quote review and approval are handled by PCS staff through the Sales Portal.
 
 ### User Stories
 
@@ -131,6 +131,10 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 
 **US-99** — As a customer, I want to see promotional banners on the dashboard and catalog so that featured deals are clearly highlighted.
 
+**US-106** — As a customer, I want to save my current catalog filters and search as a named saved search so that I can re-apply a frequent query in one click.
+
+**US-107** — As a customer, I want to mark individual devices as favorites and filter the catalog to just my favorites so that I can quickly return to products I am interested in.
+
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
@@ -145,6 +149,8 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 | UC-97 | Convert quote to order | Customer | An accepted quote is converted into a new order pre-populated with its line items |
 | UC-98 | View hottest offers | Customer | Dashboard displays a curated set of current deals and featured inventory |
 | UC-99 | View promotional banner | Customer | Full-width promotional banners are displayed on the dashboard and catalog |
+| UC-106 | Save & apply a search | Customer | Customer names and saves the current filter/search combination; saved searches appear as one-click shortcuts and can be applied, renamed, or deleted |
+| UC-107 | Favorite a device | Customer | Customer marks/unmarks a device as a favorite; a Favorites filter shows only favorited devices; the customer's favorites persist across visits |
 
 ### Quote Status Definitions
 
