@@ -263,13 +263,13 @@ export default function CatalogPage() {
               <p className="text-sm font-semibold text-gray-900 dark:text-white">Filters</p>
               {activeFilterCount > 0 && <button onClick={clearFilters} className="text-xs text-blue-600">Clear</button>}
             </div>
+            <SavedSearchPanel {...savedProps} />
             <FilterGroups stateByKey={stateByKey} toggle={toggle} dense />
             <div>
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Max Price</p>
               <input type="range" min="150" max="500" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[#0b1b3a]" />
               <p className="text-sm font-medium text-gray-900 dark:text-white mt-1">Up to {fmt(maxPrice)}</p>
             </div>
-            <SavedSearchPanel {...savedProps} />
           </div>
         )}
 
@@ -377,6 +377,8 @@ export default function CatalogPage() {
               )}
             </div>
 
+            <SavedSearchPanel {...savedProps} />
+
             <FilterGroups stateByKey={stateByKey} toggle={toggle} />
 
             <div>
@@ -384,8 +386,6 @@ export default function CatalogPage() {
               <input type="range" min="150" max="500" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[#0b1b3a]" />
               <p className="text-sm font-medium text-gray-900 dark:text-white mt-1">Up to {fmt(maxPrice)}</p>
             </div>
-
-            <SavedSearchPanel {...savedProps} />
           </aside>
 
           {/* Catalog main */}
@@ -520,7 +520,7 @@ function FilterGroups({ stateByKey, toggle, dense }) {
 
 function SavedSearchPanel({ savedSearches, activeSavedId, saveName, setSaveName, saveCurrent, applySaved, deleteSaved, startRename, editingId, renameValue, setRenameValue, commitRename }) {
   return (
-    <div className="border-t border-gray-100 dark:border-gray-700 pt-4 mt-4">
+    <div className="border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
       <div className="flex items-center gap-1.5 mb-2">
         <Bookmark size={13} className="text-gray-400" />
         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Saved Searches</p>
