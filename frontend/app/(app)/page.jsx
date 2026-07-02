@@ -7,12 +7,14 @@ const stats = [
   { label: 'Pending Shipments', value: '8', sub: 'In Transit', href: '/shipments', icon: Truck, iconColor: 'text-teal-500' },
   { label: 'Outstanding Balance', value: '$47,230', sub: '$12,450 past due', subRed: true, href: '/financial', icon: DollarSign, iconColor: 'text-rose-500' },
   { label: 'Support Tickets', value: '3', sub: 'Open', href: '/support', icon: TicketCheck, iconColor: 'text-purple-500' },
+  { label: 'Open RMAs', value: '2', sub: 'In progress', href: '/returns', icon: RotateCcw, iconColor: 'text-amber-500' },
+  { label: 'Open Quotes', value: '4', sub: 'Awaiting response', href: '/quotes', icon: FileText, iconColor: 'text-indigo-500' },
 ]
 
 const quickActions = [
-  { label: 'Request Quote', desc: 'Get pricing for bulk orders', icon: FileText, bg: 'bg-blue-50 dark:bg-blue-900/20', color: 'text-blue-500' },
-  { label: 'Create RMA', desc: 'Return defective devices', icon: RotateCcw, bg: 'bg-rose-50 dark:bg-rose-900/20', color: 'text-rose-500' },
-  { label: 'Contact Support', desc: 'Get help from our team', icon: Headphones, bg: 'bg-orange-50 dark:bg-orange-900/20', color: 'text-orange-500' },
+  { label: 'Request Quote', desc: 'Get pricing for bulk orders', icon: FileText, bg: 'bg-blue-50 dark:bg-blue-900/20', color: 'text-blue-500', href: '/quotes' },
+  { label: 'Create RMA', desc: 'Return defective devices', icon: RotateCcw, bg: 'bg-rose-50 dark:bg-rose-900/20', color: 'text-rose-500', href: '/returns' },
+  { label: 'Contact Support', desc: 'Get help from our team', icon: Headphones, bg: 'bg-orange-50 dark:bg-orange-900/20', color: 'text-orange-500', href: '/support' },
 ]
 
 const recentActivity = [
@@ -24,9 +26,9 @@ const recentActivity = [
 ]
 
 const mobileQuickActions = [
-  { label: 'Quote', icon: FileText, bg: 'bg-blue-500/20', color: 'text-blue-400' },
-  { label: 'RMA', icon: RotateCcw, bg: 'bg-rose-500/20', color: 'text-rose-400' },
-  { label: 'Support', icon: Headphones, bg: 'bg-orange-500/20', color: 'text-orange-400' },
+  { label: 'Quote', icon: FileText, bg: 'bg-blue-500/20', color: 'text-blue-400', href: '/quotes' },
+  { label: 'RMA', icon: RotateCcw, bg: 'bg-rose-500/20', color: 'text-rose-400', href: '/returns' },
+  { label: 'Support', icon: Headphones, bg: 'bg-orange-500/20', color: 'text-orange-400', href: '/support' },
 ]
 
 export default function DashboardPage() {
@@ -63,7 +65,7 @@ export default function DashboardPage() {
             <p className="text-sm font-semibold text-red-600 dark:text-red-400">Payment Overdue</p>
           </div>
           <p className="text-xs text-red-500 dark:text-red-300/70 mb-2">INV-8815 is 5 days past due</p>
-          <button className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Pay Now</button>
+          <Link href="/pay" className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Pay Now</Link>
         </div>
 
         {/* Quick Actions */}
@@ -71,12 +73,12 @@ export default function DashboardPage() {
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Quick Actions</h2>
           <div className="grid grid-cols-3 gap-3">
             {mobileQuickActions.map((a) => (
-              <button key={a.label} className="flex flex-col items-center gap-2">
+              <Link key={a.label} href={a.href} className="flex flex-col items-center gap-2">
                 <div className={`w-14 h-14 rounded-2xl ${a.bg} flex items-center justify-center`}>
                   <a.icon size={22} className={a.color} />
                 </div>
                 <span className="text-xs text-gray-500 dark:text-blue-200/60">{a.label}</span>
-              </button>
+              </Link>
             ))}
           </div>
         </div>
@@ -113,13 +115,13 @@ export default function DashboardPage() {
               You have 2 invoices past due totaling <strong>$12,450.00</strong>. Please review your outstanding balance to avoid service interruption.
             </span>
           </div>
-          <button className="text-sm font-medium text-yellow-700 dark:text-yellow-400 hover:text-yellow-900 ml-6 whitespace-nowrap">
-            View now
-          </button>
+          <Link href="/pay" className="text-sm font-medium text-yellow-700 dark:text-yellow-400 hover:text-yellow-900 ml-6 whitespace-nowrap">
+            Pay now
+          </Link>
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-4 md:gap-3 xl:gap-4 md:mb-4 xl:mb-6">
+        <div className="grid grid-cols-3 xl:grid-cols-6 md:gap-3 xl:gap-4 md:mb-4 xl:mb-6">
           {stats.map((s) => (
             <Link key={s.label} href={s.href} className="bg-white dark:bg-[#152035] rounded-xl md:p-3 xl:p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-md transition-all block">
               <div className="flex items-start justify-between md:mb-2 xl:mb-3">
@@ -141,8 +143,9 @@ export default function DashboardPage() {
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white md:mb-3 xl:mb-4">Quick Actions</h2>
             <div className="space-y-2">
               {quickActions.map((a) => (
-                <button
+                <Link
                   key={a.label}
+                  href={a.href}
                   className="w-full flex items-center justify-between px-4 md:py-3 xl:py-6 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors text-left"
                 >
                   <div className="flex items-center gap-3">
@@ -155,7 +158,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <ChevronRight size={16} className="text-gray-400" />
-                </button>
+                </Link>
               ))}
             </div>
           </div>

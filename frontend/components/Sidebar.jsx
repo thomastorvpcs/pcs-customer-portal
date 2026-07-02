@@ -3,15 +3,20 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ShoppingCart, Truck, BarChart2, Activity, Headphones, Settings } from 'lucide-react'
+import { LayoutDashboard, ShoppingCart, Store, FileText, Truck, RotateCcw, BarChart2, Calendar, Activity, Headphones, Plug, Settings } from 'lucide-react'
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/catalog', label: 'Catalog', icon: Store },
+  { href: '/quotes', label: 'Quotes', icon: FileText },
   { href: '/shipments', label: 'Shipments', icon: Truck },
+  { href: '/returns', label: 'Returns', icon: RotateCcw },
   { href: '/financial', label: 'Financial', icon: BarChart2 },
+  { href: '/meetings', label: 'Meetings', icon: Calendar },
   { href: '/activity', label: 'Recent Activities', icon: Activity },
   { href: '/support', label: 'Support', icon: Headphones },
+  { href: '/integrations', label: 'Integrations', icon: Plug },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -26,7 +31,7 @@ export default function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-2 space-y-0.5">
+      <nav className="flex-1 px-2 space-y-0.5 overflow-y-auto">
         {navItems.map(({ href, label, icon: Icon }) => {
           const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
           return (

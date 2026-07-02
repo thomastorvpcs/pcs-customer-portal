@@ -5,32 +5,37 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import {
-  Menu, X, LayoutDashboard, ShoppingCart, Truck, BarChart2,
-  Activity, Headphones, Settings, FileText, RotateCcw, Smartphone, Bell,
+  Menu, X, LayoutDashboard, ShoppingCart, Store, Truck, BarChart2,
+  Activity, Headphones, Settings, FileText, RotateCcw, Calendar, Plug, Smartphone, Bell,
 } from 'lucide-react'
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/catalog', label: 'Catalog', icon: Store },
+  { href: '/quotes', label: 'Quotes', icon: FileText },
   { href: '/shipments', label: 'Shipments', icon: Truck },
+  { href: '/returns', label: 'Returns', icon: RotateCcw },
   { href: '/financial', label: 'Financial', icon: BarChart2 },
+  { href: '/meetings', label: 'Meetings', icon: Calendar },
   { href: '/activity', label: 'Recent Activities', icon: Activity },
   { href: '/support', label: 'Support', icon: Headphones },
+  { href: '/integrations', label: 'Integrations', icon: Plug },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
 const bottomItems = [
   { href: '/', label: 'Home', icon: LayoutDashboard },
   { href: '/orders', label: 'Orders', icon: ShoppingCart },
-  { href: '/activity', label: 'Activity', icon: Activity },
+  { href: '/catalog', label: 'Catalog', icon: Store },
   { href: '/financial', label: 'Financial', icon: BarChart2 },
   { href: '/support', label: 'Support', icon: Headphones },
 ]
 
 const quickActions = [
-  { label: 'Request Quote', icon: FileText },
-  { label: 'Create RMA', icon: RotateCcw },
-  { label: 'Device Lookup', icon: Smartphone },
+  { label: 'Request Quote', icon: FileText, href: '/quotes' },
+  { label: 'Create RMA', icon: RotateCcw, href: '/returns' },
+  { label: 'Device Lookup', icon: Smartphone, href: '/catalog' },
 ]
 
 export default function MobileNav() {
@@ -76,7 +81,7 @@ export default function MobileNav() {
         </div>
 
         {/* Nav Items */}
-        <nav className="px-3 py-4 space-y-0.5">
+        <nav className="px-3 py-4 space-y-0.5 overflow-y-auto flex-1">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
             return (
@@ -100,14 +105,16 @@ export default function MobileNav() {
         {/* Quick Actions */}
         <div className="px-3 pt-2 pb-4 border-t border-gray-200 dark:border-white/10">
           <p className="text-[10px] text-gray-400 dark:text-blue-300/50 uppercase tracking-widest mb-3 px-3 mt-4">Quick Actions</p>
-          {quickActions.map(({ label, icon: Icon }) => (
-            <button
+          {quickActions.map(({ label, icon: Icon, href }) => (
+            <Link
               key={label}
+              href={href}
+              onClick={() => setDrawerOpen(false)}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 dark:text-blue-200/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-800 dark:hover:text-blue-100 transition-colors text-left"
             >
               <Icon size={16} />
               {label}
-            </button>
+            </Link>
           ))}
         </div>
 
