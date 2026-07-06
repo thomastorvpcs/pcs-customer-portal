@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, ArrowLeft, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil } from 'lucide-react'
+import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, ArrowLeft, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock } from 'lucide-react'
+
+const OFFER_REASONS = ['Volume commitment', 'Competitor quote', 'Budget constraint', 'Repeat order', 'Other']
 
 const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
@@ -186,6 +188,17 @@ export default function CatalogPage() {
   const setCustomPrice = (id, val) =>
     setCart((c) => c.map((i) => (i.id === id ? { ...i, customPrice: val.replace(/[^0-9.]/g, '') } : i)))
   const removeLine = (id) => setCart((c) => c.filter((i) => i.id !== id))
+
+  // Per-line custom-pricing gate (pricing step): request → pick reason + acknowledge → unlock offer input
+  const updateLine = (id, patch) => setCart((c) => c.map((i) => (i.id === id ? { ...i, ...patch } : i)))
+  const requestPricing = (id) => updateLine(id, { requesting: true })
+  const cancelPricing = (id) => updateLine(id, { requesting: false, reason: '', ack: false })
+  const setLineReason = (id, reason) => updateLine(id, { reason })
+  const toggleLineAck = (id) => setCart((c) => c.map((i) => (i.id === id ? { ...i, ack: !i.ack } : i)))
+  const enablePricing = (id) =>
+    setCart((c) => c.map((i) => (i.id === id && i.reason && i.ack ? { ...i, unlocked: true, requesting: false } : i)))
+  const resetLine = (id) => updateLine(id, { unlocked: false, requesting: false, reason: '', ack: false, customPrice: '' })
+  const pricingCtl = { requestPricing, cancelPricing, setLineReason, toggleLineAck, enablePricing, resetLine }
 
   const cartCount = cart.reduce((n, i) => n + i.qty, 0)
   const lineUnit = (i) => {
@@ -371,7 +384,7 @@ export default function CatalogPage() {
                 </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400"><X size={20} /></button>
               </div>
-              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} />
+              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
               <CartFooter cart={cart} step={quoteStep} subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
             </div>
           </div>
@@ -527,7 +540,7 @@ export default function CatalogPage() {
                 </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={18} /></button>
               </div>
-              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} />
+              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
               <CartFooter cart={cart} step={quoteStep} subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
             </aside>
           )}
@@ -643,7 +656,7 @@ function SavedSearchPanel({ savedSearches, activeSavedId, saveName, setSaveName,
   )
 }
 
-function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine }) {
+function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine, pricingCtl }) {
   if (cart.length === 0) {
     return <p className="text-sm text-gray-400 text-center py-8">No items yet. Add devices to build your quote.</p>
   }
@@ -669,16 +682,50 @@ function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine
               </div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">{fmt(lineTotal)}</p>
             </div>
-            {mode === 'pricing' ? (
+
+            {/* Cart step, or pricing step before this line is unlocked: show list price */}
+            {(mode === 'cart' || (mode === 'pricing' && !i.unlocked)) && (
+              <p className="text-[11px] text-gray-400 dark:text-blue-300/50 mt-1.5">{fmt(dev.price)} / unit · list price</p>
+            )}
+
+            {mode === 'pricing' && !i.unlocked && !i.requesting && (
+              <button onClick={() => pricingCtl.requestPricing(i.id)} className="mt-2 w-full flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">
+                <Lock size={12} /> Request custom pricing
+              </button>
+            )}
+
+            {mode === 'pricing' && !i.unlocked && i.requesting && (
+              <div className="mt-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-gray-700 p-2.5 space-y-2.5">
+                <div>
+                  <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Reason for custom pricing</label>
+                  <select value={i.reason || ''} onChange={(e) => pricingCtl.setLineReason(i.id, e.target.value)} className="mt-1 w-full px-2.5 py-1.5 text-xs border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="" disabled>Select a reason…</option>
+                    {OFFER_REASONS.map((r) => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                </div>
+                <label className="flex items-start gap-2 text-[11px] text-gray-600 dark:text-gray-300 leading-snug cursor-pointer">
+                  <input type="checkbox" checked={!!i.ack} onChange={() => pricingCtl.toggleLineAck(i.id)} className="mt-0.5 accent-[#0b1b3a]" />
+                  <span>I understand any price I propose is a request, reviewed and confirmed by PCS.</span>
+                </label>
+                <div className="flex gap-2">
+                  <button onClick={() => pricingCtl.cancelPricing(i.id)} className="flex-1 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Cancel</button>
+                  <button onClick={() => pricingCtl.enablePricing(i.id)} disabled={!i.reason || !i.ack} className="flex-1 py-1.5 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] disabled:opacity-40 disabled:cursor-not-allowed">Enable price field</button>
+                </div>
+              </div>
+            )}
+
+            {mode === 'pricing' && i.unlocked && (
               <div className="mt-2">
-                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Your offer / unit (list {fmt(dev.price)})</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Your offer / unit (list {fmt(dev.price)})</label>
+                  <button onClick={() => pricingCtl.resetLine(i.id)} className="text-[10px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">Use list price</button>
+                </div>
                 <div className="relative mt-1">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
                   <input value={i.customPrice} onChange={(e) => setCustomPrice(i.id, e.target.value)} placeholder={dev.price.toFixed(2)} className="w-full pl-6 pr-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
+                {i.reason && <p className="text-[10px] text-gray-400 mt-1">Reason: {i.reason}</p>}
               </div>
-            ) : (
-              <p className="text-[11px] text-gray-400 dark:text-blue-300/50 mt-1.5">{fmt(dev.price)} / unit · list price</p>
             )}
           </div>
         )
