@@ -117,7 +117,7 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 
 **US-92** — As a customer, I want to add devices to a quote cart with the quantity I need so that I can request pricing for a specific set of items.
 
-**US-93** — As a customer, I want to propose a custom per-unit price on quote line items so that I can negotiate pricing with PCS.
+**US-93** — As a customer, I want to propose a custom per-unit price on quote line items so that I can negotiate pricing with PCS. Proposing prices is a deliberate action taken on a separate pricing step, after the cart is built at list prices.
 
 **US-94** — As a customer, I want to submit my quote to PCS for review so that a sales rep can respond with confirmed pricing.
 
@@ -142,7 +142,7 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 | UC-90 | Browse catalog | Customer | Available devices displayed with product, grade, storage, and indicative price |
 | UC-91 | Filter / sort catalog | Customer | Catalog filtered and sorted by the selected criteria |
 | UC-92 | Add to quote cart | Customer | Selected device and quantity added to the quote cart |
-| UC-93 | Set custom price | Customer | Customer enters a proposed per-unit price on a quote line item |
+| UC-93 | Set custom price | Customer | On the dedicated pricing step (after building the cart at list prices), the customer enters a proposed per-unit price on a quote line item |
 | UC-94 | Submit quote | Customer | Quote submitted to PCS; status set to Submitted and a reference number issued |
 | UC-95 | View quote list | Customer | All quotes shown with reference, date, item count, total, and status |
 | UC-96 | View quote detail & history | Customer | Full quote shown with line items, pricing, and a chronological status history |

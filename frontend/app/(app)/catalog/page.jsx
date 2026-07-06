@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil } from 'lucide-react'
+import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, ArrowLeft, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil } from 'lucide-react'
 
 const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
@@ -103,6 +103,7 @@ export default function CatalogPage() {
   const [search, setSearch] = useState('')
   const [cart, setCart] = useState([]) // { id, qty, customPrice }
   const [cartOpen, setCartOpen] = useState(false)
+  const [quoteStep, setQuoteStep] = useState('cart') // 'cart' | 'pricing'
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   // Saved searches + favorites (persisted to localStorage)
@@ -177,6 +178,7 @@ export default function CatalogPage() {
 
   const addToQuote = (id) => {
     setCart((c) => (c.find((i) => i.id === id) ? c.map((i) => (i.id === id ? { ...i, qty: i.qty + 10 } : i)) : [...c, { id, qty: 10, customPrice: '' }]))
+    setQuoteStep('cart')
     setCartOpen(true)
   }
   const changeQty = (id, delta) =>
@@ -191,6 +193,7 @@ export default function CatalogPage() {
     return i.customPrice !== '' ? parseFloat(i.customPrice) || 0 : dev.price
   }
   const subtotal = cart.reduce((sum, i) => sum + lineUnit(i) * i.qty, 0)
+  const listSubtotal = cart.reduce((sum, i) => sum + (devices.find((d) => d.id === i.id)?.price || 0) * i.qty, 0)
 
   const activeFilterCount =
     categories.length + brands.length + models.length + grades.length + storages.length + locations.length + colors.length + carriers.length + (maxPrice < DEFAULT_MAX ? 1 : 0)
@@ -315,7 +318,7 @@ export default function CatalogPage() {
             <FilterGroups stateByKey={stateByKey} toggle={toggle} enabledByKey={enabledByKey} dense />
             <div>
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Max Price</p>
-              <input type="range" min="150" max="500" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[#0b1b3a]" />
+              <input type="range" min="50" max="1200" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[#0b1b3a]" />
               <p className="text-sm font-medium text-gray-900 dark:text-white mt-1">Up to {fmt(maxPrice)}</p>
             </div>
           </div>
@@ -360,11 +363,16 @@ export default function CatalogPage() {
           <div className="fixed inset-0 z-40 flex items-end bg-black/40" onClick={() => setCartOpen(false)}>
             <div onClick={(e) => e.stopPropagation()} className="w-full max-h-[85vh] overflow-auto bg-white dark:bg-[#152035] rounded-t-2xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-bold text-gray-900 dark:text-white">Your Quote</h3>
+                <div className="flex items-center gap-2">
+                  {quoteStep === 'pricing' && (
+                    <button onClick={() => setQuoteStep('cart')} className="text-gray-500 dark:text-gray-400"><ArrowLeft size={18} /></button>
+                  )}
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Quote'}</h3>
+                </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400"><X size={20} /></button>
               </div>
-              <CartLines cart={cart} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} />
-              <CartFooter cart={cart} subtotal={subtotal} cartCount={cartCount} />
+              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} />
+              <CartFooter cart={cart} step={quoteStep} subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
             </div>
           </div>
         )}
@@ -431,7 +439,7 @@ export default function CatalogPage() {
 
             <div>
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Max Price</p>
-              <input type="range" min="150" max="500" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[#0b1b3a]" />
+              <input type="range" min="50" max="1200" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[#0b1b3a]" />
               <p className="text-sm font-medium text-gray-900 dark:text-white mt-1">Up to {fmt(maxPrice)}</p>
             </div>
           </aside>
@@ -511,11 +519,16 @@ export default function CatalogPage() {
           {cartOpen && (
             <aside className="w-[300px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 self-start">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Your Quote</h3>
+                <div className="flex items-center gap-2">
+                  {quoteStep === 'pricing' && (
+                    <button onClick={() => setQuoteStep('cart')} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"><ArrowLeft size={16} /></button>
+                  )}
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Quote'}</h3>
+                </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={18} /></button>
               </div>
-              <CartLines cart={cart} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} />
-              <CartFooter cart={cart} subtotal={subtotal} cartCount={cartCount} />
+              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} />
+              <CartFooter cart={cart} step={quoteStep} subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
             </aside>
           )}
         </div>
@@ -630,7 +643,7 @@ function SavedSearchPanel({ savedSearches, activeSavedId, saveName, setSaveName,
   )
 }
 
-function CartLines({ cart, lineUnit, changeQty, setCustomPrice, removeLine }) {
+function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine }) {
   if (cart.length === 0) {
     return <p className="text-sm text-gray-400 text-center py-8">No items yet. Add devices to build your quote.</p>
   }
@@ -638,6 +651,7 @@ function CartLines({ cart, lineUnit, changeQty, setCustomPrice, removeLine }) {
     <div className="space-y-3 mb-4">
       {cart.map((i) => {
         const dev = devices.find((d) => d.id === i.id)
+        const lineTotal = mode === 'pricing' ? lineUnit(i) * i.qty : dev.price * i.qty
         return (
           <div key={i.id} className="border border-gray-100 dark:border-gray-700 rounded-lg p-3">
             <div className="flex items-start justify-between gap-2">
@@ -653,15 +667,19 @@ function CartLines({ cart, lineUnit, changeQty, setCustomPrice, removeLine }) {
                 <span className="text-sm font-medium text-gray-900 dark:text-white w-10 text-center">{i.qty}</span>
                 <button onClick={() => changeQty(i.id, 10)} className="w-6 h-6 flex items-center justify-center rounded border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300"><Plus size={12} /></button>
               </div>
-              <p className="text-sm font-semibold text-gray-900 dark:text-white">{fmt(lineUnit(i) * i.qty)}</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{fmt(lineTotal)}</p>
             </div>
-            <div className="mt-2">
-              <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Your price / unit (list {fmt(dev.price)})</label>
-              <div className="relative mt-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
-                <input value={i.customPrice} onChange={(e) => setCustomPrice(i.id, e.target.value)} placeholder={dev.price.toFixed(2)} className="w-full pl-6 pr-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            {mode === 'pricing' ? (
+              <div className="mt-2">
+                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Your offer / unit (list {fmt(dev.price)})</label>
+                <div className="relative mt-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                  <input value={i.customPrice} onChange={(e) => setCustomPrice(i.id, e.target.value)} placeholder={dev.price.toFixed(2)} className="w-full pl-6 pr-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="text-[11px] text-gray-400 dark:text-blue-300/50 mt-1.5">{fmt(dev.price)} / unit · list price</p>
+            )}
           </div>
         )
       })}
@@ -669,8 +687,9 @@ function CartLines({ cart, lineUnit, changeQty, setCustomPrice, removeLine }) {
   )
 }
 
-function CartFooter({ cart, subtotal, cartCount }) {
+function CartFooter({ cart, step, subtotal, listSubtotal, cartCount, onContinue }) {
   if (cart.length === 0) return null
+  const shownSubtotal = step === 'pricing' ? subtotal : listSubtotal
   return (
     <div className="border-t border-gray-100 dark:border-gray-700 pt-3">
       <div className="flex items-center justify-between mb-1">
@@ -679,14 +698,27 @@ function CartFooter({ cart, subtotal, cartCount }) {
       </div>
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-semibold text-gray-900 dark:text-white">Subtotal</span>
-        <span className="text-lg font-bold text-gray-900 dark:text-white">{fmt(subtotal)}</span>
+        <span className="text-lg font-bold text-gray-900 dark:text-white">{fmt(shownSubtotal)}</span>
       </div>
-      <Link href="/quotes" className="block w-full text-center py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
-        Submit Quote for Review
-      </Link>
-      <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug">
-        Prices shown are indicative. PCS will respond with confirmed pricing after review.
-      </p>
+      {step === 'pricing' ? (
+        <>
+          <Link href="/quotes" className="block w-full text-center py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
+            Submit Quote for Review
+          </Link>
+          <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug">
+            Prices shown are indicative. PCS will respond with confirmed pricing after review.
+          </p>
+        </>
+      ) : (
+        <>
+          <button onClick={onContinue} className="w-full flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
+            Continue to pricing <ArrowRight size={14} />
+          </button>
+          <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug">
+            You'll be able to propose your own pricing on the next step.
+          </p>
+        </>
+      )}
     </div>
   )
 }
