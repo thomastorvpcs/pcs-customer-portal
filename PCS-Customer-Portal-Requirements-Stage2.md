@@ -113,7 +113,7 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 
 **US-90** — As a customer, I want to browse the device catalog so that I can see what inventory is available to purchase.
 
-**US-91** — As a customer, I want to filter and sort the catalog (by device type, grade, storage, price) so that I can find the products I am interested in quickly.
+**US-91** — As a customer, I want to filter and sort the catalog (by category, brand, model, grade, storage, location, color, carrier, and price) so that I can find the products I am interested in quickly. Filter options that would return no results given my current selection are disabled.
 
 **US-92** — As a customer, I want to add devices to a quote cart with the quantity I need so that I can request pricing for a specific set of items.
 

@@ -2,31 +2,48 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Smartphone, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil } from 'lucide-react'
+import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil } from 'lucide-react'
 
 const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
 const devices = [
-  { id: 'D1', name: 'iPhone 13 Pro', type: 'iPhone', grade: 'A', storage: 128, price: 229, qty: 1240, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'Spring Clearance' },
-  { id: 'D2', name: 'iPhone 14', type: 'iPhone', grade: 'A', storage: 256, price: 389, qty: 860, color: 'Blue', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Best Seller' },
-  { id: 'D3', name: 'iPhone 13', type: 'iPhone', grade: 'B', storage: 128, price: 199, qty: 2100, color: 'Black', carrier: 'AT&T', location: 'Chicago, IL', hot: false },
-  { id: 'D4', name: 'Samsung Galaxy S23', type: 'Samsung', grade: 'A', storage: 256, price: 349, qty: 540, color: 'Black', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'New Arrival' },
-  { id: 'D5', name: 'Samsung Galaxy S22', type: 'Samsung', grade: 'B', storage: 128, price: 219, qty: 980, color: 'White', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
-  { id: 'D6', name: 'Google Pixel 8', type: 'Pixel', grade: 'A', storage: 128, price: 299, qty: 420, color: 'Black', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Limited' },
-  { id: 'D7', name: 'Google Pixel 7', type: 'Pixel', grade: 'B', storage: 128, price: 189, qty: 610, color: 'White', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
-  { id: 'D8', name: 'iPhone 14', type: 'iPhone', grade: 'B', storage: 128, price: 319, qty: 730, color: 'Silver', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
-  { id: 'D9', name: 'Samsung Galaxy S23', type: 'Samsung', grade: 'B', storage: 512, price: 379, qty: 210, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
-  { id: 'D10', name: 'Samsung Galaxy S22', type: 'Samsung', grade: 'A', storage: 256, price: 259, qty: 340, color: 'Blue', carrier: 'AT&T', location: 'Dallas, TX', hot: false },
-  { id: 'D11', name: 'Google Pixel 8', type: 'Pixel', grade: 'B', storage: 256, price: 269, qty: 155, color: 'White', carrier: 'Unlocked', location: 'Chicago, IL', hot: false },
-  { id: 'D12', name: 'iPhone 13 Pro', type: 'iPhone', grade: 'A', storage: 256, price: 279, qty: 480, color: 'Silver', carrier: 'Unlocked', location: 'Los Angeles, CA', hot: false },
-  { id: 'D13', name: 'iPhone 12', type: 'iPhone', grade: 'B', storage: 64, price: 159, qty: 1520, color: 'Black', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
-  { id: 'D14', name: 'Samsung Galaxy S23', type: 'Samsung', grade: 'A', storage: 512, price: 429, qty: 120, color: 'White', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
-  { id: 'D15', name: 'Google Pixel 7', type: 'Pixel', grade: 'A', storage: 256, price: 239, qty: 260, color: 'Blue', carrier: 'T-Mobile', location: 'Dallas, TX', hot: false },
-  { id: 'D16', name: 'iPhone 14', type: 'iPhone', grade: 'A', storage: 512, price: 469, qty: 90, color: 'Graphite', carrier: 'AT&T', location: 'Los Angeles, CA', hot: false },
+  // Smartphones
+  { id: 'D1', name: 'iPhone 13 Pro', brand: 'Apple', model: 'iPhone 13 Pro', category: 'Smartphones', grade: 'A', storage: 128, price: 229, qty: 1240, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'Spring Clearance' },
+  { id: 'D2', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'A', storage: 256, price: 389, qty: 860, color: 'Blue', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Best Seller' },
+  { id: 'D3', name: 'iPhone 13', brand: 'Apple', model: 'iPhone 13', category: 'Smartphones', grade: 'B', storage: 128, price: 199, qty: 2100, color: 'Black', carrier: 'AT&T', location: 'Chicago, IL', hot: false },
+  { id: 'D4', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'A', storage: 256, price: 349, qty: 540, color: 'Black', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'New Arrival' },
+  { id: 'D5', name: 'Samsung Galaxy S22', brand: 'Samsung', model: 'Galaxy S22', category: 'Smartphones', grade: 'B', storage: 128, price: 219, qty: 980, color: 'White', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
+  { id: 'D6', name: 'Google Pixel 8', brand: 'Google', model: 'Pixel 8', category: 'Smartphones', grade: 'A', storage: 128, price: 299, qty: 420, color: 'Black', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Limited' },
+  { id: 'D7', name: 'Google Pixel 7', brand: 'Google', model: 'Pixel 7', category: 'Smartphones', grade: 'B', storage: 128, price: 189, qty: 610, color: 'White', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
+  { id: 'D8', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'B', storage: 128, price: 319, qty: 730, color: 'Silver', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
+  { id: 'D9', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'B', storage: 512, price: 379, qty: 210, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
+  { id: 'D10', name: 'Samsung Galaxy S22', brand: 'Samsung', model: 'Galaxy S22', category: 'Smartphones', grade: 'A', storage: 256, price: 259, qty: 340, color: 'Blue', carrier: 'AT&T', location: 'Dallas, TX', hot: false },
+  { id: 'D11', name: 'Google Pixel 8', brand: 'Google', model: 'Pixel 8', category: 'Smartphones', grade: 'B', storage: 256, price: 269, qty: 155, color: 'White', carrier: 'Unlocked', location: 'Chicago, IL', hot: false },
+  { id: 'D12', name: 'iPhone 13 Pro', brand: 'Apple', model: 'iPhone 13 Pro', category: 'Smartphones', grade: 'A', storage: 256, price: 279, qty: 480, color: 'Silver', carrier: 'Unlocked', location: 'Los Angeles, CA', hot: false },
+  { id: 'D13', name: 'iPhone 12', brand: 'Apple', model: 'iPhone 12', category: 'Smartphones', grade: 'B', storage: 64, price: 159, qty: 1520, color: 'Black', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
+  { id: 'D14', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'A', storage: 512, price: 429, qty: 120, color: 'White', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
+  { id: 'D15', name: 'Google Pixel 7', brand: 'Google', model: 'Pixel 7', category: 'Smartphones', grade: 'A', storage: 256, price: 239, qty: 260, color: 'Blue', carrier: 'T-Mobile', location: 'Dallas, TX', hot: false },
+  { id: 'D16', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'A', storage: 512, price: 469, qty: 90, color: 'Graphite', carrier: 'AT&T', location: 'Los Angeles, CA', hot: false },
+  // Tablets
+  { id: 'D17', name: 'iPad Air', brand: 'Apple', model: 'iPad Air', category: 'Tablets', grade: 'A', storage: 256, price: 399, qty: 300, color: 'Blue', carrier: 'Wi-Fi', location: 'Miami, FL', hot: true, tag: 'New Arrival' },
+  { id: 'D18', name: 'iPad', brand: 'Apple', model: 'iPad', category: 'Tablets', grade: 'B', storage: 64, price: 219, qty: 540, color: 'Silver', carrier: 'Wi-Fi', location: 'Dallas, TX', hot: false },
+  { id: 'D19', name: 'Galaxy Tab S8', brand: 'Samsung', model: 'Galaxy Tab S8', category: 'Tablets', grade: 'A', storage: 128, price: 349, qty: 180, color: 'Graphite', carrier: 'Wi-Fi', location: 'Chicago, IL', hot: false },
+  // Laptops
+  { id: 'D20', name: 'MacBook Air 13"', brand: 'Apple', model: 'MacBook Air 13"', category: 'Laptops', grade: 'A', storage: 256, price: 749, qty: 90, color: 'Silver', carrier: null, location: 'Los Angeles, CA', hot: false },
+  { id: 'D21', name: 'MacBook Pro 14"', brand: 'Apple', model: 'MacBook Pro 14"', category: 'Laptops', grade: 'B', storage: 512, price: 1099, qty: 60, color: 'Graphite', carrier: null, location: 'Miami, FL', hot: false },
+  // Wearables
+  { id: 'D22', name: 'Apple Watch Series 8', brand: 'Apple', model: 'Apple Watch Series 8', category: 'Wearables', grade: 'A', storage: null, price: 199, qty: 260, color: 'Black', carrier: null, location: 'Dallas, TX', hot: false },
+  { id: 'D23', name: 'Galaxy Watch 5', brand: 'Samsung', model: 'Galaxy Watch 5', category: 'Wearables', grade: 'B', storage: null, price: 129, qty: 340, color: 'Black', carrier: null, location: 'Chicago, IL', hot: false },
+  { id: 'D24', name: 'Pixel Watch', brand: 'Google', model: 'Pixel Watch', category: 'Wearables', grade: 'A', storage: null, price: 149, qty: 150, color: 'Black', carrier: null, location: 'Los Angeles, CA', hot: false },
+  // Accessories
+  { id: 'D25', name: 'AirPods Pro', brand: 'Apple', model: 'AirPods Pro', category: 'Accessories', grade: 'A', storage: null, price: 129, qty: 800, color: 'White', carrier: null, location: 'Miami, FL', hot: false },
+  { id: 'D26', name: 'Galaxy Buds2', brand: 'Samsung', model: 'Galaxy Buds2', category: 'Accessories', grade: 'B', storage: null, price: 69, qty: 620, color: 'White', carrier: null, location: 'Dallas, TX', hot: false },
 ]
 
 const filterGroups = {
-  type: ['iPhone', 'Samsung', 'Pixel'],
+  category: ['Smartphones', 'Tablets', 'Laptops', 'Wearables', 'Accessories'],
+  brand: ['Apple', 'Samsung', 'Google'],
+  model: ['iPhone 14', 'iPhone 13 Pro', 'iPhone 13', 'iPhone 12', 'Galaxy S23', 'Galaxy S22', 'Pixel 8', 'Pixel 7', 'iPad Air', 'iPad', 'Galaxy Tab S8', 'MacBook Air 13"', 'MacBook Pro 14"', 'Apple Watch Series 8', 'Galaxy Watch 5', 'Pixel Watch', 'AirPods Pro', 'Galaxy Buds2'],
   grade: ['A', 'B'],
   storage: [64, 128, 256, 512],
   location: ['Miami, FL', 'Dallas, TX', 'Los Angeles, CA', 'Chicago, IL'],
@@ -35,7 +52,9 @@ const filterGroups = {
 }
 
 const groupMeta = {
-  type: { label: 'Device Type', fmt: (o) => o },
+  category: { label: 'Category', fmt: (o) => o },
+  brand: { label: 'Brand', fmt: (o) => o },
+  model: { label: 'Model', fmt: (o) => o },
   grade: { label: 'Grade', fmt: (o) => 'Grade ' + o },
   storage: { label: 'Storage', fmt: (o) => o + 'GB' },
   location: { label: 'Location', fmt: (o) => o },
@@ -43,18 +62,25 @@ const groupMeta = {
   carrier: { label: 'Carrier', fmt: (o) => o },
 }
 
+const catIcon = { Smartphones: Smartphone, Tablets: Tablet, Laptops: Laptop, Wearables: Watch, Accessories: Headphones }
+
+// Adaptive spec line — omits attributes that don't apply (e.g. laptops/wearables have no carrier)
+const specLine = (d) => [d.storage ? `${d.storage}GB` : null, d.color, d.carrier].filter(Boolean).join(' · ')
+
 const gradeBadge = {
   A: 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   B: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
 }
 
-const DEFAULT_MAX = 500
-const SAVED_KEY = 'pcs.catalog.savedSearches'
+const DEFAULT_MAX = 1200
+const SAVED_KEY = 'pcs.catalog.savedSearches.v2'
 const FAV_KEY = 'pcs.catalog.favorites'
 
 const normPayload = (p) => JSON.stringify({
   search: (p.search || '').trim().toLowerCase(),
-  types: [...(p.types || [])].sort(),
+  categories: [...(p.categories || [])].sort(),
+  brands: [...(p.brands || [])].sort(),
+  models: [...(p.models || [])].sort(),
   grades: [...(p.grades || [])].sort(),
   storages: [...(p.storages || [])].sort(),
   locations: [...(p.locations || [])].sort(),
@@ -64,7 +90,9 @@ const normPayload = (p) => JSON.stringify({
 })
 
 export default function CatalogPage() {
-  const [types, setTypes] = useState([])
+  const [categories, setCategories] = useState([])
+  const [brands, setBrands] = useState([])
+  const [models, setModels] = useState([])
   const [grades, setGrades] = useState([])
   const [storages, setStorages] = useState([])
   const [locations, setLocations] = useState([])
@@ -101,7 +129,9 @@ export default function CatalogPage() {
   useEffect(() => { if (hydrated) localStorage.setItem(FAV_KEY, JSON.stringify(favorites)) }, [favorites, hydrated])
 
   const stateByKey = {
-    type: [types, setTypes],
+    category: [categories, setCategories],
+    brand: [brands, setBrands],
+    model: [models, setModels],
     grade: [grades, setGrades],
     storage: [storages, setStorages],
     location: [locations, setLocations],
@@ -113,7 +143,9 @@ export default function CatalogPage() {
     setList(list.includes(val) ? list.filter((x) => x !== val) : [...list, val])
 
   const filtered = devices
-    .filter((d) => (types.length ? types.includes(d.type) : true))
+    .filter((d) => (categories.length ? categories.includes(d.category) : true))
+    .filter((d) => (brands.length ? brands.includes(d.brand) : true))
+    .filter((d) => (models.length ? models.includes(d.model) : true))
     .filter((d) => (grades.length ? grades.includes(d.grade) : true))
     .filter((d) => (storages.length ? storages.includes(d.storage) : true))
     .filter((d) => (locations.length ? locations.includes(d.location) : true))
@@ -125,6 +157,21 @@ export default function CatalogPage() {
     .sort((a, b) =>
       sort === 'Price' ? a.price - b.price : sort === 'Name' ? a.name.localeCompare(b.name) : b.qty - a.qty
     )
+
+  // Facet auto-disable: which option values still yield ≥1 device given the OTHER
+  // active filter groups + search + price (mirrors the Online Catalog's matchesOtherFilters).
+  const selByKey = { category: categories, brand: brands, model: models, grade: grades, storage: storages, location: locations, color: colors, carrier: carriers }
+  const matchesSearchPrice = (d) => d.price <= maxPrice && d.name.toLowerCase().includes(search.toLowerCase())
+  const deviceMatchesExcept = (d, exceptKey) =>
+    Object.entries(selByKey).every(([k, vals]) => (k === exceptKey || !vals.length ? true : vals.includes(d[k])))
+  const enabledByKey = {}
+  for (const key of Object.keys(filterGroups)) {
+    const set = new Set()
+    for (const opt of filterGroups[key]) {
+      if (devices.some((d) => d[key] === opt && matchesSearchPrice(d) && deviceMatchesExcept(d, key))) set.add(opt)
+    }
+    enabledByKey[key] = set
+  }
 
   const hottest = devices.filter((d) => d.hot)
 
@@ -146,10 +193,10 @@ export default function CatalogPage() {
   const subtotal = cart.reduce((sum, i) => sum + lineUnit(i) * i.qty, 0)
 
   const activeFilterCount =
-    types.length + grades.length + storages.length + locations.length + colors.length + carriers.length + (maxPrice < DEFAULT_MAX ? 1 : 0)
+    categories.length + brands.length + models.length + grades.length + storages.length + locations.length + colors.length + carriers.length + (maxPrice < DEFAULT_MAX ? 1 : 0)
 
   const clearFilters = () => {
-    setTypes([]); setGrades([]); setStorages([]); setLocations([]); setColors([]); setCarriers([]); setMaxPrice(DEFAULT_MAX); setSearch('')
+    setCategories([]); setBrands([]); setModels([]); setGrades([]); setStorages([]); setLocations([]); setColors([]); setCarriers([]); setMaxPrice(DEFAULT_MAX); setSearch('')
   }
 
   // ── Favorites ──
@@ -158,7 +205,7 @@ export default function CatalogPage() {
     setFavorites((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]))
 
   // ── Saved searches ──
-  const currentPayload = { search, types, grades, storages, locations, colors, carriers, maxPrice }
+  const currentPayload = { search, categories, brands, models, grades, storages, locations, colors, carriers, maxPrice }
   const activeSavedId = (() => {
     const cur = normPayload(currentPayload)
     const hit = savedSearches.find((s) => normPayload(s.payload) === cur)
@@ -174,7 +221,8 @@ export default function CatalogPage() {
   const applySaved = (s) => {
     const p = s.payload || {}
     setSearch(p.search || '')
-    setTypes(p.types || []); setGrades(p.grades || []); setStorages(p.storages || [])
+    setCategories(p.categories || []); setBrands(p.brands || []); setModels(p.models || [])
+    setGrades(p.grades || []); setStorages(p.storages || [])
     setLocations(p.locations || []); setColors(p.colors || []); setCarriers(p.carriers || [])
     setMaxPrice(p.maxPrice ?? DEFAULT_MAX)
     setShowFavorites(false)
@@ -225,10 +273,10 @@ export default function CatalogPage() {
                 <Heart size={16} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
               </button>
               <div className="bg-yellow-400/15 rounded-xl h-20 flex items-center justify-center mb-2">
-                <Smartphone size={30} className="text-yellow-600 dark:text-yellow-400" />
+                <DeviceIcon category={d.category} size={30} className="text-yellow-600 dark:text-yellow-400" />
               </div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{d.name}</p>
-              <p className="text-xs text-gray-400 dark:text-blue-300/50">Grade {d.grade} · {d.storage}GB</p>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50">Grade {d.grade}{d.storage ? ` · ${d.storage}GB` : ''}</p>
               <p className="text-yellow-600 dark:text-yellow-400 font-bold text-sm mt-1">from {fmt(d.price)}</p>
             </div>
           ))}
@@ -264,7 +312,7 @@ export default function CatalogPage() {
               {activeFilterCount > 0 && <button onClick={clearFilters} className="text-xs text-blue-600">Clear</button>}
             </div>
             <SavedSearchPanel {...savedProps} />
-            <FilterGroups stateByKey={stateByKey} toggle={toggle} dense />
+            <FilterGroups stateByKey={stateByKey} toggle={toggle} enabledByKey={enabledByKey} dense />
             <div>
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Max Price</p>
               <input type="range" min="150" max="500" step="10" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[#0b1b3a]" />
@@ -278,7 +326,7 @@ export default function CatalogPage() {
           {filtered.map((d) => (
             <div key={d.id} className="bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 p-3">
               <div className="relative bg-gray-50 dark:bg-[#1e2d45] rounded-xl h-24 flex items-center justify-center mb-2">
-                <Smartphone size={34} className="text-gray-300 dark:text-gray-500" />
+                <DeviceIcon category={d.category} size={34} className="text-gray-300 dark:text-gray-500" />
                 <button onClick={() => toggleFavorite(d.id)} className="absolute top-2 right-2">
                   <Heart size={16} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
                 </button>
@@ -287,7 +335,7 @@ export default function CatalogPage() {
                 <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{d.name}</p>
                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${gradeBadge[d.grade]}`}>{d.grade}</span>
               </div>
-              <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{d.storage}GB · {d.color} · {d.carrier}</p>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{specLine(d)}</p>
               <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} avail</p>
               <p className="text-gray-900 dark:text-white font-bold text-sm mt-1">from {fmt(d.price)}</p>
               <button onClick={() => addToQuote(d.id)} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Quote</button>
@@ -354,10 +402,10 @@ export default function CatalogPage() {
               </button>
               {d.tag && <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-yellow-400/15 text-yellow-600 dark:text-yellow-400">{d.tag}</span>}
               <div className="bg-yellow-400/15 rounded-xl h-24 flex items-center justify-center mb-3">
-                <Smartphone size={38} className="text-yellow-600 dark:text-yellow-400" />
+                <DeviceIcon category={d.category} size={38} className="text-yellow-600 dark:text-yellow-400" />
               </div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">{d.name}</p>
-              <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">Grade {d.grade} · {d.storage}GB · {d.qty.toLocaleString()} avail</p>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">Grade {d.grade}{d.storage ? ` · ${d.storage}GB` : ''} · {d.qty.toLocaleString()} avail</p>
               <div className="flex items-center justify-between mt-2">
                 <p className="text-yellow-600 dark:text-yellow-400 font-bold">from {fmt(d.price)}</p>
                 <button onClick={() => addToQuote(d.id)} className="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-[#0b1b3a] text-white hover:bg-[#0d2147]">Add</button>
@@ -379,7 +427,7 @@ export default function CatalogPage() {
 
             <SavedSearchPanel {...savedProps} />
 
-            <FilterGroups stateByKey={stateByKey} toggle={toggle} />
+            <FilterGroups stateByKey={stateByKey} toggle={toggle} enabledByKey={enabledByKey} />
 
             <div>
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Max Price</p>
@@ -429,7 +477,7 @@ export default function CatalogPage() {
               {filtered.map((d) => (
                 <div key={d.id} className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 flex flex-col">
                   <div className="relative bg-gray-50 dark:bg-[#1e2d45] rounded-xl h-28 flex items-center justify-center mb-3">
-                    <Smartphone size={42} className="text-gray-300 dark:text-gray-500" />
+                    <DeviceIcon category={d.category} size={42} className="text-gray-300 dark:text-gray-500" />
                     <button onClick={() => toggleFavorite(d.id)} className="absolute top-2 right-2">
                       <Heart size={17} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500 hover:text-rose-400'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
                     </button>
@@ -438,7 +486,7 @@ export default function CatalogPage() {
                     <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{d.name}</p>
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap ${gradeBadge[d.grade]}`}>Grade {d.grade}</span>
                   </div>
-                  <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-1">{d.storage}GB · {d.color} · {d.carrier}</p>
+                  <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-1">{specLine(d)}</p>
                   <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} available</p>
                   <div className="flex items-end justify-between mt-3 pt-3 border-t border-gray-50 dark:border-gray-700">
                     <div>
@@ -476,12 +524,18 @@ export default function CatalogPage() {
   )
 }
 
-function FilterGroups({ stateByKey, toggle, dense }) {
+function DeviceIcon({ category, size, className }) {
+  const Icon = catIcon[category] || Smartphone
+  return <Icon size={size} className={className} />
+}
+
+function FilterGroups({ stateByKey, toggle, enabledByKey, dense }) {
   return (
     <>
       {Object.entries(filterGroups).map(([key, opts]) => {
         const [list, setList] = stateByKey[key]
         const meta = groupMeta[key]
+        const enabled = enabledByKey?.[key]
         return (
           <div key={key} className={dense ? '' : 'mb-5'}>
             <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">{meta.label}</p>
@@ -489,8 +543,9 @@ function FilterGroups({ stateByKey, toggle, dense }) {
               <div className="flex flex-wrap gap-2">
                 {opts.map((o) => {
                   const on = list.includes(o)
+                  const disabled = !on && enabled && !enabled.has(o)
                   return (
-                    <button key={o} onClick={() => toggle(list, setList, o)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${on ? 'bg-[#0b1b3a] text-white border-[#0b1b3a]' : 'bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600'}`}>
+                    <button key={o} disabled={disabled} onClick={() => !disabled && toggle(list, setList, o)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${on ? 'bg-[#0b1b3a] text-white border-[#0b1b3a]' : disabled ? 'bg-gray-50 dark:bg-white/5 text-gray-300 dark:text-gray-600 border-gray-100 dark:border-gray-700 cursor-not-allowed' : 'bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600'}`}>
                       {meta.fmt(o)}
                     </button>
                   )
@@ -500,9 +555,10 @@ function FilterGroups({ stateByKey, toggle, dense }) {
               <div className="space-y-1.5">
                 {opts.map((o) => {
                   const on = list.includes(o)
+                  const disabled = !on && enabled && !enabled.has(o)
                   return (
-                    <label key={o} onClick={() => toggle(list, setList, o)} className="flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300">
-                      <span className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${on ? 'bg-[#0b1b3a] border-[#0b1b3a]' : 'border-gray-300 dark:border-gray-600'}`}>
+                    <label key={o} onClick={() => !disabled && toggle(list, setList, o)} className={`flex items-center gap-2 text-sm ${disabled ? 'cursor-not-allowed text-gray-300 dark:text-gray-600' : 'cursor-pointer text-gray-700 dark:text-gray-300'}`}>
+                      <span className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${on ? 'bg-[#0b1b3a] border-[#0b1b3a]' : disabled ? 'border-gray-200 dark:border-gray-700' : 'border-gray-300 dark:border-gray-600'}`}>
                         {on && <Check size={12} className="text-white" />}
                       </span>
                       <span>{meta.fmt(o)}</span>
@@ -587,7 +643,7 @@ function CartLines({ cart, lineUnit, changeQty, setCustomPrice, removeLine }) {
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{dev.name}</p>
-                <p className="text-xs text-gray-400 dark:text-blue-300/50">Grade {dev.grade} · {dev.storage}GB</p>
+                <p className="text-xs text-gray-400 dark:text-blue-300/50">Grade {dev.grade}{dev.storage ? ` · ${dev.storage}GB` : ''}</p>
               </div>
               <button onClick={() => removeLine(i.id)} className="text-gray-300 hover:text-red-500"><Trash2 size={15} /></button>
             </div>
