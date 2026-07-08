@@ -1,6 +1,6 @@
 # PCS Wireless Customer Portal — Stage 2 Feature Tickets
 
-**Document Version:** 1.0
+**Document Version:** 1.1
 **Date:** July 8, 2026
 **Stage / Module:** Stage 2 — Catalog, Quotes & Offers
 **Status:** Draft — For Development Refinement
@@ -13,11 +13,11 @@
 
 This document sits **between** the Stage 2 business requirements (the `US-##` user stories and `UC-##` use cases) and the developers' technical tickets. The user stories say *what* a customer wants and *why*; they intentionally do not say *how the feature should behave*. This document fills that gap with **mid-level feature tickets** that describe the behaviour in enough detail for a developer to write technical requirements without having to guess at the flow, rules, and edge cases.
 
-Each ticket is written in **product / behavioural terms only**. It deliberately contains **no technical detail** — no data models, endpoints, screens-as-built, or technology choices. Those decisions belong to the developers and are the output of the next step, informed by these tickets.
+Each ticket is written in **product / behavioural terms only**. It deliberately contains **no technical detail** — no data models, endpoints, or technology choices. Those decisions belong to the developers and are the output of the next step, informed by these tickets.
 
 **Scope:** the **Catalog, Quotes & Offers** module of Stage 2 (`US-90`–`US-99`, `US-106`, `US-107`). The other Stage 2 modules (Returns/RMA, Online Payments, Reorder, and the Stage 2 dashboard additions) are not covered here and can be added as further sections later.
 
-The behaviours below are concrete because they are grounded in the agreed Stage 2 requirements (catalog filter dimensions, the quote status list, the custom-pricing gating).
+The behaviours below are concrete because they are grounded in the agreed Stage 2 requirements (catalog attributes and filter dimensions, the quote status list, the custom-pricing gating).
 
 ---
 
@@ -48,24 +48,68 @@ Every ticket uses the same fields:
 
 ## 1. Catalog
 
-### CQ-01 · Browse, filter & sort the catalog
+### CQ-01 · Catalog page layout & product display
 
-**User stories:** US-90, US-91  ·  **Who:** Admin, Buyer, Viewer
+**User stories:** US-90  ·  **Who:** Admin, Buyer, Viewer
 
-**Summary.** A customer browses available inventory and narrows it down using filters, keyword search, and sorting to find the products they are interested in.
+**Summary.** A customer opens the catalog and sees the available inventory laid out clearly, with each product presented as a card showing the key details needed to decide what to quote.
 
 **How it works**
-- The catalog lists available devices. Each device shows its name, grade, storage (where applicable), colour and carrier (where applicable), stock location, quantity available, and an indicative "from" price.
-- The customer can filter by: **category, brand, model, grade, storage, location, colour, carrier,** and a **maximum price**.
-- Within a single filter (e.g. Brand), selecting more than one value widens the results (Apple *or* Samsung). Across different filters, selections narrow the results (Brand *and* Grade *and* …).
-- Filter options that would return **no results** given the customer's other current selections are shown but **disabled**, so the customer cannot accidentally reach an empty list. This is recalculated every time any filter changes.
-- The customer can search by keyword and sort the results by **price, name, or newest**.
-- A running count of matching devices is shown, along with a count of active filters and a one-click **Clear** that resets all filters and search.
+- The catalog page is composed, top to bottom, of: a page heading; a **promotional banner** (see CQ-09); a **Hottest Offers** rail of featured devices (see CQ-09); and the **main catalog area**.
+- The main catalog area places the **filter controls** and the **product grid** side by side on desktop (filters in a left column, grid to the right), and stacks them on mobile with the filters in a collapsible panel.
+- Above the grid is a controls row: keyword **search**, a **Favorites** toggle, a **sort** control, a **View Quote** button, the customer's **saved-search shortcuts**, and a **count of matching devices**.
+- Products are shown as a **responsive grid of cards** — two per row on mobile, up to three per row on larger screens.
+- **Each product card shows:**
+  - A device image/thumbnail (a category-based placeholder where real imagery is not yet available).
+  - A **favorite** toggle (see CQ-04).
+  - The **device name**.
+  - A **grade badge** (e.g. Grade A, Grade B).
+  - A **spec line** of the attributes that apply: storage, colour, and carrier. Attributes that do not apply to a product (e.g. carrier for a laptop, storage for a wearable) are omitted rather than shown blank.
+  - The **stock location** and **quantity available**.
+  - An indicative **"from" price**.
+  - An **Add to Quote** action (see CQ-05).
+  - An optional **highlight tag** on featured items (e.g. "New Arrival", "Best Seller", "Limited").
+- **Empty state:** when no devices match the current filters, a clear message is shown; a distinct message is shown when the Favorites filter is on but the customer has no favorites.
 
 **Rules & constraints**
-- Only inventory that is available to purchase is shown.
+- Only inventory that is available to purchase is listed.
+- Attributes that do not apply to a product type are omitted from the card, not shown blank.
+- Price is presented as an indicative "from" amount, not a firm price.
+- The layout adapts to screen size (mobile vs desktop) but presents the same information on each card.
+
+**Acceptance criteria**
+- The catalog displays the available devices as a grid of product cards.
+- Each card shows: name, grade, the applicable spec line, stock location, quantity available, an indicative "from" price, a favorite toggle, and an Add to Quote action.
+- The grid reflows to the screen width (two cards per row on mobile, up to three on desktop) without dropping any of that information.
+- A count of the devices currently shown is displayed and stays accurate as filters change.
+- When nothing matches, an appropriate empty-state message is shown.
+
+**Open questions for the business**
+- Will real product photography be available per device, or should category placeholder imagery be used for now?
+- Should a customer be able to open a **product detail view** (larger imagery, full specs, per-grade pricing), or is the card the only view?
+- Should the card show a single "from" price, or a price range across grades/storage tiers?
+- Is quantity shown as an exact number, or banded (e.g. "1,000+ available") for commercial reasons?
+- With real inventory the grid could be large — should it paginate, load more on scroll, or cap results?
+
+---
+
+### CQ-02 · Filter, search & sort the catalog
+
+**User stories:** US-91  ·  **Who:** Admin, Buyer, Viewer
+
+**Summary.** A customer narrows down the catalog using filters, keyword search, and sorting to find the products they are interested in quickly.
+
+**How it works**
+- The customer can filter by: **category, brand, model, grade, storage, location, colour, carrier,** and a **maximum price**.
+- Within a single filter (e.g. Brand), selecting more than one value **widens** the results (Apple *or* Samsung). Across different filters, selections **narrow** the results (Brand *and* Grade *and* …).
+- Filter options that would return **no results** given the customer's other current selections are shown but **disabled**, so the customer cannot accidentally reach an empty list. This is recalculated every time any filter changes.
+- The customer can search by keyword and sort results by **price, name, or newest**.
+- A count of active filters is shown, along with a one-click **Clear** that resets all filters, the price limit, and the search.
+
+**Rules & constraints**
 - The price filter is an **upper bound** — it shows devices at or below the chosen price.
-- Attributes that do not apply to a device (e.g. carrier for a laptop, storage for a wearable) are simply omitted for that device rather than shown blank.
+- Filtering, search, and sort all operate together on the same result set (the grid described in CQ-01).
+- The disabled-option behaviour is recalculated on every change to any filter, search term, or price limit.
 
 **Acceptance criteria**
 - Applying any filter narrows the list to matching devices only, and the match count updates.
@@ -75,13 +119,13 @@ Every ticket uses the same fields:
 - Clear resets all filters, the price limit, and the search box back to the full catalog.
 
 **Open questions for the business**
-- Is the "from" price a single list price shown to every customer, or customer-specific pricing?
 - What is the default sort order on first load?
 - Should keyword search match on product name only, or also model, SKU, and other attributes?
+- Are there filter dimensions beyond those listed that customers will want (e.g. battery health, warranty, lot size)?
 
 ---
 
-### CQ-02 · Save and re-apply a named search
+### CQ-03 · Save and re-apply a named search
 
 **User stories:** US-106  ·  **Who:** Admin, Buyer, Viewer
 
@@ -112,7 +156,7 @@ Every ticket uses the same fields:
 
 ---
 
-### CQ-03 · Favorite devices and filter to favorites
+### CQ-04 · Favorite devices and filter to favorites
 
 **User stories:** US-107  ·  **Who:** Admin, Buyer, Viewer
 
@@ -143,7 +187,7 @@ Every ticket uses the same fields:
 
 ## 2. Quotes
 
-### CQ-04 · Build a quote cart with quantities
+### CQ-05 · Build a quote cart with quantities
 
 **User stories:** US-92  ·  **Who:** Admin, Buyer
 
@@ -155,12 +199,12 @@ Every ticket uses the same fields:
 - The customer can increase or decrease the quantity per line, and remove a line.
 - The cart shows the total number of units and a subtotal at **list prices**.
 - The customer can keep browsing and adding devices; the cart is retained while they do.
-- The cart is the starting point for a quote and leads into the pricing step (see CQ-05) and submission (see CQ-06).
+- The cart is the starting point for a quote and leads into the pricing step (see CQ-06) and submission (see CQ-07).
 
 **Rules & constraints**
 - A line quantity must be at least 1.
 - Adding a device already in the cart increases that line's quantity rather than creating a duplicate line.
-- The cart shows list prices only; proposing different pricing is a separate, deliberate step (CQ-05).
+- The cart shows list prices only; proposing different pricing is a separate, deliberate step (CQ-06).
 
 **Acceptance criteria**
 - A customer can add a device to the cart and see it as a line with quantity and list price.
@@ -176,7 +220,7 @@ Every ticket uses the same fields:
 
 ---
 
-### CQ-05 · Propose custom pricing on a quote
+### CQ-06 · Propose custom pricing on a quote
 
 **User stories:** US-93  ·  **Who:** Admin, Buyer
 
@@ -208,7 +252,7 @@ Every ticket uses the same fields:
 
 ---
 
-### CQ-06 · Submit and track quotes, with status history
+### CQ-07 · Submit and track quotes, with status history
 
 **User stories:** US-94, US-95, US-96  ·  **Who:** Admin, Buyer (submit); Admin, Buyer, Viewer (view)
 
@@ -229,7 +273,7 @@ Every ticket uses the same fields:
 | Submitted | Sent to PCS; awaiting review |
 | Under Review | PCS is reviewing the requested pricing |
 | Counter-Offered | PCS has responded with revised pricing; customer can Accept or Decline |
-| Accepted | Pricing agreed; the quote can be converted to an order (see CQ-07) |
+| Accepted | Pricing agreed; the quote can be converted to an order (see CQ-08) |
 | Rejected | Quote declined |
 | Expired | The quote's validity period has lapsed |
 
@@ -255,7 +299,7 @@ Every ticket uses the same fields:
 
 ---
 
-### CQ-07 · Convert an accepted quote to an order
+### CQ-08 · Convert an accepted quote to an order
 
 **User stories:** US-97  ·  **Who:** Admin, Buyer
 
@@ -285,7 +329,7 @@ Every ticket uses the same fields:
 
 ## 3. Promotional Offers
 
-### CQ-08 · Hottest Offers & promotional banners
+### CQ-09 · Hottest Offers & promotional banners
 
 **User stories:** US-98, US-99  ·  **Who:** Admin, Buyer, Viewer
 
@@ -319,17 +363,17 @@ Every Catalog, Quotes & Offers user story maps to at least one ticket.
 | User Story | Covered by |
 |------------|------------|
 | US-90 — Browse the catalog | CQ-01 |
-| US-91 — Filter & sort the catalog (with auto-disabled options) | CQ-01 |
-| US-92 — Add devices to a quote cart with quantity | CQ-04 |
-| US-93 — Propose custom per-unit pricing | CQ-05 |
-| US-94 — Submit a quote for review | CQ-06 |
-| US-95 — View all submitted quotes with status | CQ-06 |
-| US-96 — View a quote's full history & status changes | CQ-06 |
-| US-97 — Convert an accepted quote into an order | CQ-07 |
-| US-98 — "Hottest Offers" section | CQ-08 |
-| US-99 — Promotional banners | CQ-08 |
-| US-106 — Save & re-apply a named search | CQ-02 |
-| US-107 — Favorite devices & filter to favorites | CQ-03 |
+| US-91 — Filter & sort the catalog (with auto-disabled options) | CQ-02 |
+| US-92 — Add devices to a quote cart with quantity | CQ-05 |
+| US-93 — Propose custom per-unit pricing | CQ-06 |
+| US-94 — Submit a quote for review | CQ-07 |
+| US-95 — View all submitted quotes with status | CQ-07 |
+| US-96 — View a quote's full history & status changes | CQ-07 |
+| US-97 — Convert an accepted quote into an order | CQ-08 |
+| US-98 — "Hottest Offers" section | CQ-09 |
+| US-99 — Promotional banners | CQ-09 |
+| US-106 — Save & re-apply a named search | CQ-03 |
+| US-107 — Favorite devices & filter to favorites | CQ-04 |
 
 ---
 
