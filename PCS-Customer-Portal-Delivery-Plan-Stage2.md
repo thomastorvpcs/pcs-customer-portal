@@ -1,6 +1,6 @@
 # PCS Wireless Customer Portal — Stage 2 Feature Tickets
 
-**Document Version:** 1.2
+**Document Version:** 1.3
 **Date:** July 8, 2026
 **Stage / Module:** Stage 2 — Catalog, Quotes & Offers
 **Status:** Draft — For Development Refinement
@@ -15,7 +15,7 @@ This document sits **between** the Stage 2 business requirements (the `US-##` us
 
 Each ticket is written in **product / behavioural terms only**. It deliberately contains **no technical detail** — no data models, endpoints, or technology choices. Those decisions belong to the developers and are the output of the next step, informed by these tickets.
 
-**Scope:** the **Catalog, Quotes & Offers** module of Stage 2 (`US-90`–`US-99`, `US-106`, `US-107`). It also specifies two catalog enhancements added during Stage 2 delivery — a **product detail view** (CQ-10) and a **device grading guide** (CQ-11). The other Stage 2 modules (Returns/RMA, Online Payments, Reorder, and the Stage 2 dashboard additions) are not covered here and can be added as further sections later.
+**Scope:** the **Catalog, Quotes & Offers** module of Stage 2 (`US-90`–`US-99`, `US-106`–`US-108`). It also specifies two catalog enhancements added during Stage 2 delivery — a **product detail view** (CQ-10) and a **device grading guide** (CQ-11, `US-108`). The other Stage 2 modules (Returns/RMA, Online Payments, Reorder, and the Stage 2 dashboard additions) are not covered here and can be added as further sections later.
 
 The behaviours below are concrete because they are grounded in the agreed Stage 2 requirements (catalog attributes and filter dimensions, the quote status list, the custom-pricing gating).
 
@@ -225,7 +225,7 @@ Every ticket uses the same fields:
 
 ### CQ-11 · Device grading guide
 
-**User stories:** *(delivery enhancement — no dedicated user story; supports buyer confidence for US-90)*  ·  **Who:** Admin, Buyer, Viewer
+**User stories:** US-108  ·  **Who:** Admin, Buyer, Viewer
 
 **Summary.** A customer opens a dedicated page that explains what each device grade means — in plain language, with example media — so they understand exactly what condition they are buying.
 
@@ -447,8 +447,9 @@ Every Catalog, Quotes & Offers user story maps to at least one ticket.
 | US-99 — Promotional banners | CQ-09 |
 | US-106 — Save & re-apply a named search | CQ-03 |
 | US-107 — Favorite devices & filter to favorites | CQ-04 |
+| US-108 — View the device grading guide | CQ-11 |
 
-**Delivery enhancements (no dedicated Stage 2 user story):** CQ-10 (Product detail view) extends US-90 and resolves an open question raised in CQ-01. CQ-11 (Device grading guide) is a buyer-confidence addition reached from the catalog and the detail view; it should be confirmed against PCS's official grade definitions (see CQ-11 open questions).
+**Delivery enhancement:** CQ-10 (Product detail view) has no dedicated user story of its own — it extends US-90 (browse the catalog) and resolves an open question raised in CQ-01. The grade definitions and battery-health thresholds published by CQ-11 are still to be confirmed against PCS's official grading rules (see CQ-11 open questions).
 
 ---
 

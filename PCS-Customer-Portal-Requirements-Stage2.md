@@ -1,7 +1,7 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.0  
-**Date:** July 2, 2026  
+**Document Version:** 1.1  
+**Date:** July 8, 2026  
 **Stage:** Stage 2 — Customer Self-Service & Revenue  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
@@ -135,6 +135,8 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 
 **US-107** — As a customer, I want to mark individual devices as favorites and filter the catalog to just my favorites so that I can quickly return to products I am interested in.
 
+**US-108** — As a customer, I want to open a guide that explains what each device grade means — with plain-language descriptions and example images and video — so that I understand exactly what condition I am buying before I add a device to a quote.
+
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
@@ -151,6 +153,7 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 | UC-99 | View promotional banner | Customer | Full-width promotional banners are displayed on the dashboard and catalog |
 | UC-106 | Save & apply a search | Customer | Customer names and saves the current filter/search combination; saved searches appear as one-click shortcuts and can be applied, renamed, or deleted |
 | UC-107 | Favorite a device | Customer | Customer marks/unmarks a device as a favorite; a Favorites filter shows only favorited devices; the customer's favorites persist across visits |
+| UC-108 | View grading guide | Customer | Customer opens a guide explaining each catalog grade, with descriptions, example media, a side-by-side comparison, and an FAQ; reachable from the grade shown on a product and from the catalog |
 
 ### Quote Status Definitions
 
