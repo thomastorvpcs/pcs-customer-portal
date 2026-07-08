@@ -23,6 +23,7 @@ const ROOT = __dirname;
 const PDF_DOCS = [
   ['PCS-Customer-Portal-Requirements-Stage2.md', 'PCS-Customer-Portal-Requirements-Stage2-v1.pdf'],
   ['PCS-Customer-Portal-Requirements-Stage3.md', 'PCS-Customer-Portal-Requirements-Stage3-v1.pdf'],
+  ['PCS-Customer-Portal-Delivery-Plan-Stage2.md', 'PCS-Customer-Portal-Delivery-Plan-Stage2-v1.pdf'],
 ];
 
 // Print stylesheet — professional requirements-doc look (Inter/Arial), tuned for A4 print.
