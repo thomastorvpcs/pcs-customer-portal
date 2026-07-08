@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, ArrowLeft, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock } from 'lucide-react'
+import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, ArrowLeft, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck } from 'lucide-react'
 
 const OFFER_REASONS = ['Volume commitment', 'Competitor quote', 'Budget constraint', 'Repeat order', 'Other']
 
@@ -74,6 +74,12 @@ const gradeBadge = {
   B: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
 }
 
+// Grade guidance shown in the product detail view
+const gradeInfo = {
+  A: { label: 'Grade A', desc: 'Excellent condition — minimal signs of use. Fully tested and verified functional.' },
+  B: { label: 'Grade B', desc: 'Good condition — light to moderate cosmetic wear. Fully tested and verified functional.' },
+}
+
 const DEFAULT_MAX = 1200
 const SAVED_KEY = 'pcs.catalog.savedSearches.v2'
 const FAV_KEY = 'pcs.catalog.favorites'
@@ -107,6 +113,7 @@ export default function CatalogPage() {
   const [cartOpen, setCartOpen] = useState(false)
   const [quoteStep, setQuoteStep] = useState('cart') // 'cart' | 'pricing'
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [activeProduct, setActiveProduct] = useState(null) // device shown in the detail view
 
   // Saved searches + favorites (persisted to localStorage)
   const [savedSearches, setSavedSearches] = useState([])
@@ -178,11 +185,26 @@ export default function CatalogPage() {
 
   const hottest = devices.filter((d) => d.hot)
 
-  const addToQuote = (id) => {
-    setCart((c) => (c.find((i) => i.id === id) ? c.map((i) => (i.id === id ? { ...i, qty: i.qty + 10 } : i)) : [...c, { id, qty: 10, customPrice: '' }]))
+  const addToQuote = (id, amount = 10) => {
+    setCart((c) => (c.find((i) => i.id === id) ? c.map((i) => (i.id === id ? { ...i, qty: i.qty + amount } : i)) : [...c, { id, qty: amount, customPrice: '' }]))
     setQuoteStep('cart')
     setCartOpen(true)
   }
+
+  // Product detail view
+  const openProduct = (d) => setActiveProduct(d)
+  const closeProduct = () => setActiveProduct(null)
+  const addFromDetail = (id, qty) => { addToQuote(id, qty); closeProduct() }
+
+  // Close the detail view on Escape and lock body scroll while it's open
+  useEffect(() => {
+    if (!activeProduct) return
+    const onKey = (e) => { if (e.key === 'Escape') closeProduct() }
+    document.addEventListener('keydown', onKey)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prevOverflow }
+  }, [activeProduct])
   const changeQty = (id, delta) =>
     setCart((c) => c.map((i) => (i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)))
   const setCustomPrice = (id, val) =>
@@ -284,8 +306,8 @@ export default function CatalogPage() {
         </div>
         <div className="flex gap-3 overflow-x-auto px-4 py-3 scrollbar-none">
           {hottest.map((d) => (
-            <div key={d.id} className="flex-shrink-0 w-40 bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 p-3 relative">
-              <button onClick={() => toggleFavorite(d.id)} className="absolute top-2 right-2 z-10">
+            <div key={d.id} onClick={() => openProduct(d)} className="flex-shrink-0 w-40 bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 p-3 relative cursor-pointer active:scale-[0.98] transition-transform">
+              <button onClick={(e) => { e.stopPropagation(); toggleFavorite(d.id) }} className="absolute top-2 right-2 z-10">
                 <Heart size={16} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
               </button>
               <div className="bg-yellow-400/15 rounded-xl h-20 flex items-center justify-center mb-2">
@@ -340,10 +362,10 @@ export default function CatalogPage() {
         {/* Catalog grid */}
         <div className="px-4 mt-4 grid grid-cols-2 gap-3">
           {filtered.map((d) => (
-            <div key={d.id} className="bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 p-3">
+            <div key={d.id} onClick={() => openProduct(d)} className="bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 p-3 cursor-pointer active:scale-[0.98] transition-transform">
               <div className="relative bg-gray-50 dark:bg-[#1e2d45] rounded-xl h-24 flex items-center justify-center mb-2">
                 <DeviceIcon category={d.category} size={34} className="text-gray-300 dark:text-gray-500" />
-                <button onClick={() => toggleFavorite(d.id)} className="absolute top-2 right-2">
+                <button onClick={(e) => { e.stopPropagation(); toggleFavorite(d.id) }} className="absolute top-2 right-2">
                   <Heart size={16} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
                 </button>
               </div>
@@ -354,7 +376,7 @@ export default function CatalogPage() {
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{specLine(d)}</p>
               <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} avail</p>
               <p className="text-gray-900 dark:text-white font-bold text-sm mt-1">from {fmt(d.price)}</p>
-              <button onClick={() => addToQuote(d.id)} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Quote</button>
+              <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Quote</button>
             </div>
           ))}
           {filtered.length === 0 && (
@@ -417,8 +439,8 @@ export default function CatalogPage() {
         </div>
         <div className="grid grid-cols-4 gap-4 mb-6">
           {hottest.map((d) => (
-            <div key={d.id} className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 relative">
-              <button onClick={() => toggleFavorite(d.id)} className="absolute top-3 left-3 z-10">
+            <div key={d.id} onClick={() => openProduct(d)} className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 relative cursor-pointer hover:border-blue-200 dark:hover:border-blue-800/60 hover:shadow-md transition-all">
+              <button onClick={(e) => { e.stopPropagation(); toggleFavorite(d.id) }} className="absolute top-3 left-3 z-10">
                 <Heart size={17} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500 hover:text-rose-400'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
               </button>
               {d.tag && <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-yellow-400/15 text-yellow-600 dark:text-yellow-400">{d.tag}</span>}
@@ -429,7 +451,7 @@ export default function CatalogPage() {
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">Grade {d.grade}{d.storage ? ` · ${d.storage}GB` : ''} · {d.qty.toLocaleString()} avail</p>
               <div className="flex items-center justify-between mt-2">
                 <p className="text-yellow-600 dark:text-yellow-400 font-bold">from {fmt(d.price)}</p>
-                <button onClick={() => addToQuote(d.id)} className="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-[#0b1b3a] text-white hover:bg-[#0d2147]">Add</button>
+                <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-[#0b1b3a] text-white hover:bg-[#0d2147]">Add</button>
               </div>
             </div>
           ))}
@@ -496,10 +518,10 @@ export default function CatalogPage() {
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((d) => (
-                <div key={d.id} className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 flex flex-col">
+                <div key={d.id} onClick={() => openProduct(d)} className="bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 flex flex-col cursor-pointer hover:border-blue-200 dark:hover:border-blue-800/60 hover:shadow-md transition-all">
                   <div className="relative bg-gray-50 dark:bg-[#1e2d45] rounded-xl h-28 flex items-center justify-center mb-3">
                     <DeviceIcon category={d.category} size={42} className="text-gray-300 dark:text-gray-500" />
-                    <button onClick={() => toggleFavorite(d.id)} className="absolute top-2 right-2">
+                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(d.id) }} className="absolute top-2 right-2">
                       <Heart size={17} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500 hover:text-rose-400'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
                     </button>
                   </div>
@@ -514,7 +536,7 @@ export default function CatalogPage() {
                       <p className="text-[10px] text-gray-400 uppercase tracking-wide">from</p>
                       <p className="text-lg font-bold text-gray-900 dark:text-white leading-none">{fmt(d.price)}</p>
                     </div>
-                    <button onClick={() => addToQuote(d.id)} className="flex items-center gap-1 px-3 py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">
+                    <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="flex items-center gap-1 px-3 py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">
                       <Plus size={14} /> Add to Quote
                     </button>
                   </div>
@@ -546,6 +568,17 @@ export default function CatalogPage() {
           )}
         </div>
       </div>
+
+      {/* ── PRODUCT DETAIL ── */}
+      {activeProduct && (
+        <ProductDetail
+          device={activeProduct}
+          onClose={closeProduct}
+          onAddToQuote={addFromDetail}
+          isFavorite={isFavorite}
+          toggleFavorite={toggleFavorite}
+        />
+      )}
     </>
   )
 }
@@ -553,6 +586,126 @@ export default function CatalogPage() {
 function DeviceIcon({ category, size, className }) {
   const Icon = catIcon[category] || Smartphone
   return <Icon size={size} className={className} />
+}
+
+function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFavorite }) {
+  const [qty, setQty] = useState(10)
+  const g = gradeInfo[d.grade]
+  const lineTotal = d.price * (Number(qty) || 0)
+  const specs = [
+    ['Category', d.category],
+    ['Brand', d.brand],
+    ['Model', d.model],
+    ['Storage', d.storage ? `${d.storage}GB` : '—'],
+    ['Color', d.color || '—'],
+    ['Carrier', d.carrier || '—'],
+  ]
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 md:backdrop-blur-sm"
+      onMouseDown={onClose}
+    >
+      <div
+        onMouseDown={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${d.name} details`}
+        className="relative w-full md:w-auto md:max-w-3xl max-h-[92vh] md:max-h-[88vh] overflow-y-auto bg-white dark:bg-[#152035] rounded-t-2xl md:rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl"
+      >
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-[#1e2d45]/80 text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#243350]"
+        >
+          <X size={18} />
+        </button>
+
+        <div className="md:grid md:grid-cols-2">
+          {/* Left: image + specs */}
+          <div className="p-5 md:p-6">
+            <div className="relative bg-gray-50 dark:bg-[#1e2d45] rounded-2xl h-48 md:h-56 flex items-center justify-center">
+              <DeviceIcon category={d.category} size={72} className="text-gray-300 dark:text-gray-500" />
+              {d.tag && (
+                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-yellow-400/15 text-yellow-600 dark:text-yellow-400">{d.tag}</span>
+              )}
+              <button onClick={() => toggleFavorite(d.id)} aria-label="Toggle favorite" className="absolute top-3 right-3">
+                <Heart size={20} className={isFavorite(d.id) ? 'text-rose-500' : 'text-gray-300 dark:text-gray-500 hover:text-rose-400'} fill={isFavorite(d.id) ? 'currentColor' : 'none'} />
+              </button>
+            </div>
+
+            <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mt-5 mb-3">Device Specifications</h4>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+              {specs.map(([k, v]) => (
+                <div key={k}>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wide">{k}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{v}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: header, availability, grade, add to quote */}
+          <div className="p-5 md:p-6 border-t md:border-t-0 md:border-l border-gray-100 dark:border-white/5">
+            <p className="text-xs font-semibold text-gray-400 dark:text-blue-300/50 uppercase tracking-wide">{d.brand}</p>
+            <div className="flex items-start justify-between gap-3 mt-1 pr-8">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">{d.name}</h3>
+              <span className={`flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-medium ${gradeBadge[d.grade]}`}>Grade {d.grade}</span>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">{fmt(d.price)}</span>
+              <span className="text-xs text-gray-400">/ unit · list price</span>
+            </div>
+
+            {/* Availability */}
+            <div className="mt-4 rounded-xl bg-gray-50 dark:bg-[#1e2d45] p-3 space-y-2">
+              <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200"><MapPin size={15} className="text-gray-400" /> {d.location}</div>
+              <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200"><Package size={15} className="text-gray-400" /> {d.qty.toLocaleString()} units available</div>
+            </div>
+
+            {/* Grade guide */}
+            {g && (
+              <div className="mt-3 flex gap-2 rounded-xl border border-gray-100 dark:border-gray-700 p-3">
+                <ShieldCheck size={16} className="text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-semibold text-gray-900 dark:text-white">{g.label}</p>
+                  <p className="text-xs text-gray-400 dark:text-blue-300/60 leading-snug mt-0.5">{g.desc}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Add to quote */}
+            <div className="mt-4 border-t border-gray-100 dark:border-gray-700 pt-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Quantity</span>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => setQty((q) => Math.max(1, (Number(q) || 1) - 10))} className="w-7 h-7 flex items-center justify-center rounded border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300"><Minus size={13} /></button>
+                  <input
+                    value={qty}
+                    onChange={(e) => setQty(e.target.value.replace(/[^0-9]/g, ''))}
+                    onBlur={() => setQty((q) => Math.max(1, Number(q) || 1))}
+                    className="w-14 text-center text-sm font-medium text-gray-900 dark:text-white bg-white dark:bg-[#1e2d45] border border-gray-200 dark:border-gray-600 rounded py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button onClick={() => setQty((q) => (Number(q) || 0) + 10)} className="w-7 h-7 flex items-center justify-center rounded border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300"><Plus size={13} /></button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between mt-3">
+                <span className="text-sm text-gray-400">Est. subtotal</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white">{fmt(lineTotal)}</span>
+              </div>
+              <button
+                onClick={() => onAddToQuote(d.id, Math.max(1, Number(qty) || 1))}
+                className="mt-3 w-full flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]"
+              >
+                <ShoppingCart size={16} /> Add to Quote
+              </button>
+              <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug mt-2">You'll be able to propose custom pricing at checkout.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function FilterGroups({ stateByKey, toggle, enabledByKey, dense }) {
