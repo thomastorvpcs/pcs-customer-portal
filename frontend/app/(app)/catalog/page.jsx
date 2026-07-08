@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, ArrowLeft, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck } from 'lucide-react'
+import { GRADE_BY_CODE } from '@/lib/grades'
 
 const OFFER_REASONS = ['Volume commitment', 'Competitor quote', 'Budget constraint', 'Repeat order', 'Other']
 
@@ -74,12 +75,6 @@ const gradeBadge = {
   B: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
 }
 
-// Grade guidance shown in the product detail view
-const gradeInfo = {
-  A: { label: 'Grade A', desc: 'Excellent condition — minimal signs of use. Fully tested and verified functional.' },
-  B: { label: 'Grade B', desc: 'Good condition — light to moderate cosmetic wear. Fully tested and verified functional.' },
-}
-
 const DEFAULT_MAX = 1200
 const SAVED_KEY = 'pcs.catalog.savedSearches.v2'
 const FAV_KEY = 'pcs.catalog.favorites'
@@ -133,6 +128,12 @@ export default function CatalogPage() {
       if (Array.isArray(f)) setFavorites(f)
     } catch { /* ignore malformed storage */ }
     setHydrated(true)
+  }, [])
+
+  // Pre-apply a grade filter when arriving from the grading guide (/catalog?grade=A)
+  useEffect(() => {
+    const g = new URLSearchParams(window.location.search).get('grade')
+    if (g && filterGroups.grade.includes(g)) setGrades([g])
   }, [])
 
   useEffect(() => { if (hydrated) localStorage.setItem(SAVED_KEY, JSON.stringify(savedSearches)) }, [savedSearches, hydrated])
@@ -288,6 +289,9 @@ export default function CatalogPage() {
         <div className="px-4 pt-5 pb-3">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Catalog</h1>
           <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a quote</p>
+          <Link href="/catalog/grades" className="inline-flex items-center gap-1 text-xs font-medium text-[#0b1b3a] dark:text-blue-300 mt-1.5 hover:underline">
+            <ShieldCheck size={13} /> How our grading works
+          </Link>
         </div>
 
         {/* Promo banner */}
@@ -418,6 +422,9 @@ export default function CatalogPage() {
         <div className="mb-4">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Catalog</h1>
           <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a quote</p>
+          <Link href="/catalog/grades" className="inline-flex items-center gap-1 text-xs font-medium text-[#0b1b3a] dark:text-blue-300 mt-1.5 hover:underline">
+            <ShieldCheck size={13} /> How our grading works
+          </Link>
         </div>
 
         {/* Promo banner */}
@@ -590,7 +597,7 @@ function DeviceIcon({ category, size, className }) {
 
 function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFavorite }) {
   const [qty, setQty] = useState(10)
-  const g = gradeInfo[d.grade]
+  const g = GRADE_BY_CODE[d.grade]
   const lineTotal = d.price * (Number(qty) || 0)
   const specs = [
     ['Category', d.category],
@@ -650,7 +657,7 @@ function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFav
             <p className="text-xs font-semibold text-gray-400 dark:text-blue-300/50 uppercase tracking-wide">{d.brand}</p>
             <div className="flex items-start justify-between gap-3 mt-1 pr-8">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">{d.name}</h3>
-              <span className={`flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-medium ${gradeBadge[d.grade]}`}>Grade {d.grade}</span>
+              <Link href={`/catalog/grades#${g?.slug || ''}`} className={`flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-medium hover:ring-2 hover:ring-blue-300 dark:hover:ring-blue-600 transition ${gradeBadge[d.grade]}`} title="See what this grade means">Grade {d.grade}</Link>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-3xl font-bold text-gray-900 dark:text-white">{fmt(d.price)}</span>
@@ -663,15 +670,18 @@ function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFav
               <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200"><Package size={15} className="text-gray-400" /> {d.qty.toLocaleString()} units available</div>
             </div>
 
-            {/* Grade guide */}
+            {/* Grade guide — links to the full grading guide page */}
             {g && (
-              <div className="mt-3 flex gap-2 rounded-xl border border-gray-100 dark:border-gray-700 p-3">
-                <ShieldCheck size={16} className="text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-xs font-semibold text-gray-900 dark:text-white">{g.label}</p>
-                  <p className="text-xs text-gray-400 dark:text-blue-300/60 leading-snug mt-0.5">{g.desc}</p>
+              <Link href={`/catalog/grades#${g.slug}`} className="mt-3 flex gap-2 rounded-xl border border-gray-100 dark:border-gray-700 p-3 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group">
+                <ShieldCheck size={16} style={{ color: g.accent }} className="flex-shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-gray-900 dark:text-white">{g.name}</p>
+                  <p className="text-xs text-gray-400 dark:text-blue-300/60 leading-snug mt-0.5">{g.short}</p>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#0b1b3a] dark:text-blue-300 mt-1.5 group-hover:underline">
+                    See grade examples <ArrowRight size={12} />
+                  </span>
                 </div>
-              </div>
+              </Link>
             )}
 
             {/* Add to quote */}
