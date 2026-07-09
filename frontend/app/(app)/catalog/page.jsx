@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, ArrowLeft, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck } from 'lucide-react'
+import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck } from 'lucide-react'
 import { GRADE_BY_CODE } from '@/lib/grades'
 
 const OFFER_REASONS = ['Volume commitment', 'Competitor quote', 'Budget constraint', 'Repeat order', 'Other']
@@ -296,7 +296,7 @@ export default function CatalogPage() {
       <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] pb-24">
         <div className="px-4 pt-5 pb-3">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Catalog</h1>
-          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a sales estimate</p>
+          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build your cart</p>
           <Link href="/catalog/grades" className="inline-flex items-center gap-1 text-xs font-medium text-[#0b1b3a] dark:text-blue-300 mt-1.5 hover:underline">
             <ShieldCheck size={13} /> How our grading works
           </Link>
@@ -424,7 +424,7 @@ export default function CatalogPage() {
       <div className="hidden md:block md:p-4 xl:p-8">
         <div className="mb-4">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Catalog</h1>
-          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a sales estimate</p>
+          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build your cart</p>
           <Link href="/catalog/grades" className="inline-flex items-center gap-1 text-xs font-medium text-[#0b1b3a] dark:text-blue-300 mt-1.5 hover:underline">
             <ShieldCheck size={13} /> How our grading works
           </Link>
@@ -577,21 +577,18 @@ export default function CatalogPage() {
       {/* ── PRICING MODAL ── opens from the cart's "Continue to pricing" */}
       {cartOpen && quoteStep === 'pricing' && (
         <div
-          className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 md:backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
           onMouseDown={() => setQuoteStep('cart')}
         >
           <div
             onMouseDown={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Propose pricing"
-            className="w-full md:w-auto md:max-w-lg max-h-[90vh] md:max-h-[85vh] overflow-y-auto bg-white dark:bg-[#152035] rounded-t-2xl md:rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-4 md:p-5"
+            aria-label="Your cart"
+            className="w-full max-w-lg max-h-[85vh] overflow-y-auto bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-4 md:p-5"
           >
             <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-2">
-                <button onClick={() => setQuoteStep('cart')} aria-label="Back to cart" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"><ArrowLeft size={18} /></button>
-                <h3 className="text-base font-bold text-gray-900 dark:text-white">Propose Pricing</h3>
-              </div>
+              <h3 className="text-base font-bold text-gray-900 dark:text-white">Your Cart</h3>
               <button onClick={() => setQuoteStep('cart')} aria-label="Close" className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
             </div>
             <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-4">Review each line and optionally propose your own per-unit pricing before submitting.</p>
@@ -846,7 +843,7 @@ function SavedSearchPanel({ savedSearches, activeSavedId, saveName, setSaveName,
 
 function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine, pricingCtl }) {
   if (cart.length === 0) {
-    return <p className="text-sm text-gray-400 text-center py-8">No items yet. Add devices to build your sales estimate.</p>
+    return <p className="text-sm text-gray-400 text-center py-8">No items yet. Add devices to build your cart.</p>
   }
   return (
     <div className="space-y-3 mb-4">
@@ -938,7 +935,7 @@ function CartFooter({ cart, step, subtotal, listSubtotal, cartCount, onContinue 
       {step === 'pricing' ? (
         <>
           <Link href="/sales-estimates" className="block w-full text-center py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
-            Submit Estimate for Review
+            Submit for Review
           </Link>
           <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug">
             Prices shown are indicative. PCS will respond with confirmed pricing after review.
