@@ -24,7 +24,7 @@ Please review Stage 1 and indicate:
 | Stage | Scope | Status |
 |-------|-------|--------|
 | **Stage 1** | Authentication, Support Ticket Agent View, Customer Search & List, Customer 360 — Core | **This document** |
-| Future | RMA Management, Dashboard KPIs, Inventory Browser, Quote Creation & Approvals, Customer Analytics & AI Insights, Calendar & Meeting Scheduling | Upcoming |
+| Future | RMA Management, Dashboard KPIs, Inventory Browser, Sales Estimate Creation & Approvals, Customer Analytics & AI Insights, Calendar & Meeting Scheduling | Upcoming |
 
 ---
 
@@ -70,7 +70,7 @@ A two-panel support interface allowing sales reps and support agents to view, ma
 
 **US-B-04** — As a support agent, I want to filter tickets by priority (Urgent, High, Normal, Low) so that I can handle the most critical issues first.
 
-**US-B-05** — As a support agent, I want to filter tickets by category (Order Issue, Shipping, RMA, Billing, Quote, Certificate, General) so that I can work through a specific type of request.
+**US-B-05** — As a support agent, I want to filter tickets by category (Order Issue, Shipping, RMA, Billing, Sales Estimate, Certificate, General) so that I can work through a specific type of request.
 
 **US-B-06** — As a support agent, I want to filter tickets by assigned sales rep so that I can view only the tickets relevant to my accounts.
 
@@ -131,7 +131,7 @@ A two-panel support interface allowing sales reps and support agents to view, ma
 
 #### Ticket Categories
 
-Order Issue, Shipping, RMA Enquiry, Billing, Quote, Certificate, General
+Order Issue, Shipping, RMA Enquiry, Billing, Sales Estimate, Certificate, General
 
 #### Reply vs Internal Note
 
@@ -201,8 +201,8 @@ A profile view for each customer account. Stage 1 delivers the account header an
 
 | Role | Description |
 |------|-------------|
-| Sales Representative | Full access to all Stage 1 features; cannot approve quotes in future stages |
-| Sales Manager | Full access to all stages including future quote approvals and AI insights |
+| Sales Representative | Full access to all Stage 1 features; cannot approve sales estimates in future stages |
+| Sales Manager | Full access to all stages including future sales estimate approvals and AI insights |
 | Support Agent | Access to support ticket view only; cannot access customer accounts or financial data |
 
 ### Access Matrix — Stage 1
@@ -226,12 +226,12 @@ The following features are planned for future delivery. Each feature area will r
 
 | Feature Area | Description |
 |-------------|-------------|
-| Backoffice Dashboard | Account-wide KPI cards (Total Customers, Open RMAs, Open Tickets, Pending Quotes, Revenue MTD), quick action buttons, recent activity feed, and upcoming meetings panel |
+| Backoffice Dashboard | Account-wide KPI cards (Total Customers, Open RMAs, Open Tickets, Pending Sales Estimates, Revenue MTD), quick action buttons, recent activity feed, and upcoming meetings panel |
 | RMA Management Queue | Centralised queue for reviewing, approving, or refusing customer return requests; resolution tracking with credit memo, replacement, or partial credit outcomes |
-| Advanced Customer 360 | Invoice history, financial aging breakdown, shipments, RMA history, open quotes, and chronological account activity log |
+| Advanced Customer 360 | Invoice history, financial aging breakdown, shipments, RMA history, open sales estimates, and chronological account activity log |
 | Inventory Browser | Live inventory view across warehouse locations with tier pricing, floor prices, low-stock indicators, and margin colour coding |
-| Quote Creation Tool | Build and submit custom product quotes for customers, with product catalog browsing, custom pricing, draft saving, and manager submission |
-| Quote Approvals | Manager-only approval queue for reviewing, approving, counter-offering, or rejecting submitted quotes |
+| Sales Estimate Creation Tool | Build and submit custom product sales estimates for customers, with product catalog browsing, custom pricing, draft saving, and manager submission |
+| Sales Estimate Approvals | Manager-only approval queue for reviewing, approving, counter-offering, or rejecting submitted sales estimates |
 | Customer Analytics & AI Insights | Purchase behaviour analytics, AI-generated account summaries, at-risk customer alerts, aging inventory recommendations, and customer segmentation |
 | Calendar & Meeting Scheduling | Office 365–integrated calendar for scheduling and managing customer meetings with Outlook invite sync |
 

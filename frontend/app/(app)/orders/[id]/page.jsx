@@ -125,7 +125,7 @@ export default function OrderDetailPage({ params }) {
                 { label: 'View Shipment', icon: Truck },
                 { label: 'View Invoice', icon: FileText },
                 { label: 'Device Manifest', icon: LayoutList },
-                { label: 'Original Quote', icon: FileCheck },
+                { label: 'Original Sales Estimate', icon: FileCheck },
               ].map(({ label, icon: Icon }) => (
                 <button key={label} className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-gray-100 dark:border-white/5 text-sm text-blue-600 dark:text-blue-400">
                   <Icon size={14} />
@@ -250,7 +250,7 @@ export default function OrderDetailPage({ params }) {
                 { label: 'View Shipment', icon: Truck },
                 { label: 'View Invoice', icon: FileText },
                 { label: 'Device Manifest', icon: LayoutList },
-                { label: 'Original Quote', icon: FileCheck },
+                { label: 'Original Sales Estimate', icon: FileCheck },
               ].map(({ label, icon: Icon }) => (
                 <button key={label} className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 transition-colors">
                   <Icon size={14} />

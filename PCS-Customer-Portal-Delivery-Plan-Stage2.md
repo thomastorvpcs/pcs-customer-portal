@@ -1,8 +1,8 @@
 # PCS Wireless Customer Portal — Stage 2 Feature Tickets
 
-**Document Version:** 1.3
-**Date:** July 8, 2026
-**Stage / Module:** Stage 2 — Catalog, Quotes & Offers
+**Document Version:** 1.4
+**Date:** July 9, 2026
+**Stage / Module:** Stage 2 — Catalog, Sales Estimates & Offers
 **Status:** Draft — For Development Refinement
 **Prepared by:** Business Analysis
 **Audience:** Development team (to write technical requirements); open questions flagged for Business
@@ -15,9 +15,9 @@ This document sits **between** the Stage 2 business requirements (the `US-##` us
 
 Each ticket is written in **product / behavioral terms only**. It deliberately contains **no technical detail** — no data models, endpoints, or technology choices. Those decisions belong to the developers and are the output of the next step, informed by these tickets.
 
-**Scope:** the **Catalog, Quotes & Offers** module of Stage 2 (`US-90`–`US-99`, `US-106`–`US-108`). It also specifies two catalog enhancements added during Stage 2 delivery — a **product detail view** (CQ-10) and a **device grading guide** (CQ-11, `US-108`). The other Stage 2 modules (Returns/RMA, Online Payments, Reorder, and the Stage 2 dashboard additions) are not covered here and can be added as further sections later.
+**Scope:** the **Catalog, Sales Estimates & Offers** module of Stage 2 (`US-90`–`US-99`, `US-106`–`US-109`). It also specifies two catalog enhancements added during Stage 2 delivery — a **product detail view** (CQ-10) and a **device grading guide** (CQ-11, `US-108`). The other Stage 2 modules (Returns/RMA, Online Payments, Reorder, and the Stage 2 dashboard additions) are not covered here and can be added as further sections later.
 
-The behaviors below are concrete because they are grounded in the agreed Stage 2 requirements (catalog attributes and filter dimensions, the quote status list, the custom-pricing gating).
+The behaviors below are concrete because they are grounded in the agreed Stage 2 requirements (catalog attributes and filter dimensions, the sales estimate status list, the custom-pricing gating).
 
 ---
 
@@ -39,7 +39,7 @@ Every ticket uses the same fields:
 ## Table of Contents
 
 1. [Catalog](#1-catalog)
-2. [Quotes](#2-quotes)
+2. [Sales Estimates](#2-sales-estimates)
 3. [Promotional Offers](#3-promotional-offers)
 4. [Traceability](#4-traceability)
 5. [Sign-Off](#5-sign-off)
@@ -52,12 +52,12 @@ Every ticket uses the same fields:
 
 **User stories:** US-90  ·  **Who:** Admin, Buyer, Viewer
 
-**Summary.** A customer opens the catalog and sees the available inventory laid out clearly, with each product presented as a card showing the key details needed to decide what to quote.
+**Summary.** A customer opens the catalog and sees the available inventory laid out clearly, with each product presented as a card showing the key details needed to decide what to add to a sales estimate.
 
 **How it works**
 - The catalog page is composed, top to bottom, of: a page heading; a **promotional banner** (see CQ-09); a **Hottest Offers** rail of featured devices (see CQ-09); and the **main catalog area**.
 - The main catalog area places the **filter controls** and the **product grid** side by side on desktop (filters in a left column, grid to the right), and stacks them on mobile with the filters in a collapsible panel.
-- Above the grid is a controls row: keyword **search**, a **Favorites** toggle, a **sort** control, a **View Quote** button, the customer's **saved-search shortcuts**, and a **count of matching devices**.
+- Above the grid is a controls row: keyword **search**, a **Favorites** toggle, a **sort** control, a **View Sales Estimate** button, the customer's **saved-search shortcuts**, and a **count of matching devices**.
 - Products are shown as a **responsive grid of cards** — two per row on mobile, up to three per row on larger screens.
 - **Each product card shows:**
   - A device image/thumbnail (a category-based placeholder where real imagery is not yet available).
@@ -67,7 +67,7 @@ Every ticket uses the same fields:
   - A **spec line** of the attributes that apply: storage, color, and carrier. Attributes that do not apply to a product (e.g. carrier for a laptop, storage for a wearable) are omitted rather than shown blank.
   - The **stock location** and **quantity available**.
   - An indicative **"from" price**.
-  - An **Add to Quote** action (see CQ-05).
+  - An **Add to Sales Estimate** action (see CQ-05).
   - An optional **highlight tag** on featured items (e.g. "New Arrival", "Best Seller", "Limited").
 - **Empty state:** when no devices match the current filters, a clear message is shown; a distinct message is shown when the Favorites filter is on but the customer has no favorites.
 
@@ -79,7 +79,7 @@ Every ticket uses the same fields:
 
 **Acceptance criteria**
 - The catalog displays the available devices as a grid of product cards.
-- Each card shows: name, grade, the applicable spec line, stock location, quantity available, an indicative "from" price, a favorite toggle, and an Add to Quote action.
+- Each card shows: name, grade, the applicable spec line, stock location, quantity available, an indicative "from" price, a favorite toggle, and an Add to Sales Estimate action.
 - The grid reflows to the screen width (two cards per row on mobile, up to three on desktop) without dropping any of that information.
 - A count of the devices currently shown is displayed and stays accurate as filters change.
 - When nothing matches, an appropriate empty-state message is shown.
@@ -189,7 +189,7 @@ Every ticket uses the same fields:
 
 **User stories:** US-90  ·  **Who:** Admin, Buyer, Viewer
 
-**Summary.** A customer opens a single device from the catalog to see an expanded view with larger imagery, its full specifications, availability, and grade guidance, and can add it to a quote from there.
+**Summary.** A customer opens a single device from the catalog to see an expanded view with larger imagery, its full specifications, availability, and grade guidance, and can add it to a sales estimate from there.
 
 **How it works**
 - Selecting a product card — in the main grid or in **Hottest Offers** — opens a **product detail view** presented as an overlay over the catalog, without navigating away from the current list, filters, or scroll position.
@@ -199,20 +199,20 @@ Every ticket uses the same fields:
   - A **Device Specifications** block listing the attributes that apply: category, brand, model, storage, color, carrier. Attributes that do not apply are omitted, consistent with the card (see CQ-01).
   - An **Availability** block: stock location and quantity available.
   - **Grade guidance** — a short plain-language description of what the device's grade means, linking through to the full grading guide (see CQ-11).
-- From the detail view the customer chooses a **quantity** and adds the device to the quote cart (see CQ-05); the running line subtotal is shown before adding.
+- From the detail view the customer chooses a **quantity** and adds the device to the sales estimate cart (see CQ-05); the running line subtotal is shown before adding.
 - The detail view can be dismissed to return to the catalog exactly as it was — via an explicit close control, a click outside it, or pressing Escape.
 
 **Rules & constraints**
 - Opening the detail view does not lose the customer's current filters, search, sort, or position in the list.
-- The **favorite** and **Add to Quote** actions on a card continue to work directly, without opening the detail view.
+- The **favorite** and **Add to Sales Estimate** actions on a card continue to work directly, without opening the detail view.
 - The information shown mirrors the card's rules (see CQ-01): only available inventory, applicable attributes only, and an indicative "from" price.
 - Quantity must be at least 1; adding respects the same cart rules as CQ-05 (an already-carted device has its quantity increased rather than duplicated).
 
 **Acceptance criteria**
 - Selecting a device opens a detail view showing enlarged imagery, the full applicable specifications, availability (location + quantity), grade guidance, and price.
 - The detail view closes via an explicit control, an outside click, or Escape, returning to the catalog unchanged.
-- The favorite toggle and Add to Quote action on a card do not open the detail view.
-- Choosing a quantity and adding from the detail view places that quantity in the quote cart.
+- The favorite toggle and Add to Sales Estimate action on a card do not open the detail view.
+- Choosing a quantity and adding from the detail view places that quantity in the sales estimate cart.
 - The grade shown links to the corresponding grade explanation (CQ-11).
 
 **Open questions for the business**
@@ -254,25 +254,25 @@ Every ticket uses the same fields:
 - Will PCS supply real example photography and walkthrough videos per grade, and who maintains them?
 - Should the full set of internal grades (beyond those currently on sale in the catalog) be represented, or only the customer-facing grades?
 - Should the guide content be authored/editable in a back-office tool, or is a fixed page acceptable for now?
-- Should the guide be linked from further entry points — e.g. quote lines, order history, or global navigation/footer?
+- Should the guide be linked from further entry points — e.g. sales estimate lines, order history, or global navigation/footer?
 
 ---
 
-## 2. Quotes
+## 2. Sales Estimates
 
-### CQ-05 · Build a quote cart with quantities
+### CQ-05 · Build a sales estimate cart with quantities
 
 **User stories:** US-92  ·  **Who:** Admin, Buyer
 
-**Summary.** A customer adds devices to a quote cart with the quantities they need, so they can request pricing for a specific set of items.
+**Summary.** A customer adds devices to a sales estimate cart with the quantities they need, so they can request pricing for a specific set of items.
 
 **How it works**
-- From the catalog (list or Hottest Offers), the customer adds a device to the **quote cart**.
+- From the catalog (list or Hottest Offers), the customer adds a device to the **sales estimate cart**.
 - Each cart line shows the device, its grade/storage, the quantity, the list unit price, and the line total.
 - The customer can increase or decrease the quantity per line, and remove a line.
 - The cart shows the total number of units and a subtotal at **list prices**.
 - The customer can keep browsing and adding devices; the cart is retained while they do.
-- The cart is the starting point for a quote and leads into the pricing step (see CQ-06) and submission (see CQ-07).
+- The cart is the starting point for a sales estimate and leads into the pricing step (see CQ-06) and submission (see CQ-07).
 
 **Rules & constraints**
 - A line quantity must be at least 1.
@@ -284,7 +284,7 @@ Every ticket uses the same fields:
 - Quantity can be adjusted up and down, and a line can be removed.
 - Adding an already-carted device increases its quantity instead of duplicating it.
 - The cart's unit count and list subtotal update as lines and quantities change.
-- A Viewer cannot build or submit a quote.
+- A Viewer cannot build or submit a sales estimate.
 
 **Open questions for the business**
 - Should quantity adjust in single units, or in packs (e.g. steps of 10)? Is there a minimum order quantity per device?
@@ -293,11 +293,11 @@ Every ticket uses the same fields:
 
 ---
 
-### CQ-06 · Propose custom pricing on a quote
+### CQ-06 · Propose custom pricing on a sales estimate
 
 **User stories:** US-93  ·  **Who:** Admin, Buyer
 
-**Summary.** On a dedicated pricing step, the customer can request a custom per-unit price on individual quote lines, as a formal request subject to PCS review.
+**Summary.** On a dedicated pricing step, the customer can request a custom per-unit price on individual sales estimate lines, as a formal request subject to PCS review.
 
 **How it works**
 - Pricing is a **separate step** reached after the cart is built. The cart itself always shows list prices.
@@ -316,8 +316,8 @@ Every ticket uses the same fields:
 **Acceptance criteria**
 - A line's price field stays locked until that line's reason and acknowledgement are both provided.
 - Resetting a line clears its proposed price and reason and returns it to list price.
-- Lines left untouched are carried into the submitted quote at list price.
-- The submitted quote records, per line, the proposed price and the selected reason.
+- Lines left untouched are carried into the submitted sales estimate at list price.
+- The submitted sales estimate records, per line, the proposed price and the selected reason.
 
 **Open questions for the business**
 - Is the reason list fixed as above, or should a free-text reason be allowed (e.g. for "Other")?
@@ -325,78 +325,80 @@ Every ticket uses the same fields:
 
 ---
 
-### CQ-07 · Submit and track quotes, with status history
+### CQ-07 · Submit and track sales estimates, with status history
 
 **User stories:** US-94, US-95, US-96  ·  **Who:** Admin, Buyer (submit); Admin, Buyer, Viewer (view)
 
-**Summary.** A customer submits a built quote to PCS for review, then tracks every submitted quote and follows its status and negotiation history.
+**Summary.** A customer submits a built sales estimate to PCS for review, then tracks every submitted sales estimate and follows its status and negotiation history.
 
 **How it works**
-- From the pricing step the customer **submits** the quote for review. On submission the quote is created with a **reference number** and a status of **Submitted**, and PCS is notified to respond with confirmed pricing.
-- The **Quotes list** shows all of the customer's quotes with reference number, created date, item count, total, and status. The customer can filter by status (All, Draft, Submitted, Under Review, Accepted) and search by reference number.
-- Selecting a quote opens its **detail**: the assigned PCS rep, the created and valid-until dates, each line item with the customer's proposed **Your Price** alongside the **PCS Price**, and a chronological **status history** timeline of every change with dates and notes.
-- When PCS has counter-offered, the detail highlights that revised pricing is proposed and offers the customer **Accept** or **Decline**.
-- The customer can download a PDF copy of a quote.
+- From the pricing step the customer **submits** the sales estimate for review. On submission the sales estimate is created with a **reference number** and a status of **Submitted**, and PCS is notified to respond with confirmed pricing.
+- The **Sales Estimates list** shows all of the customer's sales estimates with reference number, created date, item count, total, and status. The customer can filter by status (All, Draft, Submitted, Under Review, Accepted) and search by reference number.
+- Selecting a sales estimate opens its **detail**: the assigned PCS rep, the created and valid-until dates, each line item with the customer's proposed **Your Price** alongside the **PCS Price**, and a chronological **status history** timeline of every change with dates and notes.
+- When PCS has counter-offered, the detail highlights that revised pricing is proposed and offers the customer three responses: **Accept**, **Decline**, or **Counter**. Accepting reaches agreement and the sales estimate is automatically converted into a sales order (see CQ-08). Declining closes the sales estimate. Countering lets the customer propose their own revised per-unit pricing back to PCS, which returns the sales estimate to **Under Review** for another round.
+- The customer can download a PDF copy of a sales estimate.
 
 **States**
 
 | Status | Meaning |
 |--------|---------|
-| Draft | Quote is being built; not yet submitted |
+| Draft | Sales Estimate is being built; not yet submitted |
 | Submitted | Sent to PCS; awaiting review |
 | Under Review | PCS is reviewing the requested pricing |
-| Counter-Offered | PCS has responded with revised pricing; customer can Accept or Decline |
-| Accepted | Pricing agreed; the quote can be converted to an order (see CQ-08) |
-| Rejected | Quote declined |
-| Expired | The quote's validity period has lapsed |
+| Counter-Offered | PCS has responded with revised pricing; customer can Accept, Decline, or Counter |
+| Accepted | Pricing agreed (by PCS, or by the customer accepting a counter-offer); the sales estimate is **automatically converted into a sales order** (see CQ-08) |
+| Declined | Customer declined PCS's counter-offer |
+| Rejected | PCS declined the sales estimate |
+| Expired | The sales estimate's validity period has lapsed |
 
 **Rules & constraints**
-- A quote must contain at least one line item to be submitted.
-- Once submitted, a quote is read-only to the customer except for responding to a counter-offer (Accept / Decline).
+- A sales estimate must contain at least one line item to be submitted.
+- Once submitted, a sales estimate is read-only to the customer except for responding to a counter-offer (Accept / Decline / Counter).
 - The **PCS Price** for a line is shown only once PCS has set it; until then it is blank.
-- The quote total reflects PCS pricing where it has been provided, otherwise the customer's proposed price.
-- A quote past its valid-until date is treated as Expired and cannot be accepted or converted.
+- The sales estimate total reflects PCS pricing where it has been provided, otherwise the customer's proposed price.
+- A sales estimate past its valid-until date is treated as Expired and cannot be accepted or converted.
 
 **Acceptance criteria**
-- Submitting a built quote creates it with a reference number and status Submitted, and it appears in the customer's Quotes list.
+- Submitting a built sales estimate creates it with a reference number and status Submitted, and it appears in the customer's Sales Estimates list.
 - The list can be filtered by status and reflects the correct count and total per status.
 - The detail shows line items with both Your Price and PCS Price, and a status-history timeline that lists each change with its date.
-- A Counter-Offered quote presents Accept and Decline actions; other statuses do not.
-- Accepting or declining a counter-offer records the outcome in the status history.
+- A Counter-Offered sales estimate presents Accept, Decline, and Counter actions; other statuses do not.
+- Accepting, declining, or countering a counter-offer records the outcome in the status history; accepting also produces a sales order (see CQ-08).
 
 **Open questions for the business**
-- Can a customer edit and resubmit a Rejected quote, or must they start a new one?
-- When a customer declines a counter-offer, does the quote reopen for further negotiation or move straight to Rejected/closed?
-- What is the default validity period of a quote, and can a customer request an extension near expiry?
-- Should the customer be notified (email/SMS/in-app) when a quote's status changes?
+- Can a customer edit and resubmit a Rejected sales estimate, or must they start a new one?
+- Is there a limit to how many counter rounds (customer ↔ PCS) are allowed before a sales estimate must be accepted, declined, or expires?
+- What is the default validity period of a sales estimate, and can a customer request an extension near expiry?
+- Should the customer be notified (email/SMS/in-app) when a sales estimate's status changes?
 
 ---
 
-### CQ-08 · Convert an accepted quote to an order
+### CQ-08 · Automatic conversion of an accepted sales estimate to a sales order
 
-**User stories:** US-97  ·  **Who:** Admin, Buyer
+**User stories:** US-97, US-109  ·  **Who:** Admin, Buyer
 
-**Summary.** A customer turns an accepted quote into an order without re-entering the line items, so they can complete the purchase.
+**Summary.** When a sales estimate is accepted, it is **automatically converted into a sales order** — the customer does not perform any separate accept or convert step.
 
 **How it works**
-- On an **Accepted** quote, the customer chooses **Convert to Order**.
-- A new order is created **pre-populated** with the quote's line items, quantities, and the agreed (PCS-confirmed) pricing.
-- The customer reviews and confirms the pre-populated order to place it.
+- **Acceptance is the trigger.** A sales estimate becomes **Accepted** in one of two ways: PCS accepts the customer's proposed pricing, or the customer accepts a PCS counter-offer (see CQ-07).
+- On acceptance, a **sales order is created automatically**, **pre-populated** with the sales estimate's line items, quantities, and the agreed (PCS-confirmed) pricing.
+- The customer is **not** asked to accept or convert anything. The accepted sales estimate links through to the sales order it produced, which then follows the normal order flow.
 
 **Rules & constraints**
-- Convert to Order is available **only** when the quote's status is Accepted; it is disabled for every other status.
-- The order is created at the **agreed pricing** from the accepted quote, not at list or the originally proposed price.
-- An expired quote cannot be converted.
+- Conversion happens **automatically on acceptance** — there is no manual "Convert to Order" step for the customer.
+- The sales order is created at the **agreed pricing**, not at list or the originally proposed price.
+- An expired sales estimate cannot be accepted, and therefore is never converted.
 
 **Acceptance criteria**
-- The Convert to Order action is enabled only for Accepted quotes and disabled otherwise.
-- Converting produces a new order containing exactly the accepted quote's line items, quantities, and agreed prices.
-- The customer can review the pre-populated order before it is placed.
+- When a sales estimate reaches **Accepted**, a sales order is created automatically, with no customer action.
+- The resulting sales order contains exactly the accepted sales estimate's line items, quantities, and agreed prices.
+- The accepted sales estimate references the sales order it generated.
+- No "Convert to Order" action is presented to the customer.
 
 **Open questions for the business**
-- After conversion, what is the resulting quote's state — does it remain Accepted, or move to a "Converted/Closed" state to prevent double-ordering?
-- Can a single accepted quote be converted more than once (partial or repeat orders), or only once?
-- Are shipping and billing details carried from the account automatically, or confirmed during conversion?
+- Should the customer be notified (email/SMS/in-app) when acceptance produces a sales order?
+- Does the resulting sales estimate move to a "Converted/Closed" state, or remain **Accepted** with a link to the order?
+- Are shipping and billing details taken from the account automatically, or confirmed on the resulting sales order before fulfillment?
 
 ---
 
@@ -409,7 +411,7 @@ Every ticket uses the same fields:
 **Summary.** Customers see curated featured deals — a "Hottest Offers" section and full-width promotional banners — so current deals and featured inventory are clearly highlighted.
 
 **How it works**
-- A **Hottest Offers** section surfaces a curated set of featured devices. Each featured item shows its device, an optional highlight tag (e.g. "Best Seller", "New Arrival", "Limited"), grade/storage, availability, and price, and can be added straight to a quote.
+- A **Hottest Offers** section surfaces a curated set of featured devices. Each featured item shows its device, an optional highlight tag (e.g. "Best Seller", "New Arrival", "Limited"), grade/storage, availability, and price, and can be added straight to a sales estimate.
 - A **promotional banner** presents a headline featured deal in a prominent full-width strip, with a short call to action that takes the customer to the relevant deal or catalog view.
 - Hottest Offers and the promotional banner appear on the **catalog**, and Hottest Offers also appears on the **dashboard**.
 
@@ -419,7 +421,7 @@ Every ticket uses the same fields:
 
 **Acceptance criteria**
 - The Hottest Offers section displays the curated featured devices with their tag, price, and availability.
-- A featured device can be added to a quote directly from the offers section.
+- A featured device can be added to a sales estimate directly from the offers section.
 - The promotional banner is shown on the dashboard and catalog and links through to the featured deal/catalog view.
 
 **Open questions for the business**
@@ -431,23 +433,24 @@ Every ticket uses the same fields:
 
 ## 4. Traceability
 
-Every Catalog, Quotes & Offers user story maps to at least one ticket.
+Every Catalog, Sales Estimates & Offers user story maps to at least one ticket.
 
 | User Story | Covered by |
 |------------|------------|
 | US-90 — Browse the catalog | CQ-01, CQ-10 |
 | US-91 — Filter & sort the catalog (with auto-disabled options) | CQ-02 |
-| US-92 — Add devices to a quote cart with quantity | CQ-05 |
+| US-92 — Add devices to a sales estimate cart with quantity | CQ-05 |
 | US-93 — Propose custom per-unit pricing | CQ-06 |
-| US-94 — Submit a quote for review | CQ-07 |
-| US-95 — View all submitted quotes with status | CQ-07 |
-| US-96 — View a quote's full history & status changes | CQ-07 |
-| US-97 — Convert an accepted quote into an order | CQ-08 |
+| US-94 — Submit a sales estimate for review | CQ-07 |
+| US-95 — View all submitted sales estimates with status | CQ-07 |
+| US-96 — View a sales estimate's full history & status changes | CQ-07 |
+| US-97 — Auto-convert an accepted sales estimate into a sales order | CQ-08 |
 | US-98 — "Hottest Offers" section | CQ-09 |
 | US-99 — Promotional banners | CQ-09 |
 | US-106 — Save & re-apply a named search | CQ-03 |
 | US-107 — Favorite devices & filter to favorites | CQ-04 |
 | US-108 — View the device grading guide | CQ-11 |
+| US-109 — Respond to a counter-offer (accept / decline / counter) | CQ-07, CQ-08 |
 
 **Delivery enhancement:** CQ-10 (Product detail view) has no dedicated user story of its own — it extends US-90 (browse the catalog) and resolves an open question raised in CQ-01. The grade definitions and battery-health thresholds published by CQ-11 are still to be confirmed against PCS's official grading rules (see CQ-11 open questions).
 

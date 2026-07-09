@@ -9,7 +9,7 @@ const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/catalog', label: 'Catalog', icon: Store },
-  { href: '/quotes', label: 'Quotes', icon: FileText },
+  { href: '/sales-estimates', label: 'Sales Estimates', icon: FileText },
   { href: '/shipments', label: 'Shipments', icon: Truck },
   { href: '/returns', label: 'Returns', icon: RotateCcw },
   { href: '/financial', label: 'Financial', icon: BarChart2 },

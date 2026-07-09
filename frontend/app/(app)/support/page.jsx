@@ -8,7 +8,7 @@ const tickets = [
   { id: 'TKT-2024-0889', priority: 'In Progress', title: 'RMA status inquiry', category: 'RMA', updated: 'Updated 1 day ago', status: 'In Progress' },
   { id: 'TKT-2024-0865', priority: 'Waiting', title: 'Invoice discrepancy', category: 'Billing', updated: 'Updated 3 days ago', status: 'Waiting' },
   { id: 'TKT-2024-0878', priority: 'Resolved', title: 'Certificate of conformity request', category: 'Certificate', updated: 'Resolved 5 days ago', status: 'Resolved' },
-  { id: 'TKT-2024-0871', priority: 'Resolved', title: 'Quote revision needed', category: 'Quote', updated: 'Resolved 1 week ago', status: 'Resolved' },
+  { id: 'TKT-2024-0871', priority: 'Resolved', title: 'Sales estimate revision needed', category: 'Sales Estimate', updated: 'Resolved 1 week ago', status: 'Resolved' },
 ]
 
 const priorityStyles = {

@@ -27,7 +27,7 @@ Please review each section and indicate:
 | Stage | Scope | Status |
 |-------|-------|--------|
 | Stage 1 | Authentication (Auth0), Dashboard, Orders, Shipments, Financial, Support, Settings & Profile | Delivered / In progress |
-| Stage 2 | Returns (RMA), Catalog & Quotes, Online Payments, Reorder | See Stage 2 requirements |
+| Stage 2 | Returns (RMA), Catalog & Sales Estimates, Online Payments, Reorder | See Stage 2 requirements |
 | **Stage 3** | Integrations, Shipment Enhancements, New Customer Application, Meeting Scheduler, advanced backlog | **This document** |
 
 ---
@@ -240,7 +240,7 @@ Stage 3 features are added to the access matrix. Role definitions are unchanged 
 
 - Any feature not explicitly listed above.
 - Epics in Section 5 are not committed to a delivery date; they will be prioritised and broken down separately.
-- Sales Portal capabilities (RMA Management Queue, Quote Approvals, Backoffice Dashboard, Customer Analytics & AI Insights) — tracked in the Sales Portal requirements.
+- Sales Portal capabilities (RMA Management Queue, Sales Estimate Approvals, Backoffice Dashboard, Customer Analytics & AI Insights) — tracked in the Sales Portal requirements.
 
 ---
 

@@ -1,7 +1,7 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.1  
-**Date:** July 8, 2026  
+**Document Version:** 1.2  
+**Date:** July 9, 2026  
 **Stage:** Stage 2 — Customer Self-Service & Revenue  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
@@ -11,7 +11,7 @@
 
 ## Purpose
 
-This document describes all functionality included in **Stage 2** of the PCS Wireless Customer Portal. Stage 2 builds on the Stage 1 foundation (Authentication, Dashboard, Orders, Shipments, Financial, Support, Settings) with self-service and revenue-generating features: **Returns (RMA)**, **Catalog & Quotes**, **Online Payments**, and **Reorder**.
+This document describes all functionality included in **Stage 2** of the PCS Wireless Customer Portal. Stage 2 builds on the Stage 1 foundation (Authentication, Dashboard, Orders, Shipments, Financial, Support, Settings) with self-service and revenue-generating features: **Returns (RMA)**, **Catalog & Sales Estimates**, **Online Payments**, and **Reorder**.
 
 It is intended for business stakeholder review to confirm the Stage 2 feature set is complete and accurate before development begins. Stage 2 features were previously listed under "Out of Scope" in the Stage 1 requirements; they are now formalised here as user stories and use cases.
 
@@ -27,17 +27,17 @@ Please review each section and indicate:
 | Stage | Scope | Status |
 |-------|-------|--------|
 | Stage 1 | Authentication (Auth0), Dashboard, Orders, Shipments, Financial, Support, Settings & Profile | Delivered / In progress |
-| **Stage 2** | Returns (RMA), Catalog & Quotes, Online Payments, Reorder | **This document** |
+| **Stage 2** | Returns (RMA), Catalog & Sales Estimates, Online Payments, Reorder | **This document** |
 | Stage 3 | Integrations, Shipment Enhancements, New Customer Application, Meeting Scheduler, and advanced backlog | Upcoming |
 
-> **Cross-portal note:** Customer-side Returns pair with the Sales Portal "RMA Management Queue", and customer-side Quotes pair with the Sales Portal "Quote Creation & Approvals". Those back-office capabilities are tracked separately in the Sales Portal requirements and are **not** in scope for this document.
+> **Cross-portal note:** Customer-side Returns pair with the Sales Portal "RMA Management Queue", and customer-side Sales Estimates pair with the Sales Portal "Sales Estimate Creation & Approvals". Those back-office capabilities are tracked separately in the Sales Portal requirements and are **not** in scope for this document.
 
 ---
 
 ## Table of Contents
 
 1. [Returns (RMA)](#1-returns-rma)
-2. [Catalog, Quotes & Promotional Offers](#2-catalog-quotes--promotional-offers)
+2. [Catalog, Sales Estimates & Promotional Offers](#2-catalog-sales-estimates--promotional-offers)
 3. [Online Payments](#3-online-payments)
 4. [Reorder](#4-reorder)
 5. [Dashboard Additions](#5-dashboard-additions)
@@ -105,9 +105,9 @@ Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Po
 
 ---
 
-## 2. Catalog, Quotes & Promotional Offers
+## 2. Catalog, Sales Estimates & Promotional Offers
 
-Customers can browse available inventory, build a quote with custom per-unit pricing, and submit it to PCS for review. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Quote review and approval are handled by PCS staff through the Sales Portal.
+Customers can browse available inventory, build a sales estimate with custom per-unit pricing, and submit it to PCS for review. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Sales Estimate review and approval are handled by PCS staff through the Sales Portal.
 
 ### User Stories
 
@@ -115,17 +115,17 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 
 **US-91** — As a customer, I want to filter and sort the catalog (by category, brand, model, grade, storage, location, color, carrier, and price) so that I can find the products I am interested in quickly. Filter options that would return no results given my current selection are disabled.
 
-**US-92** — As a customer, I want to add devices to a quote cart with the quantity I need so that I can request pricing for a specific set of items.
+**US-92** — As a customer, I want to add devices to a sales estimate cart with the quantity I need so that I can request pricing for a specific set of items.
 
-**US-93** — As a customer, I want to propose a custom per-unit price on quote line items so that I can negotiate pricing with PCS. Proposing prices is a deliberate action taken on a separate pricing step, after the cart is built at list prices. On that step each line stays at list price until I explicitly request custom pricing, select a reason, and acknowledge that any proposed price is a request subject to PCS review.
+**US-93** — As a customer, I want to propose a custom per-unit price on sales estimate line items so that I can negotiate pricing with PCS. Proposing prices is a deliberate action taken on a separate pricing step, after the cart is built at list prices. On that step each line stays at list price until I explicitly request custom pricing, select a reason, and acknowledge that any proposed price is a request subject to PCS review.
 
-**US-94** — As a customer, I want to submit my quote to PCS for review so that a sales rep can respond with confirmed pricing.
+**US-94** — As a customer, I want to submit my sales estimate to PCS for review so that a sales rep can respond with confirmed pricing.
 
-**US-95** — As a customer, I want to view all my submitted quotes with their status so that I can track where each one stands.
+**US-95** — As a customer, I want to view all my submitted sales estimates with their status so that I can track where each one stands.
 
-**US-96** — As a customer, I want to view the full history and status changes of a quote so that I can follow the negotiation.
+**US-96** — As a customer, I want to view the full history and status changes of a sales estimate so that I can follow the negotiation.
 
-**US-97** — As a customer, I want to convert an accepted quote into an order so that I can complete my purchase without re-entering details.
+**US-97** — As a customer, when PCS accepts my sales estimate, I want it to be automatically converted into a sales order so that I can complete my purchase without any extra steps — I do not need to separately accept or convert it.
 
 **US-98** — As a customer, I want to see a "Hottest Offers" section on my dashboard so that I am aware of current deals and featured inventory.
 
@@ -135,7 +135,9 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 
 **US-107** — As a customer, I want to mark individual devices as favorites and filter the catalog to just my favorites so that I can quickly return to products I am interested in.
 
-**US-108** — As a customer, I want to open a guide that explains what each device grade means — with plain-language descriptions and example images and video — so that I understand exactly what condition I am buying before I add a device to a quote.
+**US-108** — As a customer, I want to open a guide that explains what each device grade means — with plain-language descriptions and example images and video — so that I understand exactly what condition I am buying before I add a device to a sales estimate.
+
+**US-109** — As a customer, when PCS returns a counter-offer on my sales estimate, I want to accept it, decline it, or counter it with my own revised pricing so that I can negotiate to an agreed price. Accepting a counter-offer reaches agreement, so the sales estimate is automatically converted into a sales order without any further step.
 
 ### Use Cases
 
@@ -143,29 +145,31 @@ Customers can browse available inventory, build a quote with custom per-unit pri
 |----|----------|-------|---------|
 | UC-90 | Browse catalog | Customer | Available devices displayed with product, grade, storage, and indicative price |
 | UC-91 | Filter / sort catalog | Customer | Catalog filtered and sorted by the selected criteria |
-| UC-92 | Add to quote cart | Customer | Selected device and quantity added to the quote cart |
+| UC-92 | Add to sales estimate cart | Customer | Selected device and quantity added to the sales estimate cart |
 | UC-93 | Set custom price | Customer | On the dedicated pricing step, each line stays at list price until the customer requests custom pricing, selects a reason, and acknowledges PCS review; the per-unit offer field then unlocks for that line |
-| UC-94 | Submit quote | Customer | Quote submitted to PCS; status set to Submitted and a reference number issued |
-| UC-95 | View quote list | Customer | All quotes shown with reference, date, item count, total, and status |
-| UC-96 | View quote detail & history | Customer | Full quote shown with line items, pricing, and a chronological status history |
-| UC-97 | Convert quote to order | Customer | An accepted quote is converted into a new order pre-populated with its line items |
+| UC-94 | Submit sales estimate | Customer | Sales Estimate submitted to PCS; status set to Submitted and a reference number issued |
+| UC-95 | View sales estimate list | Customer | All sales estimates shown with reference, date, item count, total, and status |
+| UC-96 | View sales estimate detail & history | Customer | Full sales estimate shown with line items, pricing, and a chronological status history |
+| UC-97 | Auto-convert accepted sales estimate | System | When PCS accepts a sales estimate, a sales order is created automatically, pre-populated with its line items and agreed pricing — no separate customer action is required |
 | UC-98 | View hottest offers | Customer | Dashboard displays a curated set of current deals and featured inventory |
 | UC-99 | View promotional banner | Customer | Full-width promotional banners are displayed on the dashboard and catalog |
 | UC-106 | Save & apply a search | Customer | Customer names and saves the current filter/search combination; saved searches appear as one-click shortcuts and can be applied, renamed, or deleted |
 | UC-107 | Favorite a device | Customer | Customer marks/unmarks a device as a favorite; a Favorites filter shows only favorited devices; the customer's favorites persist across visits |
 | UC-108 | View grading guide | Customer | Customer opens a guide explaining each catalog grade, with descriptions, example media, a side-by-side comparison, and an FAQ; reachable from the grade shown on a product and from the catalog |
+| UC-109 | Respond to a counter-offer | Customer | On a counter-offered sales estimate the customer accepts it (agreement reached → auto-converts to a sales order), declines it, or counters with revised pricing (returns to PCS for review) |
 
-### Quote Status Definitions
+### Sales Estimate Status Definitions
 
 | Status | Meaning |
 |--------|---------|
-| Draft | Quote being built; not yet submitted |
+| Draft | Sales Estimate being built; not yet submitted |
 | Submitted | Sent to PCS; awaiting review |
 | Under Review | PCS is reviewing the requested pricing |
-| Counter-Offered | PCS has responded with revised pricing |
-| Accepted | Pricing agreed; quote can be converted to an order |
-| Rejected | Quote declined |
-| Expired | Quote validity period has lapsed |
+| Counter-Offered | PCS has responded with revised pricing; the customer can accept, decline, or counter it |
+| Accepted | Pricing agreed (by PCS, or by the customer accepting a counter-offer); the sales estimate is automatically converted into a sales order |
+| Declined | Customer declined PCS's counter-offer |
+| Rejected | PCS declined the sales estimate |
+| Expired | Sales Estimate validity period has lapsed |
 
 ---
 
@@ -216,7 +220,7 @@ Customers can pay outstanding invoices directly in the portal. This extends the 
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-105 | Reorder previous order | Customer | Customer selects a past order and a new draft order (or quote) is created pre-populated with the same line items for confirmation |
+| UC-105 | Reorder previous order | Customer | Customer selects a past order and a new draft order (or sales estimate) is created pre-populated with the same line items for confirmation |
 
 ---
 
@@ -227,7 +231,7 @@ Stage 2 adds the following to the Dashboard, consistent with how Stage 1 built t
 | Addition | Description |
 |----------|-------------|
 | Open RMAs KPI card | Count of RMA requests not yet in Complete status |
-| Open Quotes KPI card | Count of submitted quotes awaiting resolution |
+| Open Sales Estimates KPI card | Count of submitted sales estimates awaiting resolution |
 | Hottest Offers section | Curated current deals and featured inventory |
 | Promotional banner | Full-width banner surfacing featured deals |
 | Reorder quick action | Shortcut to reorder from a recent order |
@@ -244,9 +248,9 @@ Stage 2 features are added to the Stage 1 access matrix. Role definitions are un
 | Submit RMA request | ✓ | ✓ | — |
 | View RMA list & detail | ✓ | ✓ | ✓ |
 | Download credit memo / return label | ✓ | ✓ | ✓ |
-| Build & submit quote | ✓ | ✓ | — |
-| View quotes | ✓ | ✓ | ✓ |
-| Convert quote to order | ✓ | ✓ | — |
+| Build & submit sales estimate | ✓ | ✓ | — |
+| View sales estimates | ✓ | ✓ | ✓ |
+| Convert sales estimate to order | ✓ | ✓ | — |
 | Initiate invoice payment | ✓ | ✓ | — |
 | Reorder previous order | ✓ | ✓ | — |
 

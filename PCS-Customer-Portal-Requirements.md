@@ -266,7 +266,7 @@ Each order record includes the following information:
 
 **US-53** — As a customer, I want to set the priority of a new support ticket (Normal or Urgent) so that urgent issues are flagged to the support team immediately.
 
-**US-54** — As a customer, I want to optionally link a support ticket to an Order ID or Quote ID so that the support team has the relevant context without needing to ask for it.
+**US-54** — As a customer, I want to optionally link a support ticket to an Order ID or Sales Estimate ID so that the support team has the relevant context without needing to ask for it.
 
 **US-55** — As a customer, I want to rate my experience after a support ticket is resolved so that I can provide feedback on the service I received.
 
@@ -282,7 +282,7 @@ Each order record includes the following information:
 | UC-53 | Attach file to reply | Customer | Customer can attach a file to a support message |
 | UC-54 | Create new ticket | Customer | Customer submits a new support request with category, subject, description, priority, optional linked record, and optional file attachments |
 | UC-55 | Set ticket priority | Customer | Customer selects Normal or Urgent when creating a ticket; priority is visible to the support team |
-| UC-56 | Link ticket to order or quote | Customer | Customer optionally enters an Order ID or Quote ID; reference displayed in the ticket detail for the support team |
+| UC-56 | Link ticket to order or sales estimate | Customer | Customer optionally enters an Order ID or Sales Estimate ID; reference displayed in the ticket detail for the support team |
 | UC-57 | Rate resolved ticket | Customer | After a ticket is marked Resolved, customer is presented with a star rating; rating is submitted and recorded |
 
 ---
@@ -473,14 +473,14 @@ New customers can complete a self-service application wizard to register their b
 
 ---
 
-### Catalog, Quotes & Promotional Banners
+### Catalog, Sales Estimates & Promotional Banners
 
 | Feature | Description |
 |---------|-------------|
 | Promotional offers on dashboard | A "Hottest Offers" section highlighting current deals and featured inventory |
 | Device catalog | Browse available devices with filter sidebar and sort options |
-| Quote cart | Build a quote with custom per-unit pricing; submit for PCS review |
-| My Quotes | View and manage submitted quotes with full status history |
+| Sales Estimate cart | Build a sales estimate with custom per-unit pricing; submit for PCS review |
+| My Sales Estimates | View and manage submitted sales estimates with full status history |
 | Promotional banners | Full-width banners on dashboard and catalog surfacing featured deals |
 
 ---

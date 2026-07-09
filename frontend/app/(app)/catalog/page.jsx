@@ -288,7 +288,7 @@ export default function CatalogPage() {
       <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] pb-24">
         <div className="px-4 pt-5 pb-3">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Catalog</h1>
-          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a quote</p>
+          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a sales estimate</p>
           <Link href="/catalog/grades" className="inline-flex items-center gap-1 text-xs font-medium text-[#0b1b3a] dark:text-blue-300 mt-1.5 hover:underline">
             <ShieldCheck size={13} /> How our grading works
           </Link>
@@ -380,7 +380,7 @@ export default function CatalogPage() {
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{specLine(d)}</p>
               <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} avail</p>
               <p className="text-gray-900 dark:text-white font-bold text-sm mt-1">from {fmt(d.price)}</p>
-              <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Quote</button>
+              <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Estimate</button>
             </div>
           ))}
           {filtered.length === 0 && (
@@ -393,7 +393,7 @@ export default function CatalogPage() {
         {/* Floating cart button */}
         {cartCount > 0 && !cartOpen && (
           <button onClick={() => setCartOpen(true)} className="fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#0b1b3a] text-white px-4 py-3 rounded-full shadow-lg">
-            <ShoppingCart size={18} /> <span className="text-sm font-medium">View Quote ({cart.length})</span>
+            <ShoppingCart size={18} /> <span className="text-sm font-medium">View Estimate ({cart.length})</span>
           </button>
         )}
 
@@ -406,7 +406,7 @@ export default function CatalogPage() {
                   {quoteStep === 'pricing' && (
                     <button onClick={() => setQuoteStep('cart')} className="text-gray-500 dark:text-gray-400"><ArrowLeft size={18} /></button>
                   )}
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Quote'}</h3>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Estimate'}</h3>
                 </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400"><X size={20} /></button>
               </div>
@@ -421,7 +421,7 @@ export default function CatalogPage() {
       <div className="hidden md:block md:p-4 xl:p-8">
         <div className="mb-4">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Catalog</h1>
-          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a quote</p>
+          <p className="text-sm text-gray-400 dark:text-blue-300/50 mt-0.5">Browse available inventory and build a sales estimate</p>
           <Link href="/catalog/grades" className="inline-flex items-center gap-1 text-xs font-medium text-[#0b1b3a] dark:text-blue-300 mt-1.5 hover:underline">
             <ShieldCheck size={13} /> How our grading works
           </Link>
@@ -506,7 +506,7 @@ export default function CatalogPage() {
                   </select>
                 </div>
                 <button onClick={() => setCartOpen((v) => !v)} className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">
-                  <ShoppingCart size={16} /> View Quote ({cart.length})
+                  <ShoppingCart size={16} /> View Estimate ({cart.length})
                 </button>
               </div>
             </div>
@@ -544,7 +544,7 @@ export default function CatalogPage() {
                       <p className="text-lg font-bold text-gray-900 dark:text-white leading-none">{fmt(d.price)}</p>
                     </div>
                     <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="flex items-center gap-1 px-3 py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">
-                      <Plus size={14} /> Add to Quote
+                      <Plus size={14} /> Add to Estimate
                     </button>
                   </div>
                 </div>
@@ -565,7 +565,7 @@ export default function CatalogPage() {
                   {quoteStep === 'pricing' && (
                     <button onClick={() => setQuoteStep('cart')} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"><ArrowLeft size={16} /></button>
                   )}
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Quote'}</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Estimate'}</h3>
                 </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={18} /></button>
               </div>
@@ -707,7 +707,7 @@ function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFav
                 onClick={() => onAddToQuote(d.id, Math.max(1, Number(qty) || 1))}
                 className="mt-3 w-full flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]"
               >
-                <ShoppingCart size={16} /> Add to Quote
+                <ShoppingCart size={16} /> Add to Estimate
               </button>
               <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug mt-2">You'll be able to propose custom pricing at checkout.</p>
             </div>
@@ -821,7 +821,7 @@ function SavedSearchPanel({ savedSearches, activeSavedId, saveName, setSaveName,
 
 function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine, pricingCtl }) {
   if (cart.length === 0) {
-    return <p className="text-sm text-gray-400 text-center py-8">No items yet. Add devices to build your quote.</p>
+    return <p className="text-sm text-gray-400 text-center py-8">No items yet. Add devices to build your sales estimate.</p>
   }
   return (
     <div className="space-y-3 mb-4">
@@ -912,8 +912,8 @@ function CartFooter({ cart, step, subtotal, listSubtotal, cartCount, onContinue 
       </div>
       {step === 'pricing' ? (
         <>
-          <Link href="/quotes" className="block w-full text-center py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
-            Submit Quote for Review
+          <Link href="/sales-estimates" className="block w-full text-center py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
+            Submit Estimate for Review
           </Link>
           <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug">
             Prices shown are indicative. PCS will respond with confirmed pricing after review.

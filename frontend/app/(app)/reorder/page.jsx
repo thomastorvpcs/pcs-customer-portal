@@ -78,7 +78,7 @@ export default function ReorderPage() {
           </div>
 
           <div className="mt-5 space-y-2">
-            <button className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]"><FileText size={14} /> Add to Quote</button>
+            <button className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]"><FileText size={14} /> Add to Estimate</button>
             <button onClick={() => itemCount > 0 && setPlaced(true)} disabled={itemCount === 0}
               className={`w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-colors ${itemCount > 0 ? 'bg-[#0b1b3a] text-white hover:bg-[#0d2147]' : 'bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'}`}><ShoppingCart size={14} /> Place Reorder</button>
           </div>

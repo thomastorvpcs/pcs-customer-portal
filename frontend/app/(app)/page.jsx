@@ -8,11 +8,11 @@ const stats = [
   { label: 'Outstanding Balance', value: '$47,230', sub: '$12,450 past due', subRed: true, href: '/financial', icon: DollarSign, iconColor: 'text-rose-500' },
   { label: 'Support Tickets', value: '3', sub: 'Open', href: '/support', icon: TicketCheck, iconColor: 'text-purple-500' },
   { label: 'Open RMAs', value: '2', sub: 'In progress', href: '/returns', icon: RotateCcw, iconColor: 'text-amber-500' },
-  { label: 'Open Quotes', value: '4', sub: 'Awaiting response', href: '/quotes', icon: FileText, iconColor: 'text-indigo-500' },
+  { label: 'Open Estimates', value: '4', sub: 'Awaiting response', href: '/sales-estimates', icon: FileText, iconColor: 'text-indigo-500' },
 ]
 
 const quickActions = [
-  { label: 'Request Quote', desc: 'Get pricing for bulk orders', icon: FileText, bg: 'bg-blue-50 dark:bg-blue-900/20', color: 'text-blue-500', href: '/quotes' },
+  { label: 'Request Estimate', desc: 'Get pricing for bulk orders', icon: FileText, bg: 'bg-blue-50 dark:bg-blue-900/20', color: 'text-blue-500', href: '/sales-estimates' },
   { label: 'Create RMA', desc: 'Return defective devices', icon: RotateCcw, bg: 'bg-rose-50 dark:bg-rose-900/20', color: 'text-rose-500', href: '/returns' },
   { label: 'Contact Support', desc: 'Get help from our team', icon: Headphones, bg: 'bg-orange-50 dark:bg-orange-900/20', color: 'text-orange-500', href: '/support' },
 ]
@@ -26,7 +26,7 @@ const recentActivity = [
 ]
 
 const mobileQuickActions = [
-  { label: 'Quote', icon: FileText, bg: 'bg-blue-500/20', color: 'text-blue-400', href: '/quotes' },
+  { label: 'Estimate', icon: FileText, bg: 'bg-blue-500/20', color: 'text-blue-400', href: '/sales-estimates' },
   { label: 'RMA', icon: RotateCcw, bg: 'bg-rose-500/20', color: 'text-rose-400', href: '/returns' },
   { label: 'Support', icon: Headphones, bg: 'bg-orange-500/20', color: 'text-orange-400', href: '/support' },
 ]

@@ -219,7 +219,7 @@ This document outlines the delivery plan for Stage 1 of the PCS Wireless Custome
 | Assigned staff display | US-51 — See which PCS team member is handling the ticket |
 | Linked order display | US-52 — See if the ticket is linked to a specific order |
 | Ticket priority selection | US-53 — Set priority to Normal or Urgent when creating a ticket |
-| Order / Quote ID linking | US-54 — Link a ticket to an Order ID or Quote ID |
+| Order / Sales Estimate ID linking | US-54 — Link a ticket to an Order ID or Sales Estimate ID |
 | Post-resolution rating | US-55 — Rate the experience after a ticket is resolved |
 
 ### Dashboard — Sprint 4 Additions

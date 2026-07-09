@@ -105,7 +105,7 @@ const STAGES = [
     subtitle: 'High-value, existing-customer features with minimal external dependency',
     areas: [
       ['Returns (RMA)', 'Submit & track returns, complaint reasons, credit memos, return labels — US-80–US-89'],
-      ['Catalog, Quotes & Offers', 'Browse catalog, build & submit quotes, promotional offers — US-90–US-99'],
+      ['Catalog, Sales Estimates & Offers', 'Browse catalog, build & submit sales estimates, promotional offers — US-90–US-99'],
       ['Online Payments', 'Pay invoices by card / ACH, receipts, live balance updates — US-100–US-104'],
       ['Reorder', 'Repeat a previous order pre-populated with the same items — US-105'],
     ],
