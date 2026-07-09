@@ -11,13 +11,13 @@
 
 ## Purpose
 
-This document sits **between** the Stage 2 business requirements (the `US-##` user stories and `UC-##` use cases) and the developers' technical tickets. The user stories say *what* a customer wants and *why*; they intentionally do not say *how the feature should behave*. This document fills that gap with **mid-level feature tickets** that describe the behaviour in enough detail for a developer to write technical requirements without having to guess at the flow, rules, and edge cases.
+This document sits **between** the Stage 2 business requirements (the `US-##` user stories and `UC-##` use cases) and the developers' technical tickets. The user stories say *what* a customer wants and *why*; they intentionally do not say *how the feature should behave*. This document fills that gap with **mid-level feature tickets** that describe the behavior in enough detail for a developer to write technical requirements without having to guess at the flow, rules, and edge cases.
 
-Each ticket is written in **product / behavioural terms only**. It deliberately contains **no technical detail** — no data models, endpoints, or technology choices. Those decisions belong to the developers and are the output of the next step, informed by these tickets.
+Each ticket is written in **product / behavioral terms only**. It deliberately contains **no technical detail** — no data models, endpoints, or technology choices. Those decisions belong to the developers and are the output of the next step, informed by these tickets.
 
 **Scope:** the **Catalog, Quotes & Offers** module of Stage 2 (`US-90`–`US-99`, `US-106`–`US-108`). It also specifies two catalog enhancements added during Stage 2 delivery — a **product detail view** (CQ-10) and a **device grading guide** (CQ-11, `US-108`). The other Stage 2 modules (Returns/RMA, Online Payments, Reorder, and the Stage 2 dashboard additions) are not covered here and can be added as further sections later.
 
-The behaviours below are concrete because they are grounded in the agreed Stage 2 requirements (catalog attributes and filter dimensions, the quote status list, the custom-pricing gating).
+The behaviors below are concrete because they are grounded in the agreed Stage 2 requirements (catalog attributes and filter dimensions, the quote status list, the custom-pricing gating).
 
 ---
 
@@ -28,10 +28,10 @@ Every ticket uses the same fields:
 - **User stories** — the `US-##`(s) this ticket elaborates.
 - **Who** — the roles that can use it (Admin / Buyer / Viewer, per the Stage 2 access matrix).
 - **Summary** — one sentence: what the feature lets the user do.
-- **How it works** — the behaviour step by step: entry points, what the user sees and does, the options available, and what happens on each action.
+- **How it works** — the behavior step by step: entry points, what the user sees and does, the options available, and what happens on each action.
 - **Rules & constraints** — eligibility, validation, limits, and what is allowed vs blocked.
 - **States** — where relevant, the statuses something moves through and what each means.
-- **Acceptance criteria** — testable, behaviour-only statements to confirm the feature is done.
+- **Acceptance criteria** — testable, behavior-only statements to confirm the feature is done.
 - **Open questions for the business** — product decisions still to be made, surfaced rather than assumed.
 
 ---
@@ -64,7 +64,7 @@ Every ticket uses the same fields:
   - A **favorite** toggle (see CQ-04).
   - The **device name**.
   - A **grade badge** (e.g. Grade A, Grade B).
-  - A **spec line** of the attributes that apply: storage, colour, and carrier. Attributes that do not apply to a product (e.g. carrier for a laptop, storage for a wearable) are omitted rather than shown blank.
+  - A **spec line** of the attributes that apply: storage, color, and carrier. Attributes that do not apply to a product (e.g. carrier for a laptop, storage for a wearable) are omitted rather than shown blank.
   - The **stock location** and **quantity available**.
   - An indicative **"from" price**.
   - An **Add to Quote** action (see CQ-05).
@@ -100,7 +100,7 @@ Every ticket uses the same fields:
 **Summary.** A customer narrows down the catalog using filters, keyword search, and sorting to find the products they are interested in quickly.
 
 **How it works**
-- The customer can filter by: **category, brand, model, grade, storage, location, colour, carrier,** and a **maximum price**.
+- The customer can filter by: **category, brand, model, grade, storage, location, color, carrier,** and a **maximum price**.
 - Within a single filter (e.g. Brand), selecting more than one value **widens** the results (Apple *or* Samsung). Across different filters, selections **narrow** the results (Brand *and* Grade *and* …).
 - Filter options that would return **no results** given the customer's other current selections are shown but **disabled**, so the customer cannot accidentally reach an empty list. This is recalculated every time any filter changes.
 - The customer can search by keyword and sort results by **price, name, or newest**.
@@ -109,7 +109,7 @@ Every ticket uses the same fields:
 **Rules & constraints**
 - The price filter is an **upper bound** — it shows devices at or below the chosen price.
 - Filtering, search, and sort all operate together on the same result set (the grid described in CQ-01).
-- The disabled-option behaviour is recalculated on every change to any filter, search term, or price limit.
+- The disabled-option behavior is recalculated on every change to any filter, search term, or price limit.
 
 **Acceptance criteria**
 - Applying any filter narrows the list to matching devices only, and the match count updates.
@@ -181,7 +181,7 @@ Every ticket uses the same fields:
 
 **Open questions for the business**
 - Should favorites be tied to the user's account and available on any device, or only in the browser where they were created?
-- If a favorited device goes out of stock or is delisted, should it still appear under Favorites (e.g. greyed out) or be dropped?
+- If a favorited device goes out of stock or is delisted, should it still appear under Favorites (e.g. grayed out) or be dropped?
 
 ---
 
@@ -196,7 +196,7 @@ Every ticket uses the same fields:
 - The detail view shows, for the selected device:
   - An **enlarged image/visual** (a category-based placeholder where real imagery is not yet available), the **highlight tag** if the device has one, and a **favorite** toggle.
   - A header with **brand, device name, grade badge,** and the indicative **"from" unit price**.
-  - A **Device Specifications** block listing the attributes that apply: category, brand, model, storage, colour, carrier. Attributes that do not apply are omitted, consistent with the card (see CQ-01).
+  - A **Device Specifications** block listing the attributes that apply: category, brand, model, storage, color, carrier. Attributes that do not apply are omitted, consistent with the card (see CQ-01).
   - An **Availability** block: stock location and quantity available.
   - **Grade guidance** — a short plain-language description of what the device's grade means, linking through to the full grading guide (see CQ-11).
 - From the detail view the customer chooses a **quantity** and adds the device to the quote cart (see CQ-05); the running line subtotal is shown before adding.
