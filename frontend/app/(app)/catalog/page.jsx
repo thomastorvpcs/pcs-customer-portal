@@ -574,7 +574,7 @@ export default function CatalogPage() {
         </div>
       </div>
 
-      {/* ── PRICING MODAL ── opens from the cart's "Continue to pricing" */}
+      {/* ── CART / CHECKOUT MODAL ── opens from the cart's "Continue to checkout" */}
       {cartOpen && quoteStep === 'pricing' && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
@@ -944,7 +944,7 @@ function CartFooter({ cart, step, subtotal, listSubtotal, cartCount, onContinue 
       ) : (
         <>
           <button onClick={onContinue} className="w-full flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
-            Continue to pricing <ArrowRight size={14} />
+            Continue to checkout <ArrowRight size={14} />
           </button>
           <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug">
             You'll be able to propose your own pricing on the next step.
