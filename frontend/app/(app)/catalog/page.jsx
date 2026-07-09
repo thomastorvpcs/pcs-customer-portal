@@ -206,6 +206,14 @@ export default function CatalogPage() {
     document.body.style.overflow = 'hidden'
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prevOverflow }
   }, [activeProduct])
+
+  // Close the pricing modal on Escape (returns to the cart step)
+  useEffect(() => {
+    if (!(cartOpen && quoteStep === 'pricing')) return
+    const onKey = (e) => { if (e.key === 'Escape') setQuoteStep('cart') }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [cartOpen, quoteStep])
   const changeQty = (id, delta) =>
     setCart((c) => c.map((i) => (i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)))
   const setCustomPrice = (id, val) =>
@@ -380,7 +388,7 @@ export default function CatalogPage() {
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{specLine(d)}</p>
               <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} avail</p>
               <p className="text-gray-900 dark:text-white font-bold text-sm mt-1">from {fmt(d.price)}</p>
-              <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Estimate</button>
+              <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Cart</button>
             </div>
           ))}
           {filtered.length === 0 && (
@@ -393,7 +401,7 @@ export default function CatalogPage() {
         {/* Floating cart button */}
         {cartCount > 0 && !cartOpen && (
           <button onClick={() => setCartOpen(true)} className="fixed bottom-20 right-4 z-30 flex items-center gap-2 bg-[#0b1b3a] text-white px-4 py-3 rounded-full shadow-lg">
-            <ShoppingCart size={18} /> <span className="text-sm font-medium">View Estimate ({cart.length})</span>
+            <ShoppingCart size={18} /> <span className="text-sm font-medium">View Cart ({cart.length})</span>
           </button>
         )}
 
@@ -402,16 +410,11 @@ export default function CatalogPage() {
           <div className="fixed inset-0 z-40 flex items-end bg-black/40" onClick={() => setCartOpen(false)}>
             <div onClick={(e) => e.stopPropagation()} className="w-full max-h-[85vh] overflow-auto bg-white dark:bg-[#152035] rounded-t-2xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  {quoteStep === 'pricing' && (
-                    <button onClick={() => setQuoteStep('cart')} className="text-gray-500 dark:text-gray-400"><ArrowLeft size={18} /></button>
-                  )}
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Estimate'}</h3>
-                </div>
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Your Cart</h3>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400"><X size={20} /></button>
               </div>
-              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
-              <CartFooter cart={cart} step={quoteStep} subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
+              <CartLines cart={cart} mode="cart" lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
+              <CartFooter cart={cart} step="cart" subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
             </div>
           </div>
         )}
@@ -506,7 +509,7 @@ export default function CatalogPage() {
                   </select>
                 </div>
                 <button onClick={() => setCartOpen((v) => !v)} className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">
-                  <ShoppingCart size={16} /> View Estimate ({cart.length})
+                  <ShoppingCart size={16} /> View Cart ({cart.length})
                 </button>
               </div>
             </div>
@@ -544,7 +547,7 @@ export default function CatalogPage() {
                       <p className="text-lg font-bold text-gray-900 dark:text-white leading-none">{fmt(d.price)}</p>
                     </div>
                     <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="flex items-center gap-1 px-3 py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">
-                      <Plus size={14} /> Add to Estimate
+                      <Plus size={14} /> Add to Cart
                     </button>
                   </div>
                 </div>
@@ -561,20 +564,42 @@ export default function CatalogPage() {
           {cartOpen && (
             <aside className="w-[300px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 self-start">
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  {quoteStep === 'pricing' && (
-                    <button onClick={() => setQuoteStep('cart')} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"><ArrowLeft size={16} /></button>
-                  )}
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{quoteStep === 'pricing' ? 'Propose Pricing' : 'Your Estimate'}</h3>
-                </div>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Your Cart</h3>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={18} /></button>
               </div>
-              <CartLines cart={cart} mode={quoteStep} lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
-              <CartFooter cart={cart} step={quoteStep} subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
+              <CartLines cart={cart} mode="cart" lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
+              <CartFooter cart={cart} step="cart" subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
             </aside>
           )}
         </div>
       </div>
+
+      {/* ── PRICING MODAL ── opens from the cart's "Continue to pricing" */}
+      {cartOpen && quoteStep === 'pricing' && (
+        <div
+          className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 md:backdrop-blur-sm"
+          onMouseDown={() => setQuoteStep('cart')}
+        >
+          <div
+            onMouseDown={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Propose pricing"
+            className="w-full md:w-auto md:max-w-lg max-h-[90vh] md:max-h-[85vh] overflow-y-auto bg-white dark:bg-[#152035] rounded-t-2xl md:rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-4 md:p-5"
+          >
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <button onClick={() => setQuoteStep('cart')} aria-label="Back to cart" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"><ArrowLeft size={18} /></button>
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Propose Pricing</h3>
+              </div>
+              <button onClick={() => setQuoteStep('cart')} aria-label="Close" className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+            </div>
+            <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-4">Review each line and optionally propose your own per-unit pricing before submitting.</p>
+            <CartLines cart={cart} mode="pricing" lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
+            <CartFooter cart={cart} step="pricing" subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
+          </div>
+        </div>
+      )}
 
       {/* ── PRODUCT DETAIL ── */}
       {activeProduct && (
@@ -707,7 +732,7 @@ function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFav
                 onClick={() => onAddToQuote(d.id, Math.max(1, Number(qty) || 1))}
                 className="mt-3 w-full flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]"
               >
-                <ShoppingCart size={16} /> Add to Estimate
+                <ShoppingCart size={16} /> Add to Cart
               </button>
               <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug mt-2">You'll be able to propose custom pricing at checkout.</p>
             </div>
