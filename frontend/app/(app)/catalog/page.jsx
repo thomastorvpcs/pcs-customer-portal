@@ -122,6 +122,7 @@ export default function CatalogPage() {
   const [quoteStep, setQuoteStep] = useState('cart') // 'cart' | 'pricing'
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [activeProduct, setActiveProduct] = useState(null) // device shown in the detail view
+  const [locationConflict, setLocationConflict] = useState(null) // { id, amount, location } — pending add from another location
 
   // Saved searches + favorites (persisted to localStorage)
   const [savedSearches, setSavedSearches] = useState([])
@@ -199,10 +200,34 @@ export default function CatalogPage() {
 
   const hottest = devices.filter((d) => d.hot)
 
-  const addToQuote = (id, amount = 10) => {
+  // A cart (and the sales estimate built from it) is limited to a single stock
+  // location. The cart adopts the location of the first item added.
+  const cartLocation = cart.length ? devices.find((d) => d.id === cart[0].id)?.location : null
+
+  const addLine = (id, amount) => {
     setCart((c) => (c.find((i) => i.id === id) ? c.map((i) => (i.id === id ? { ...i, qty: i.qty + amount } : i)) : [...c, { id, qty: amount, customPrice: '' }]))
     setQuoteStep('cart')
     setCartOpen(true)
+  }
+
+  const addToQuote = (id, amount = 10) => {
+    const loc = devices.find((d) => d.id === id)?.location
+    const alreadyInCart = cart.some((i) => i.id === id)
+    // Block adds from a different location than the cart; prompt the customer instead.
+    if (cartLocation && loc !== cartLocation && !alreadyInCart) {
+      setLocationConflict({ id, amount, location: loc })
+      return
+    }
+    addLine(id, amount)
+  }
+
+  // Location conflict: replace the cart with the pending item at its location
+  const startNewCartFromConflict = () => {
+    if (!locationConflict) return
+    setCart([{ id: locationConflict.id, qty: locationConflict.amount, customPrice: '' }])
+    setQuoteStep('cart')
+    setCartOpen(true)
+    setLocationConflict(null)
   }
 
   // Product detail view
@@ -227,6 +252,14 @@ export default function CatalogPage() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [cartOpen, quoteStep])
+
+  // Dismiss the location-conflict prompt on Escape (keeps the current cart)
+  useEffect(() => {
+    if (!locationConflict) return
+    const onKey = (e) => { if (e.key === 'Escape') setLocationConflict(null) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [locationConflict])
   const changeQty = (id, delta) =>
     setCart((c) => c.map((i) => (i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)))
   const setCustomPrice = (id, val) =>
@@ -423,7 +456,10 @@ export default function CatalogPage() {
           <div className="fixed inset-0 z-40 flex items-end bg-black/40" onClick={() => setCartOpen(false)}>
             <div onClick={(e) => e.stopPropagation()} className="w-full max-h-[85vh] overflow-auto bg-white dark:bg-[#152035] rounded-t-2xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-bold text-gray-900 dark:text-white">Your Cart</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">Your Cart</h3>
+                  {cartLocation && <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 dark:text-blue-300/70 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full"><MapPin size={11} /> {cartLocation}</span>}
+                </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400"><X size={20} /></button>
               </div>
               <CartLines cart={cart} mode="cart" lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
@@ -577,7 +613,10 @@ export default function CatalogPage() {
           {cartOpen && (
             <aside className="w-[300px] flex-shrink-0 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 self-start">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Your Cart</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Your Cart</h3>
+                  {cartLocation && <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 dark:text-blue-300/70 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full"><MapPin size={11} /> {cartLocation}</span>}
+                </div>
                 <button onClick={() => setCartOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={18} /></button>
               </div>
               <CartLines cart={cart} mode="cart" lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
@@ -601,7 +640,10 @@ export default function CatalogPage() {
             className="w-full max-w-lg max-h-[85vh] overflow-y-auto bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-4 md:p-5"
           >
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-base font-bold text-gray-900 dark:text-white">Your Cart</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Your Cart</h3>
+                {cartLocation && <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 dark:text-blue-300/70 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full"><MapPin size={11} /> {cartLocation}</span>}
+              </div>
               <button onClick={() => setQuoteStep('cart')} aria-label="Close" className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
             </div>
             <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-4">Review each line and optionally propose your own per-unit pricing before submitting.</p>
@@ -620,6 +662,29 @@ export default function CatalogPage() {
           isFavorite={isFavorite}
           toggleFavorite={toggleFavorite}
         />
+      )}
+
+      {/* ── LOCATION CONFLICT ── a sales estimate can only contain items from one location */}
+      {locationConflict && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setLocationConflict(null)}>
+          <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Different location" className="w-full max-w-sm bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-5">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0">
+                <MapPin size={18} className="text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Items from a different location</h3>
+                <p className="text-sm text-gray-500 dark:text-blue-300/60 mt-1 leading-snug">
+                  Your cart is for <span className="font-medium text-gray-700 dark:text-gray-200">{cartLocation}</span>. A sales estimate can only contain items from one location. Start a new cart for <span className="font-medium text-gray-700 dark:text-gray-200">{locationConflict.location}</span>?
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-5">
+              <button onClick={() => setLocationConflict(null)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Keep current cart</button>
+              <button onClick={startNewCartFromConflict} className="flex-1 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Start new cart</button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   )
