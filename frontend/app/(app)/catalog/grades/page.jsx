@@ -186,7 +186,7 @@ export default function GradesPage() {
             {/* Media: video + example gallery (only when real media exists) */}
             {hasMedia && (
               <div className="grid md:grid-cols-2 gap-4 mt-5">
-                {g.videoUrl && <GradeVideo grade={g} />}
+                <GradeVideo grade={g} />
                 {g.examples && g.examples.length > 0 && (
                   <div>
                     <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1.5">
@@ -347,11 +347,21 @@ function GradeVideo({ grade }) {
         <Play size={12} /> Walkthrough video
       </p>
       <div className="relative rounded-xl overflow-hidden aspect-video border border-gray-100 dark:border-white/5" style={{ background: `linear-gradient(135deg, ${grade.accent}1f, ${grade.accent}08)` }}>
-        {isEmbed ? (
-          <iframe src={grade.videoUrl} title={`${grade.name} walkthrough`} className="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+        {grade.videoUrl ? (
+          isEmbed ? (
+            <iframe src={grade.videoUrl} title={`${grade.name} walkthrough`} className="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+          ) : (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video src={grade.videoUrl} poster={grade.poster || undefined} controls className="w-full h-full object-cover" />
+          )
         ) : (
-          // eslint-disable-next-line jsx-a11y/media-has-caption
-          <video src={grade.videoUrl} poster={grade.poster || undefined} controls className="w-full h-full object-cover" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="w-14 h-14 rounded-full bg-white/80 dark:bg-black/40 flex items-center justify-center shadow-sm">
+              <Play size={22} style={{ color: grade.accent }} className="ml-0.5" fill="currentColor" />
+            </div>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-300 mt-3">{grade.name} example walkthrough</p>
+            <p className="text-[11px] text-gray-400 dark:text-blue-300/50 mt-0.5">Video coming soon</p>
+          </div>
         )}
       </div>
     </div>

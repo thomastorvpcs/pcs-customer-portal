@@ -13,6 +13,7 @@ export const GRADES = [
   // ── Cosmetic categories (best → heaviest wear) ──
   {
     code: 'C6', slug: 'c6', name: 'Cosmetic Category C6', tagline: 'Cosmetic grade — like-new',
+    examples: [{ view: 'Front', caption: 'Clean display, only light marks', src: null }, { view: 'Back', caption: 'Housing near-flawless', src: null }, { view: 'Edges', caption: 'Sharp corners, minimal wear', src: null }],
     badge: 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400', accent: '#16a34a',
     short: 'Very good to like-new cosmetic appearance with light wear.',
     summary: 'Very good to like-new cosmetic appearance with light wear. Frequently mapped near top cosmetic classes in secondary markets, depending on strictness.',
@@ -20,6 +21,7 @@ export const GRADES = [
   },
   {
     code: 'C5', slug: 'c5', name: 'Cosmetic Category C5', tagline: 'Cosmetic grade — good',
+    examples: [{ view: 'Front', caption: 'Minor marks, fully usable', src: null }, { view: 'Back', caption: 'Light scuffs on housing', src: null }, { view: 'Edges', caption: 'Slight edge wear', src: null }],
     badge: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', accent: '#059669',
     short: 'Good/used condition with visible but moderate wear and tear.',
     summary: 'Good/used condition with visible but moderate wear and tear. Often accepted for value-tier resale where cosmetic perfection is not required.',
@@ -27,6 +29,7 @@ export const GRADES = [
   },
   {
     code: 'C4', slug: 'c4', name: 'Cosmetic Category C4', tagline: 'Cosmetic grade — fair',
+    examples: [{ view: 'Front', caption: 'Visible scratches, no cracks', src: null }, { view: 'Back', caption: 'Noticeable scuffs and scratches', src: null }, { view: 'Edges', caption: 'Moderate edge wear', src: null }],
     badge: 'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', accent: '#d97706',
     short: 'Fair condition with significant cosmetic wear, but generally not severe structural breakage.',
     summary: 'Fair condition with significant cosmetic wear, but generally not severe structural breakage. Commonly treated as lower resale cosmetic quality. Exact defect limits vary by trading partner.',
@@ -34,6 +37,7 @@ export const GRADES = [
   },
   {
     code: 'C2', slug: 'c2', name: 'Cosmetic Category C2', tagline: 'Cosmetic grade — heavy wear',
+    examples: [{ view: 'Front', caption: 'Deep scratches; screen still functional', src: null }, { view: 'Back', caption: 'Heavy wear, chips possible', src: null }, { view: 'Edges', caption: 'Dents / chips on corners', src: null }],
     badge: 'bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', accent: '#ea580c',
     short: 'Heavy cosmetic wear and/or visible damage, typically including deep scratches and chips.',
     summary: 'Heavy cosmetic wear and/or visible damage, typically including deep scratches and chips. Based on common secondary-market interpretations of REC/CTIA cosmetic mappings. Confirm acceptance thresholds with your internal QA SOP.',
@@ -43,6 +47,7 @@ export const GRADES = [
   // ── Certified / open-box ──
   {
     code: 'CPO', slug: 'cpo', name: 'Certified Pre-Owned', tagline: 'Certified pre-owned',
+    examples: [{ view: 'Front', caption: 'Restored, near-new display', src: null }, { view: 'Back', caption: 'Cleaned, certified housing', src: null }, { view: 'Edges', caption: 'Inspected; warranty-backed', src: null }],
     badge: 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', accent: '#2563eb',
     short: 'Used device restored/tested to a high standard, typically close to like-new and warranty-backed by seller program.',
     summary: 'Used device restored/tested to a high standard, typically close to like-new and warranty-backed by seller program. CPO meaning depends on seller program rules (testing, cosmetic threshold, battery threshold, accessories, warranty).',
@@ -50,6 +55,7 @@ export const GRADES = [
   },
   {
     code: 'COB', slug: 'cob', name: 'COB', tagline: 'Open-box code',
+    examples: [{ view: 'Front', caption: 'Open-box, like-new display', src: null }, { view: 'Back', caption: 'Minimal handling marks', src: null }, { view: 'Edges', caption: 'Repackaged and inspected', src: null }],
     badge: 'bg-sky-50 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400', accent: '#0284c7',
     short: 'Placeholder: likely an Open Box-related commercial code.',
     summary: 'Placeholder: likely an Open Box-related commercial code. Confirm internal meaning (for example: Customer Open Box vs Certified Open Box) before operational use.',
