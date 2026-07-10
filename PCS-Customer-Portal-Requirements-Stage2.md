@@ -1,7 +1,7 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.2  
-**Date:** July 9, 2026  
+**Document Version:** 1.3  
+**Date:** July 10, 2026  
 **Stage:** Stage 2 — Customer Self-Service & Revenue  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
@@ -107,7 +107,7 @@ Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Po
 
 ## 2. Catalog, Sales Estimates & Promotional Offers
 
-Customers can browse available inventory, build a sales estimate with custom per-unit pricing, and submit it to PCS for review. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Sales Estimate review and approval are handled by PCS staff through the Sales Portal.
+Customers can browse available inventory, build a sales estimate with custom per-unit pricing, and submit it to PCS for review. A sales estimate is fulfilled from a **single stock location**, so its cart is limited to items from one location. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Sales Estimate review and approval are handled by PCS staff through the Sales Portal.
 
 ### User Stories
 
@@ -115,7 +115,7 @@ Customers can browse available inventory, build a sales estimate with custom per
 
 **US-91** — As a customer, I want to filter and sort the catalog (by category, brand, model, grade, storage, location, color, carrier, and price) so that I can find the products I am interested in quickly. Filter options that would return no results given my current selection are disabled.
 
-**US-92** — As a customer, I want to add devices to a sales estimate cart with the quantity I need so that I can request pricing for a specific set of items.
+**US-92** — As a customer, I want to add devices to a sales estimate cart with the quantity I need so that I can request pricing for a specific set of items. A cart is limited to items from a **single stock location**; adding an item from a different location prompts me to keep my current cart or start a new one for that location.
 
 **US-93** — As a customer, I want to propose a custom per-unit price on sales estimate line items so that I can negotiate pricing with PCS. Proposing prices is a deliberate action taken on a separate pricing step, after the cart is built at list prices. On that step each line stays at list price until I explicitly request custom pricing, select a reason, and acknowledge that any proposed price is a request subject to PCS review.
 
@@ -145,7 +145,7 @@ Customers can browse available inventory, build a sales estimate with custom per
 |----|----------|-------|---------|
 | UC-90 | Browse catalog | Customer | Available devices displayed with product, grade, storage, and indicative price |
 | UC-91 | Filter / sort catalog | Customer | Catalog filtered and sorted by the selected criteria |
-| UC-92 | Add to sales estimate cart | Customer | Selected device and quantity added to the sales estimate cart |
+| UC-92 | Add to sales estimate cart | Customer | Selected device and quantity added to the cart; the cart is limited to one stock location — an item from a different location prompts keep-cart vs start-new-cart |
 | UC-93 | Set custom price | Customer | On the dedicated pricing step, each line stays at list price until the customer requests custom pricing, selects a reason, and acknowledges PCS review; the per-unit offer field then unlocks for that line |
 | UC-94 | Submit sales estimate | Customer | Sales Estimate submitted to PCS; status set to Submitted and a reference number issued |
 | UC-95 | View sales estimate list | Customer | All sales estimates shown with reference, date, item count, total, and status |

@@ -1,6 +1,6 @@
 # PCS Wireless Customer Portal — Catalog ↔ NetSuite Field Mapping
 
-**Document Version:** 0.1 (Draft for review)
+**Document Version:** 0.2 (Draft for review)
 **Date:** July 10, 2026
 **Scope:** The item information shown in the **customer portal catalog** (list card, product detail view, filters, and the sales-estimate line items it feeds) and where each field is sourced from in **NetSuite**.
 **Prepared by:** Development / Business Analysis
@@ -88,6 +88,8 @@ NetSuite (Item record + Inventory)  →  Boomi integration  →  Portal database
 | Quantity available (total) | `quantityavailable` | Aggregate (standard) | Shown as "N available"; equals the sum of per-location quantities. Confirm whether to show exact numbers or banded (e.g. "1,000+"). |
 | Per-location quantity | Inventory sublist `locationquantityavailable` | Location sublist | Feeds the detail "Availability" breakdown; total rolls up from these. Synced into `device_inventory(device_id, location_id, quantity)`. |
 | Stock location(s) | Inventory **Location** (`inventorylocation`) | List/Record | Displayed as e.g. "Miami, FL"; also a **filter**. Synced into `locations`. Confirm which locations are exposed to customers. |
+
+> **Single-location rule.** A sales estimate is fulfilled from **one** stock location, so its cart is limited to items from a single location. When estimate creation is wired up, the estimate header should carry that `location`, and per-location inventory (above) determines which items are eligible for a given location.
 
 ---
 

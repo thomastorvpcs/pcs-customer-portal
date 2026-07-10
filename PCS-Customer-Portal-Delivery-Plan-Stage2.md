@@ -1,7 +1,7 @@
 # PCS Wireless Customer Portal — Stage 2 Feature Tickets
 
-**Document Version:** 1.4
-**Date:** July 9, 2026
+**Document Version:** 1.5
+**Date:** July 10, 2026
 **Stage / Module:** Stage 2 — Catalog, Sales Estimates & Offers
 **Status:** Draft — For Development Refinement
 **Prepared by:** Business Analysis
@@ -278,6 +278,7 @@ Every ticket uses the same fields:
 - A line quantity must be at least 1.
 - Adding a device already in the cart increases that line's quantity rather than creating a duplicate line.
 - The cart shows list prices only; proposing different pricing is a separate, deliberate step (CQ-06).
+- **A cart — and the sales estimate built from it — may contain items from only one stock location.** The cart adopts the location of the first item added and displays it. Adding an item from a different location does not silently mix locations: the customer is prompted to keep the current cart or start a new cart for the new location. Emptying the cart clears the location lock.
 
 **Acceptance criteria**
 - A customer can add a device to the cart and see it as a line with quantity and list price.
@@ -285,10 +286,11 @@ Every ticket uses the same fields:
 - Adding an already-carted device increases its quantity instead of duplicating it.
 - The cart's unit count and list subtotal update as lines and quantities change.
 - A Viewer cannot build or submit a sales estimate.
+- The cart never mixes stock locations; it shows its current location, and adding an item from a different location prompts the customer to keep the cart or start a new one for that location.
 
 **Open questions for the business**
 - Should quantity adjust in single units, or in packs (e.g. steps of 10)? Is there a minimum order quantity per device?
-- Should the cart be limited to devices from a single stock location, or may it mix locations?
+- *(Resolved)* A cart / sales estimate is limited to a **single stock location** (see Rules above). Reactive lock for now; a proactive "shopping location" picker can be added once real per-location inventory is available.
 - Does stock availability cap the quantity a customer can request?
 
 ---
