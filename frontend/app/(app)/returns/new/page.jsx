@@ -23,10 +23,11 @@ import DeviceRows from '@/components/rma/DeviceRows'
 import ValidationTable from '@/components/rma/ValidationTable'
 import BulkUpload from '@/components/rma/BulkUpload'
 import ImageUploader from '@/components/rma/ImageUploader'
+import TrackingSection from '@/components/rma/TrackingSection'
 import { inputClass, labelClass, darkBtn } from '@/components/rma/shared'
 import { validateDevice, RULE_BOOK } from '@/lib/rma-rules'
 import {
-  MOCK_SALES_ORDERS, MOCK_INVOICES, MOCK_CUSTOMER, CARRIERS, RETURN_INSTRUCTIONS,
+  MOCK_SALES_ORDERS, MOCK_INVOICES, MOCK_CUSTOMER, RETURN_INSTRUCTIONS,
   RETURN_POLICY_TEXT, seedRowsFromSource, emptyRow, factsForImei, buildCreateRmaPayload, generateRmaRef,
 } from '@/lib/rma-mock'
 
@@ -64,8 +65,7 @@ function RmaWizard() {
   // Post-submission next-steps state
   const [submitted, setSubmitted] = useState(false)
   const [rmaRef, setRmaRef] = useState(null)
-  const [carrier, setCarrier] = useState('')
-  const [tracking, setTracking] = useState('')
+  const [trackingList, setTrackingList] = useState([])
   const [returnAck, setReturnAck] = useState(false)
   const [extraFiles, setExtraFiles] = useState([])
 
@@ -149,18 +149,10 @@ function RmaWizard() {
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2"><Truck size={16} className="text-gray-400" /> Next steps</h2>
             <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-4">Complete these to move your RMA forward.</p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>Carrier <span className="text-red-500">*</span></label>
-                <select value={carrier} onChange={(e) => setCarrier(e.target.value)} className={inputClass}>
-                  <option value="">Select carrier…</option>
-                  {CARRIERS.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className={labelClass}>Tracking number <span className="text-red-500">*</span></label>
-                <input value={tracking} onChange={(e) => setTracking(e.target.value)} placeholder="e.g. 1Z999AA10123456784" className={`${inputClass} font-mono`} />
-              </div>
+            <div>
+              <label className={labelClass}>Tracking</label>
+              <TrackingSection tracking={trackingList} onChange={setTrackingList} />
+              <p className="text-[11px] text-gray-400 dark:text-blue-300/50 mt-1.5">Optional now — you can also add or update tracking any time from the RMA.</p>
             </div>
 
             <div className="mt-4 rounded-lg bg-gray-50 dark:bg-[#1a2540] border border-gray-100 dark:border-gray-700 p-4">
@@ -186,7 +178,7 @@ function RmaWizard() {
               </Link>
               <button
                 onClick={() => router.push('/returns')}
-                disabled={!carrier || !tracking.trim() || !returnAck}
+                disabled={!returnAck}
                 className={`inline-flex items-center gap-1.5 px-5 py-2 text-sm font-medium rounded-lg transition-colors ${darkBtn} disabled:opacity-40 disabled:cursor-not-allowed`}
               >
                 Done <Check size={15} />

@@ -4,14 +4,15 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   Plus, ArrowLeft, ExternalLink, Download, FileText, LifeBuoy, Image as ImageIcon,
-  UploadCloud, SlidersHorizontal, Package,
+  UploadCloud, SlidersHorizontal, Package, Truck,
 } from 'lucide-react'
 import {
   buildTimeline, StatusTimeline, DevicesTable, EvidenceStrip,
   statusStyles, mobileStatusStyles, isApprovedPlus, isComplete,
 } from '@/components/rma/shared'
+import TrackingSection from '@/components/rma/TrackingSection'
 
-const returns = [
+const initialReturns = [
   {
     id: 'RMA-2024-0087',
     order: 'PCS-2024-1845',
@@ -24,6 +25,7 @@ const returns = [
       { imei: '354872109348722', model: 'iPhone 13 Pro 128GB', complaintReason: 'Battery Drain' },
     ],
     evidence: ['front_cracked.jpg', 'boot_screen.jpg'],
+    tracking: [{ id: 'trk-0087-1', carrier: 'UPS', number: '1Z999AA10123456784' }],
     timeline: buildTimeline(7),
   },
   {
@@ -37,6 +39,7 @@ const returns = [
       { imei: '359102847561023', model: 'Galaxy S23 256GB', complaintReason: 'Charging Port' },
     ],
     evidence: ['charging_port.jpg'],
+    tracking: [{ id: 'trk-0086-1', carrier: 'FedEx', number: '748920034812' }],
     timeline: buildTimeline(3),
   },
   {
@@ -52,6 +55,7 @@ const returns = [
       { imei: '354120983746514', model: 'iPhone 12 64GB', complaintReason: 'WiFi Not Working' },
     ],
     evidence: ['dead_pixel_1.jpg', 'faceid_error.jpg'],
+    tracking: [],
     timeline: buildTimeline(2),
   },
   {
@@ -65,6 +69,7 @@ const returns = [
       { imei: '357294018273645', model: 'Pixel 8 Pro 128GB', complaintReason: 'Water Damage' },
     ],
     evidence: ['water_indicator.jpg'],
+    tracking: [],
     timeline: buildTimeline(1),
   },
   {
@@ -79,6 +84,7 @@ const returns = [
       { imei: '353781092836472', model: 'iPhone 13 Mini 128GB', complaintReason: 'Missing Accessories' },
     ],
     evidence: ['box_contents.jpg'],
+    tracking: [],
     timeline: buildTimeline(0),
   },
 ]
@@ -102,13 +108,19 @@ function AdditionalImagesBox() {
 }
 
 export default function ReturnsPage() {
+  const [rmaList, setRmaList] = useState(initialReturns)
   const [activeFilter, setActiveFilter] = useState('All')
-  const [selected, setSelected] = useState(returns[0])
-  const [mobileSelected, setMobileSelected] = useState(null)
+  const [selectedId, setSelectedId] = useState(initialReturns[0].id)
+  const [mobileSelectedId, setMobileSelectedId] = useState(null)
 
-  const filtered = activeFilter === 'All' ? returns : returns.filter((r) => r.status === activeFilter)
-  const getCount = (filter) => (filter === 'All' ? returns.length : returns.filter((r) => r.status === filter).length)
+  const selected = rmaList.find((r) => r.id === selectedId) || null
+  const mobileSelected = mobileSelectedId ? rmaList.find((r) => r.id === mobileSelectedId) || null : null
+
+  const filtered = activeFilter === 'All' ? rmaList : rmaList.filter((r) => r.status === activeFilter)
+  const getCount = (filter) => (filter === 'All' ? rmaList.length : rmaList.filter((r) => r.status === filter).length)
   const deviceCount = (r) => r.devices.length
+
+  const setTracking = (id, tracking) => setRmaList((list) => list.map((r) => (r.id === id ? { ...r, tracking } : r)))
 
   return (
     <>
@@ -117,7 +129,7 @@ export default function ReturnsPage() {
         {mobileSelected ? (
           <div>
             <div className="flex items-center gap-3 px-4 pt-5 pb-4">
-              <button onClick={() => setMobileSelected(null)} className="text-blue-500"><ArrowLeft size={20} /></button>
+              <button onClick={() => setMobileSelectedId(null)} className="text-blue-500"><ArrowLeft size={20} /></button>
               <h1 className="text-lg font-bold text-gray-900 dark:text-white">{mobileSelected.id}</h1>
               <span className={`ml-auto px-2.5 py-1 rounded-full text-xs font-medium ${mobileStatusStyles[mobileSelected.status]}`}>
                 {mobileSelected.status}
@@ -154,6 +166,11 @@ export default function ReturnsPage() {
               <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Devices</h3>
                 <DevicesTable devices={mobileSelected.devices} />
+              </div>
+
+              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-1.5"><Truck size={15} className="text-gray-400" /> Tracking</h3>
+                <TrackingSection tracking={mobileSelected.tracking} onChange={(t) => setTracking(mobileSelected.id, t)} />
               </div>
 
               <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
@@ -209,7 +226,7 @@ export default function ReturnsPage() {
               {filtered.map((r) => (
                 <button
                   key={r.id}
-                  onClick={() => setMobileSelected(r)}
+                  onClick={() => setMobileSelectedId(r.id)}
                   className="w-full text-left bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5"
                 >
                   <div className="flex items-start justify-between mb-1">
@@ -286,22 +303,22 @@ export default function ReturnsPage() {
               {filtered.map((r) => (
                 <button
                   key={r.id}
-                  onClick={() => setSelected(r)}
+                  onClick={() => setSelectedId(r.id)}
                   className={`w-full text-left px-4 py-3 grid grid-cols-[1fr_auto] gap-2 items-center transition-colors ${
-                    selected?.id === r.id ? 'bg-[#0b1b3a] dark:bg-blue-900/40' : 'hover:bg-gray-50 dark:hover:bg-[#1a2540]'
+                    selectedId === r.id ? 'bg-[#0b1b3a] dark:bg-blue-900/40' : 'hover:bg-gray-50 dark:hover:bg-[#1a2540]'
                   }`}
                 >
                   <div className="min-w-0">
-                    <p className={`text-sm font-semibold truncate ${selected?.id === r.id ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{r.id}</p>
-                    <p className={`text-xs truncate mt-0.5 ${selected?.id === r.id ? 'text-blue-200/70' : 'text-gray-400'}`}>{r.order} · {deviceCount(r)} device{deviceCount(r) > 1 ? 's' : ''}</p>
-                    <p className={`text-xs mt-0.5 ${selected?.id === r.id ? 'text-blue-200/50' : 'text-gray-400'}`}>{r.created}</p>
+                    <p className={`text-sm font-semibold truncate ${selectedId === r.id ? 'text-white' : 'text-gray-900 dark:text-white'}`}>{r.id}</p>
+                    <p className={`text-xs truncate mt-0.5 ${selectedId === r.id ? 'text-blue-200/70' : 'text-gray-400'}`}>{r.order} · {deviceCount(r)} device{deviceCount(r) > 1 ? 's' : ''}</p>
+                    <p className={`text-xs mt-0.5 ${selectedId === r.id ? 'text-blue-200/50' : 'text-gray-400'}`}>{r.created}</p>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${selected?.id === r.id ? 'bg-white/10 text-white' : statusStyles[r.status]}`}>{r.status}</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${selectedId === r.id ? 'bg-white/10 text-white' : statusStyles[r.status]}`}>{r.status}</span>
                 </button>
               ))}
             </div>
             <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-              <span className="text-xs text-gray-400">Showing 1–{filtered.length} of {returns.length}</span>
+              <span className="text-xs text-gray-400">Showing 1–{filtered.length} of {rmaList.length}</span>
               <button className="text-xs text-blue-600 hover:underline font-medium">Next</button>
             </div>
           </div>
@@ -348,6 +365,14 @@ export default function ReturnsPage() {
                 <div className="md:mb-3 xl:mb-5">
                   <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-1.5"><Package size={15} className="text-gray-400" /> Devices</p>
                   <DevicesTable devices={selected.devices} />
+                </div>
+
+                {/* Tracking */}
+                <div className="md:mb-3 xl:mb-5">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-1.5"><Truck size={15} className="text-gray-400" /> Tracking</p>
+                  <div className="max-w-xl">
+                    <TrackingSection tracking={selected.tracking} onChange={(t) => setTracking(selected.id, t)} />
+                  </div>
                 </div>
 
                 {/* Evidence */}
