@@ -2,10 +2,11 @@
 
 // RMA submission wizard (UI-only demo). Flow:
 //   1 Source   — from a sales order, an invoice, or a bulk CSV upload
-//   2 Devices  — enter IMEIs, return reasons, per-device notes
-//   3 Validate — run the rule book, show a per-IMEI verdict table
-//   4 Evidence — attach photos/video per device (required-image gating)
-//   5 Review   — accept policy, preview the createRMA payload, submit
+//   2 Select   — pick which of the source's devices to return
+//   3 Devices  — set return reason + per-device notes for the selected devices
+//   4 Validate — run the rule book, show a per-IMEI verdict table
+//   5 Evidence — attach photos/video per device (required-image gating)
+//   6 Review   — accept policy, preview the createRMA payload, submit
 // After submit: a next-steps screen (tracking, return instructions, policy).
 // Nothing is persisted or sent anywhere — this is a stakeholder demo.
 
@@ -15,7 +16,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import {
   ArrowLeft, ArrowRight, Check, CheckCircle2, Send, ShieldCheck, ClipboardCheck,
   Smartphone, FileInput, Image as ImageIcon, ShoppingCart, FileText, Upload,
-  AlertTriangle, ChevronRight, Truck, Info,
+  AlertTriangle, ChevronRight, Truck, Info, ListChecks,
 } from 'lucide-react'
 
 import WizardSteps from '@/components/rma/WizardSteps'
@@ -25,6 +26,7 @@ import BulkUpload from '@/components/rma/BulkUpload'
 import ImageUploader from '@/components/rma/ImageUploader'
 import TrackingSection from '@/components/rma/TrackingSection'
 import { inputClass, labelClass, darkBtn } from '@/components/rma/shared'
+import { gradeBadgeClass } from '@/lib/grades'
 import { validateDevice, RULE_BOOK } from '@/lib/rma-rules'
 import {
   MOCK_SALES_ORDERS, MOCK_INVOICES, MOCK_CUSTOMER, RETURN_INSTRUCTIONS,
@@ -33,10 +35,11 @@ import {
 
 const steps = [
   { n: 1, label: 'Source', icon: FileInput },
-  { n: 2, label: 'Devices', icon: Smartphone },
-  { n: 3, label: 'Validate', icon: ShieldCheck },
-  { n: 4, label: 'Evidence', icon: ImageIcon },
-  { n: 5, label: 'Review', icon: ClipboardCheck },
+  { n: 2, label: 'Select', icon: ListChecks },
+  { n: 3, label: 'Devices', icon: Smartphone },
+  { n: 4, label: 'Validate', icon: ShieldCheck },
+  { n: 5, label: 'Evidence', icon: ImageIcon },
+  { n: 6, label: 'Review', icon: ClipboardCheck },
 ]
 
 // Facts passed to the rule book — only for devices we recognise on file.
@@ -54,11 +57,15 @@ function RmaWizard() {
   const [step, setStep] = useState(1)
   const [kind, setKind] = useState(initialInvoice ? 'invoice' : initialOrder ? 'order' : null)
   const [sourceId, setSourceId] = useState(initialInvoice || initialOrder || '')
-  const [rows, setRows] = useState(() => {
+  // `available` = devices on the chosen order/invoice/bulk list; the customer
+  // picks a subset on the Select step, which becomes the working `rows`.
+  const [available, setAvailable] = useState(() => {
     if (initialInvoice) return seedRowsFromSource('invoice', initialInvoice)
     if (initialOrder) return seedRowsFromSource('order', initialOrder)
     return []
   })
+  const [selectedKeys, setSelectedKeys] = useState([])
+  const [rows, setRows] = useState([])
   const [validated, setValidated] = useState(false)
   const [policyAccepted, setPolicyAccepted] = useState(false)
 
@@ -69,28 +76,44 @@ function RmaWizard() {
   const [returnAck, setReturnAck] = useState(false)
   const [extraFiles, setExtraFiles] = useState([])
 
-  const changeRows = (next) => { setRows(next); setValidated(false) }
+  const changeRows = (nextRows) => { setRows(nextRows); setValidated(false) }
 
   const chooseSource = (kindSel) => {
     setKind(kindSel)
     setValidated(false)
-    if (kindSel === 'order') { const o = MOCK_SALES_ORDERS[0]; setSourceId(o.id); setRows(seedRowsFromSource('order', o.id)) }
-    else if (kindSel === 'invoice') { const iv = MOCK_INVOICES[0]; setSourceId(iv.id); setRows(seedRowsFromSource('invoice', iv.id)) }
-    else { setSourceId(''); setRows([]) }
+    setSelectedKeys([])
+    setRows([])
+    if (kindSel === 'order') { const o = MOCK_SALES_ORDERS[0]; setSourceId(o.id); setAvailable(seedRowsFromSource('order', o.id)) }
+    else if (kindSel === 'invoice') { const iv = MOCK_INVOICES[0]; setSourceId(iv.id); setAvailable(seedRowsFromSource('invoice', iv.id)) }
+    else { setSourceId(''); setAvailable([]) }
   }
 
-  const selectSource = (id) => { setSourceId(id); setRows(seedRowsFromSource(kind, id)); setValidated(false) }
+  const selectSource = (id) => { setSourceId(id); setAvailable(seedRowsFromSource(kind, id)); setSelectedKeys([]); setRows([]); setValidated(false) }
 
   const importBulk = (parsed) => {
     const mapped = parsed.map((p) => {
       const facts = factsForImei(p.deviceId.trim())
       return { ...emptyRow(), ...(facts || {}), deviceId: p.deviceId, imei: p.deviceId, reason: p.reason, notes: p.notes || '' }
     })
-    changeRows(mapped)
+    setAvailable(mapped)
+    setSelectedKeys(mapped.map((m) => m.deviceId))   // bulk list is pre-selected; deselect to exclude
+    setRows([])
+    setValidated(false)
     setStep(2)
   }
 
-  const startManual = () => { setKind('manual'); setRows([emptyRow()]); setValidated(false) }
+  const startManual = () => { setKind('manual'); setAvailable([]); setSelectedKeys([]); setRows([emptyRow()]); setValidated(false) }
+
+  const toggleSelect = (key) => setSelectedKeys((keys) => (keys.includes(key) ? keys.filter((k) => k !== key) : [...keys, key]))
+  const allSelected = available.length > 0 && selectedKeys.length === available.length
+  const toggleAll = () => setSelectedKeys(allSelected ? [] : available.map((a) => a.deviceId))
+
+  // Build the working rows from the selection, preserving any reason/notes/files
+  // already entered for a device (so going back to Select doesn't lose edits).
+  const buildRowsFromSelection = () => {
+    const chosen = available.filter((a) => selectedKeys.includes(a.deviceId))
+    return chosen.map((a) => rows.find((r) => r.deviceId === a.deviceId) || { ...a })
+  }
 
   const runValidation = () => {
     const today = new Date()
@@ -103,22 +126,26 @@ function RmaWizard() {
   const submit = () => { setRmaRef(generateRmaRef()); setSubmitted(true) }
 
   // ── gating ──
-  const hasDevices = rows.length > 0
-  const devicesComplete = hasDevices && rows.every((r) => r.deviceId.trim() && r.reason)
+  const devicesComplete = rows.length > 0 && rows.every((r) => r.deviceId.trim() && r.reason)
   const blockingImage = rows.filter((r) => r.validation?.imageRequired && (!r.files || r.files.length === 0))
   const canSubmit = validated && policyAccepted && blockingImage.length === 0 && devicesComplete
 
   const canNext =
-    (step === 1 && hasDevices) ||
-    (step === 2 && devicesComplete) ||
-    (step === 3 && validated) ||
-    step === 4
+    (step === 1 && (available.length > 0 || kind === 'manual')) ||
+    (step === 2 && (available.length === 0 || selectedKeys.length > 0)) ||
+    (step === 3 && devicesComplete) ||
+    (step === 4 && validated) ||
+    step === 5
 
-  const next = () => setStep((s) => Math.min(5, s + 1))
+  const goNext = () => {
+    if (step === 2 && available.length > 0) { setRows(buildRowsFromSelection()); setValidated(false) }
+    setStep((s) => Math.min(6, s + 1))
+  }
   const back = () => setStep((s) => Math.max(1, s - 1))
 
   const acceptedCount = rows.filter((r) => r.validation?.accepted).length
   const flaggedCount = rows.length - acceptedCount
+  const sourceLabel = kind === 'order' ? 'order' : kind === 'invoice' ? 'invoice' : 'list'
 
   // ── Post-submission next-steps screen ──
   if (submitted) {
@@ -242,7 +269,7 @@ function RmaWizard() {
                       <option value={sourceId}>{sourceId}</option>
                     )}
                   </select>
-                  {hasDevices && <p className="text-xs text-gray-400 mt-2">{rows.length} device{rows.length !== 1 ? 's' : ''} loaded — continue to review and set reasons.</p>}
+                  {available.length > 0 && <p className="text-xs text-gray-400 mt-2">{available.length} device{available.length !== 1 ? 's' : ''} on this {sourceLabel} — you&apos;ll choose which to return next.</p>}
                 </div>
               )}
 
@@ -253,23 +280,72 @@ function RmaWizard() {
                   Or enter devices manually →
                 </button>
               )}
+              {kind === 'manual' && (
+                <p className="text-xs text-gray-500 dark:text-gray-400">Manual entry selected — you&apos;ll add devices on the Devices step.</p>
+              )}
             </div>
           )}
 
-          {/* Step 2 — Devices */}
+          {/* Step 2 — Select devices */}
           {step === 2 && (
             <div>
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Select devices to return</h2>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-5">Choose which devices from this {sourceLabel} you want to return.</p>
+
+              {available.length === 0 ? (
+                <div className="border border-dashed border-gray-200 dark:border-gray-600 rounded-lg py-8 text-center">
+                  <Smartphone size={24} className="text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500 dark:text-gray-400">No order or invoice selected — you&apos;ll add devices manually on the next step.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={allSelected} onChange={toggleAll} className="accent-blue-600 w-4 h-4" />
+                      <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Select all ({available.length})</span>
+                    </label>
+                    <span className="text-xs text-gray-400">{selectedKeys.length} selected</span>
+                  </div>
+                  <div className="space-y-2">
+                    {available.map((a) => {
+                      const checked = selectedKeys.includes(a.deviceId)
+                      return (
+                        <label
+                          key={a.deviceId}
+                          className={`flex items-center gap-3 px-3 py-2.5 border rounded-lg cursor-pointer transition-colors ${checked ? 'border-[#0b1b3a] bg-[#0b1b3a]/[0.03] dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540]'}`}
+                        >
+                          <input type="checkbox" checked={checked} onChange={() => toggleSelect(a.deviceId)} className="accent-blue-600 w-4 h-4 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-mono text-gray-700 dark:text-gray-300 truncate">{a.deviceId}</p>
+                            <p className="text-[11px] text-gray-400 truncate">{a.model || 'Device'}{a.reason ? ` · ${a.reason}` : ''}</p>
+                          </div>
+                          {a.grade && <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium flex-shrink-0 ${gradeBadgeClass(a.grade)}`}>{a.grade}</span>}
+                        </label>
+                      )
+                    })}
+                  </div>
+                  {selectedKeys.length === 0 && (
+                    <p className="text-xs text-amber-500 mt-3 flex items-center gap-1"><AlertTriangle size={13} /> Select at least one device to continue.</p>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Step 3 — Devices & reasons */}
+          {step === 3 && (
+            <div>
               <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Devices &amp; reasons</h2>
-              <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-5">Confirm each device, choose a return reason, and add optional notes.</p>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-5">Choose a return reason for each selected device and add optional notes. You can also add more devices here.</p>
               <DeviceRows rows={rows} onChange={changeRows} />
-              {!devicesComplete && hasDevices && (
+              {!devicesComplete && rows.length > 0 && (
                 <p className="text-xs text-amber-500 mt-3 flex items-center gap-1"><AlertTriangle size={13} /> Every device needs an ID and a return reason.</p>
               )}
             </div>
           )}
 
-          {/* Step 3 — Validate */}
-          {step === 3 && (
+          {/* Step 4 — Validate */}
+          {step === 4 && (
             <div>
               <div className="flex items-center justify-between mb-1">
                 <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Validate RMA data</h2>
@@ -304,8 +380,8 @@ function RmaWizard() {
             </div>
           )}
 
-          {/* Step 4 — Evidence */}
-          {step === 4 && (
+          {/* Step 5 — Evidence */}
+          {step === 5 && (
             <div>
               <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Evidence</h2>
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-5">Attach photos or video per device. Reasons marked <span className="font-medium">Required</span> must have at least one file before you can submit.</p>
@@ -330,8 +406,8 @@ function RmaWizard() {
             </div>
           )}
 
-          {/* Step 5 — Review & Submit */}
-          {step === 5 && (
+          {/* Step 6 — Review & Submit */}
+          {step === 6 && (
             <div>
               <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Review &amp; submit</h2>
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-5">Confirm the request. Flagged devices are still submitted for manual review.</p>
@@ -382,9 +458,9 @@ function RmaWizard() {
             >
               <ArrowLeft size={15} /> Back
             </button>
-            {step < 5 ? (
+            {step < 6 ? (
               <button
-                onClick={next}
+                onClick={goNext}
                 disabled={!canNext}
                 className={`inline-flex items-center gap-1.5 px-5 py-2 text-sm font-medium rounded-lg transition-colors ${darkBtn} disabled:opacity-40 disabled:cursor-not-allowed`}
               >
