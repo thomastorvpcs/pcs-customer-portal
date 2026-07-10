@@ -16,7 +16,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import {
   ArrowLeft, ArrowRight, Check, CheckCircle2, Send, ShieldCheck, ClipboardCheck,
   Smartphone, FileInput, Image as ImageIcon, ShoppingCart, FileText, Upload,
-  AlertTriangle, ChevronRight, Truck, Info, ListChecks,
+  AlertTriangle, ChevronRight, Truck, Info, ListChecks, Search,
 } from 'lucide-react'
 
 import WizardSteps from '@/components/rma/WizardSteps'
@@ -65,6 +65,7 @@ function RmaWizard() {
     return []
   })
   const [selectedKeys, setSelectedKeys] = useState([])
+  const [search, setSearch] = useState('')
   const [rows, setRows] = useState([])
   const [validated, setValidated] = useState(false)
   const [policyAccepted, setPolicyAccepted] = useState(false)
@@ -82,13 +83,14 @@ function RmaWizard() {
     setKind(kindSel)
     setValidated(false)
     setSelectedKeys([])
+    setSearch('')
     setRows([])
     if (kindSel === 'order') { const o = MOCK_SALES_ORDERS[0]; setSourceId(o.id); setAvailable(seedRowsFromSource('order', o.id)) }
     else if (kindSel === 'invoice') { const iv = MOCK_INVOICES[0]; setSourceId(iv.id); setAvailable(seedRowsFromSource('invoice', iv.id)) }
     else { setSourceId(''); setAvailable([]) }
   }
 
-  const selectSource = (id) => { setSourceId(id); setAvailable(seedRowsFromSource(kind, id)); setSelectedKeys([]); setRows([]); setValidated(false) }
+  const selectSource = (id) => { setSourceId(id); setAvailable(seedRowsFromSource(kind, id)); setSelectedKeys([]); setSearch(''); setRows([]); setValidated(false) }
 
   const importBulk = (parsed) => {
     const mapped = parsed.map((p) => {
@@ -97,6 +99,7 @@ function RmaWizard() {
     })
     setAvailable(mapped)
     setSelectedKeys(mapped.map((m) => m.deviceId))   // bulk list is pre-selected; deselect to exclude
+    setSearch('')
     setRows([])
     setValidated(false)
     setStep(2)
@@ -105,8 +108,13 @@ function RmaWizard() {
   const startManual = () => { setKind('manual'); setAvailable([]); setSelectedKeys([]); setRows([emptyRow()]); setValidated(false) }
 
   const toggleSelect = (key) => setSelectedKeys((keys) => (keys.includes(key) ? keys.filter((k) => k !== key) : [...keys, key]))
-  const allSelected = available.length > 0 && selectedKeys.length === available.length
-  const toggleAll = () => setSelectedKeys(allSelected ? [] : available.map((a) => a.deviceId))
+  const q = search.trim().toLowerCase()
+  const filteredAvailable = q ? available.filter((a) => `${a.deviceId} ${a.model || ''}`.toLowerCase().includes(q)) : available
+  const allFilteredSelected = filteredAvailable.length > 0 && filteredAvailable.every((a) => selectedKeys.includes(a.deviceId))
+  const toggleAllFiltered = () => {
+    const keys = filteredAvailable.map((a) => a.deviceId)
+    setSelectedKeys((prev) => (allFilteredSelected ? prev.filter((k) => !keys.includes(k)) : [...new Set([...prev, ...keys])]))
+  }
 
   // Build the working rows from the selection, preserving any reason/notes/files
   // already entered for a device (so going back to Select doesn't lose edits).
@@ -299,31 +307,47 @@ function RmaWizard() {
                 </div>
               ) : (
                 <>
+                  <div className="relative mb-3">
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search by IMEI or model…"
+                      className={`${inputClass} pl-9`}
+                    />
+                  </div>
                   <div className="flex items-center justify-between mb-2">
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={allSelected} onChange={toggleAll} className="accent-blue-600 w-4 h-4" />
-                      <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Select all ({available.length})</span>
+                      <input type="checkbox" checked={allFilteredSelected} disabled={filteredAvailable.length === 0} onChange={toggleAllFiltered} className="accent-blue-600 w-4 h-4" />
+                      <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Select all{q ? ' matching' : ''} ({filteredAvailable.length})</span>
                     </label>
                     <span className="text-xs text-gray-400">{selectedKeys.length} selected</span>
                   </div>
-                  <div className="space-y-2">
-                    {available.map((a) => {
-                      const checked = selectedKeys.includes(a.deviceId)
-                      return (
-                        <label
-                          key={a.deviceId}
-                          className={`flex items-center gap-3 px-3 py-2.5 border rounded-lg cursor-pointer transition-colors ${checked ? 'border-[#0b1b3a] bg-[#0b1b3a]/[0.03] dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540]'}`}
-                        >
-                          <input type="checkbox" checked={checked} onChange={() => toggleSelect(a.deviceId)} className="accent-blue-600 w-4 h-4 flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs font-mono text-gray-700 dark:text-gray-300 truncate">{a.deviceId}</p>
-                            <p className="text-[11px] text-gray-400 truncate">{a.model || 'Device'}{a.reason ? ` · ${a.reason}` : ''}</p>
-                          </div>
-                          {a.grade && <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium flex-shrink-0 ${gradeBadgeClass(a.grade)}`}>{a.grade}</span>}
-                        </label>
-                      )
-                    })}
-                  </div>
+                  {filteredAvailable.length === 0 ? (
+                    <div className="border border-dashed border-gray-200 dark:border-gray-600 rounded-lg py-8 text-center">
+                      <Search size={22} className="text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500 dark:text-gray-400">No devices match &ldquo;{search}&rdquo;.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {filteredAvailable.map((a) => {
+                        const checked = selectedKeys.includes(a.deviceId)
+                        return (
+                          <label
+                            key={a.deviceId}
+                            className={`flex items-center gap-3 px-3 py-2.5 border rounded-lg cursor-pointer transition-colors ${checked ? 'border-[#0b1b3a] bg-[#0b1b3a]/[0.03] dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-[#1a2540]'}`}
+                          >
+                            <input type="checkbox" checked={checked} onChange={() => toggleSelect(a.deviceId)} className="accent-blue-600 w-4 h-4 flex-shrink-0" />
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs font-mono text-gray-700 dark:text-gray-300 truncate">{a.deviceId}</p>
+                              <p className="text-[11px] text-gray-400 truncate">{a.model || 'Device'}{a.reason ? ` · ${a.reason}` : ''}</p>
+                            </div>
+                            {a.grade && <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium flex-shrink-0 ${gradeBadgeClass(a.grade)}`}>{a.grade}</span>}
+                          </label>
+                        )
+                      })}
+                    </div>
+                  )}
                   {selectedKeys.length === 0 && (
                     <p className="text-xs text-amber-500 mt-3 flex items-center gap-1"><AlertTriangle size={13} /> Select at least one device to continue.</p>
                   )}
