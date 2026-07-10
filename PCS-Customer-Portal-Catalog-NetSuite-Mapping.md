@@ -1,6 +1,6 @@
 # PCS Wireless Customer Portal — Catalog ↔ NetSuite Field Mapping
 
-**Document Version:** 0.2 (Draft for review)
+**Document Version:** 0.3 (Draft for review)
 **Date:** July 10, 2026
 **Scope:** The item information shown in the **customer portal catalog** (list card, product detail view, filters, and the sales-estimate line items it feeds) and where each field is sourced from in **NetSuite**.
 **Prepared by:** Development / Business Analysis
@@ -49,7 +49,7 @@ NetSuite (Item record + Inventory)  →  Boomi integration  →  Portal database
 
 | Portal field | NetSuite source field | NetSuite field type | Transform / notes |
 |---|---|---|---|
-| Grade (A / B) | `custitem_grade` ⚠ | List/Record | Drives the **grade badge** and links to the grading guide. Filter. Confirm the NetSuite grade value set maps to the portal's A/B (and any future grades). |
+| Grade | `custitem_grade` ⚠ | List/Record | The PCS grade code — C2/C4/C5/C6, CPO, COB, MD A/B, TBG/TBG2/TBG FIN, CRC/CRD/CRX, D2/D3/D4. Drives the **grade badge** and links to the grading guide. Filter. Confirm the NetSuite field ID and its value set match the portal's code list. |
 | Storage | `custitem_storage` ⚠ | Integer or List | Displayed as `128GB`; part of the spec line and **filter**. Store the raw number; portal appends "GB". |
 | Colour | `custitem_color` ⚠ | List/Record | Spec line + **filter**. |
 | Carrier | `custitem_carrier` ⚠ | List/Record | Spec line + **filter** (Unlocked, AT&T, T-Mobile, Verizon…). Omitted for products where it doesn't apply (e.g. laptops). |
@@ -123,7 +123,7 @@ These appear in the catalog experience but are **not** item data from NetSuite �
 6. **Locations** — which inventory locations are exposed to customers, and should quantities be exact or banded?
 7. **Images** — are product photos in NetSuite (item image / file cabinet) or an external source/URL?
 8. **Merchandising** — are promo tags and the "featured/hottest" flag curated in NetSuite or in a portal back-office tool?
-9. **Grade value set** — what is the full list of grade codes in NetSuite, and how do they map to the customer-facing grades (currently A / B)?
+9. **Grade definitions** — the portal now uses PCS's full grade code set (C2/C4/C5/C6, CPO, COB, MD A/B, TBG/TBG2/TBG FIN, CRC/CRD/CRX, D2/D3/D4), seeded from the internal list. Confirm each code's authoritative definition and cosmetic/battery thresholds (several are currently flagged "to be confirmed"), and that the NetSuite `custitem_grade` value set matches this list exactly.
 
 ---
 

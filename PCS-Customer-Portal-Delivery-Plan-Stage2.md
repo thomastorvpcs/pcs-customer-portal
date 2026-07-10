@@ -1,6 +1,6 @@
 # PCS Wireless Customer Portal — Stage 2 Feature Tickets
 
-**Document Version:** 1.5
+**Document Version:** 1.6
 **Date:** July 10, 2026
 **Stage / Module:** Stage 2 — Catalog, Sales Estimates & Offers
 **Status:** Draft — For Development Refinement
@@ -63,7 +63,7 @@ Every ticket uses the same fields:
   - A device image/thumbnail (a category-based placeholder where real imagery is not yet available).
   - A **favorite** toggle (see CQ-04).
   - The **device name**.
-  - A **grade badge** (e.g. Grade A, Grade B).
+  - A **grade badge** (the PCS grade code, e.g. C6, CPO, TBG).
   - A **spec line** of the attributes that apply: storage, color, and carrier. Attributes that do not apply to a product (e.g. carrier for a laptop, storage for a wearable) are omitted rather than shown blank.
   - The **stock location** and **quantity available**.
   - An indicative **"from" price**.
@@ -250,7 +250,7 @@ Every ticket uses the same fields:
 - Grade names and definitions in the guide match the badges used elsewhere in the catalog.
 
 **Open questions for the business**
-- What are the **official** grade definitions and battery-health thresholds PCS wants published to customers? (The current copy uses working definitions — Grade A battery health ≥ 90%, Grade B ≥ 80% — pending confirmation.)
+- What are the **official** definitions and cosmetic/battery thresholds for each PCS grade code (C2–C6, CPO, COB, MD A/B, TBG/TBG2/TBG FIN, CRC/CRD/CRX, D2–D4)? The guide seeds descriptions from the internal list; several are flagged "definition to be confirmed" pending PCS input.
 - Will PCS supply real example photography and walkthrough videos per grade, and who maintains them?
 - Should the full set of internal grades (beyond those currently on sale in the catalog) be represented, or only the customer-facing grades?
 - Should the guide content be authored/editable in a back-office tool, or is a fixed page acceptable for now?
