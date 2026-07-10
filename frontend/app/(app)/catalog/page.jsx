@@ -75,6 +75,19 @@ const gradeBadge = {
   B: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
 }
 
+// Per-location stock breakdown for the detail view. Derived deterministically
+// from the device's total quantity and primary location (mock data only — in
+// production this comes from NetSuite's per-location inventory, see the
+// Catalog ↔ NetSuite mapping). The primary location holds the largest share.
+const LOCATION_WEIGHTS = [0.55, 0.25, 0.12, 0.08]
+function stockByLocation(d) {
+  const ordered = [d.location, ...filterGroups.location.filter((l) => l !== d.location)]
+  const rows = ordered.map((location, i) => ({ location, qty: Math.floor(d.qty * (LOCATION_WEIGHTS[i] || 0)) }))
+  const allocated = rows.reduce((sum, r) => sum + r.qty, 0)
+  rows[0].qty += d.qty - allocated // give the rounding remainder to the primary location so the total matches exactly
+  return rows.filter((r) => r.qty > 0)
+}
+
 const DEFAULT_MAX = 1200
 const SAVED_KEY = 'pcs.catalog.savedSearches.v2'
 const FAV_KEY = 'pcs.catalog.favorites'
@@ -686,10 +699,20 @@ function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFav
               <span className="text-xs text-gray-400">/ unit · list price</span>
             </div>
 
-            {/* Availability */}
-            <div className="mt-4 rounded-xl bg-gray-50 dark:bg-[#1e2d45] p-3 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200"><MapPin size={15} className="text-gray-400" /> {d.location}</div>
-              <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200"><Package size={15} className="text-gray-400" /> {d.qty.toLocaleString()} units available</div>
+            {/* Availability by location */}
+            <div className="mt-4 rounded-xl bg-gray-50 dark:bg-[#1e2d45] p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide"><Package size={13} /> Availability by location</span>
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-200">{d.qty.toLocaleString()} total</span>
+              </div>
+              <div className="space-y-1.5">
+                {stockByLocation(d).map((row) => (
+                  <div key={row.location} className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-1.5 text-gray-700 dark:text-gray-200"><MapPin size={14} className="text-gray-400 flex-shrink-0" /> {row.location}</span>
+                    <span className="text-gray-900 dark:text-white font-medium">{row.qty.toLocaleString()} units</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Grade guide — links to the full grading guide page */}
