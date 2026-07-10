@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import {
-  Plus, ArrowLeft, ExternalLink, Download, FileText, LifeBuoy, Image as ImageIcon,
+  Plus, ArrowLeft, ExternalLink, Download, LifeBuoy, Image as ImageIcon,
   UploadCloud, SlidersHorizontal, Package, Truck,
 } from 'lucide-react'
 import {
@@ -47,7 +47,7 @@ const initialReturns = [
     order: 'PCS-2024-1847',
     created: 'Mar 28, 2024',
     status: 'Approved',
-    resolution: 'Return label issued — awaiting shipment',
+    resolution: 'Approved — awaiting shipment',
     creditMemo: null,
     devices: [
       { imei: '354120983746512', model: 'iPhone 13 Pro 256GB', complaintReason: 'Dead Pixel' },
@@ -185,11 +185,6 @@ export default function ReturnsPage() {
                 {isComplete(mobileSelected.status) && (
                   <button className="flex items-center justify-center gap-1.5 py-3 text-sm border border-amber-400 rounded-xl text-amber-600 dark:text-amber-400 bg-white dark:bg-[#152035] font-medium">
                     <Download size={14} /> Download Credit Memo
-                  </button>
-                )}
-                {isApprovedPlus(mobileSelected.status) && (
-                  <button className="flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]">
-                    <FileText size={14} /> Download Return Label
                   </button>
                 )}
                 <Link href="/support" className="flex items-center justify-center gap-1.5 py-3 text-sm font-medium bg-[#0b1b3a] text-white rounded-xl">
@@ -389,11 +384,6 @@ export default function ReturnsPage() {
                   {(isComplete(selected.status) || isApprovedPlus(selected.status)) && (
                     <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-amber-400 rounded-lg text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-400/10 transition-colors font-medium">
                       <Download size={14} /> Download Credit Memo
-                    </button>
-                  )}
-                  {isApprovedPlus(selected.status) && (
-                    <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
-                      <FileText size={14} /> Download Return Label
                     </button>
                   )}
                   <Link href="/support" className="flex items-center gap-1.5 px-4 py-2 text-sm bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] transition-colors font-medium">
