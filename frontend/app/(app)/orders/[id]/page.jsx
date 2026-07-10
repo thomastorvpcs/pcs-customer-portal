@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle2, Circle, Truck, FileText, LayoutList, FileCheck, Download } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Circle, Truck, FileText, LayoutList, FileCheck, Download, Undo2 } from 'lucide-react'
 import { gradeBadgeClass } from '@/lib/grades'
 
 const statusSteps = [
@@ -134,6 +134,9 @@ export default function OrderDetailPage({ params }) {
                 </button>
               ))}
             </div>
+            <Link href={`/returns/new?order=${params.id}`} className="w-full flex items-center justify-center gap-1.5 py-2.5 mb-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300">
+              <Undo2 size={14} /> Start Return / RMA
+            </Link>
             <div className="flex gap-2">
               <button className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300">
                 <Download size={14} /> Download PDF
@@ -260,6 +263,10 @@ export default function OrderDetailPage({ params }) {
               ))}
             </div>
             <div className="flex items-center gap-3">
+              <Link href={`/returns/new?order=${params.id}`} className="px-4 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors flex items-center gap-1.5">
+                <Undo2 size={14} />
+                Start Return / RMA
+              </Link>
               <button className="px-4 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors flex items-center gap-1.5">
                 <Download size={14} />
                 Download PDF

@@ -4,27 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   Plus, ArrowLeft, ExternalLink, Download, FileText, LifeBuoy, Image as ImageIcon,
-  UploadCloud, Trash2, X, CheckCircle2, CircleDot, Circle, SlidersHorizontal, Package,
+  UploadCloud, SlidersHorizontal, Package,
 } from 'lucide-react'
-
-const complaintReasons = [
-  'Dead Pixel', 'Cracked LCD', 'Battery Drain', 'WiFi Not Working', 'Bluetooth',
-  'Charging Port', 'Speaker/Mic', 'Face ID', 'Touch ID', 'Camera', 'Water Damage',
-  'Cosmetic Damage', 'Wrong Item', 'Missing Accessories', 'Software Issue',
-  'Carrier Lock', 'IMEI Mismatch', 'Other',
-]
-
-const mockOrders = ['PCS-2024-1847', 'PCS-2024-1846', 'PCS-2024-1845', 'PCS-2024-1844', 'PCS-2024-1843']
-
-const stages = ['Submitted', 'Under Review', 'Approved', 'Shipped', 'Received', 'Diagnostic', 'Complete']
-
-function buildTimeline(reachedIndex) {
-  return stages.map((label, i) => ({
-    label,
-    done: i < reachedIndex,
-    active: i === reachedIndex,
-  }))
-}
+import {
+  buildTimeline, StatusTimeline, DevicesTable, EvidenceStrip,
+  statusStyles, mobileStatusStyles, isApprovedPlus, isComplete,
+} from '@/components/rma/shared'
 
 const returns = [
   {
@@ -98,26 +83,6 @@ const returns = [
   },
 ]
 
-const statusStyles = {
-  Submitted: 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
-  'Under Review': 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
-  Approved: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400',
-  Shipped: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400',
-  Received: 'bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
-  Diagnostic: 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
-  Complete: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400',
-}
-
-const mobileStatusStyles = {
-  Submitted: 'bg-blue-500/15 text-blue-400',
-  'Under Review': 'bg-amber-500/15 text-amber-400',
-  Approved: 'bg-teal-500/15 text-teal-400',
-  Shipped: 'bg-indigo-500/15 text-indigo-400',
-  Received: 'bg-purple-500/15 text-purple-400',
-  Diagnostic: 'bg-amber-500/15 text-amber-400',
-  Complete: 'bg-green-500/15 text-green-400',
-}
-
 const kpis = [
   { label: 'All', filter: 'All' },
   { label: 'Submitted', filter: 'Submitted' },
@@ -126,182 +91,12 @@ const kpis = [
   { label: 'Complete', filter: 'Complete' },
 ]
 
-const rank = (status) => stages.indexOf(status)
-const isApprovedPlus = (status) => rank(status) >= rank('Approved')
-const isComplete = (status) => status === 'Complete'
-
-function StatusTimeline({ timeline, variant = 'desktop' }) {
-  if (variant === 'mobile') {
-    return (
-      <div className="flex flex-col">
-        {timeline.map((step, i) => (
-          <div key={step.label} className="flex items-stretch gap-3">
-            <div className="flex flex-col items-center">
-              <div className="flex-shrink-0 z-10">
-                {step.done ? (
-                  <CheckCircle2 size={20} className="text-green-500" fill="#f0fdf4" />
-                ) : step.active ? (
-                  <CircleDot size={20} className="text-blue-500" fill="#eff6ff" />
-                ) : (
-                  <Circle size={20} className="text-gray-300 dark:text-gray-600" fill="white" />
-                )}
-              </div>
-              {i < timeline.length - 1 && (
-                <div className={`w-0.5 flex-1 my-1 ${step.done ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-600'}`} />
-              )}
-            </div>
-            <p className={`text-xs font-medium pb-4 pt-0.5 ${step.active ? 'text-blue-600' : step.done ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400'}`}>
-              {step.label}
-            </p>
-          </div>
-        ))}
-      </div>
-    )
-  }
+function AdditionalImagesBox() {
   return (
-    <div className="flex items-start">
-      {timeline.map((step, i) => (
-        <div key={step.label} className="flex items-start flex-1">
-          <div className="flex flex-col items-center flex-1">
-            <div className="flex items-center w-full">
-              {i > 0 && <div className={`flex-1 h-0.5 -mr-1 ${timeline[i - 1].done ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-600'}`} />}
-              <div className="flex-shrink-0 z-10">
-                {step.done ? (
-                  <CheckCircle2 size={22} className="text-green-500" fill="#f0fdf4" />
-                ) : step.active ? (
-                  <CircleDot size={22} className="text-blue-500" fill="#eff6ff" />
-                ) : (
-                  <Circle size={22} className="text-gray-300 dark:text-gray-600" fill="white" />
-                )}
-              </div>
-              {i < timeline.length - 1 && <div className={`flex-1 h-0.5 -ml-1 ${step.done ? 'bg-green-400' : step.active ? 'bg-blue-300 dark:bg-blue-700' : 'bg-gray-200 dark:bg-gray-600'}`} />}
-            </div>
-            <p className={`text-[11px] font-medium mt-2 text-center leading-tight ${step.done ? 'text-gray-700 dark:text-gray-300' : step.active ? 'text-blue-600' : 'text-gray-400'}`}>{step.label}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function DevicesTable({ devices }) {
-  return (
-    <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden">
-      <div className="grid grid-cols-[1.4fr_1.4fr_1fr] gap-2 px-3 py-2 bg-gray-50 dark:bg-[#1a2540] border-b border-gray-100 dark:border-gray-700">
-        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">IMEI</span>
-        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Model</span>
-        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Complaint Reason</span>
-      </div>
-      <div className="divide-y divide-gray-50 dark:divide-gray-700">
-        {devices.map((d) => (
-          <div key={d.imei} className="grid grid-cols-[1.4fr_1.4fr_1fr] gap-2 px-3 py-2.5">
-            <span className="text-xs font-mono text-gray-700 dark:text-gray-300 truncate">{d.imei}</span>
-            <span className="text-xs text-gray-800 dark:text-gray-200 truncate">{d.model}</span>
-            <span className="text-xs text-yellow-600 dark:text-yellow-400 font-medium truncate">{d.complaintReason}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function EvidenceStrip({ evidence }) {
-  return (
-    <div className="flex flex-wrap gap-3">
-      {evidence.map((name) => (
-        <div key={name} className="w-24">
-          <div className="w-24 h-24 rounded-lg bg-gray-100 dark:bg-[#1a2540] border border-gray-200 dark:border-gray-700 flex items-center justify-center">
-            <ImageIcon size={26} className="text-gray-400 dark:text-blue-300/50" />
-          </div>
-          <p className="text-[10px] text-gray-400 dark:text-blue-300/50 mt-1 truncate">{name}</p>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function NewRmaForm({ onCancel, onSubmit }) {
-  const [order, setOrder] = useState('')
-  const [rows, setRows] = useState([{ imei: '', complaintReason: '' }])
-
-  const updateRow = (i, key, value) => setRows(rows.map((r, idx) => (idx === i ? { ...r, [key]: value } : r)))
-  const addRow = () => setRows([...rows, { imei: '', complaintReason: '' }])
-  const removeRow = (i) => setRows(rows.length > 1 ? rows.filter((_, idx) => idx !== i) : rows)
-
-  return (
-    <div className="space-y-5">
-      {/* Step 1: Order */}
-      <div>
-        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">1 · Select Order</p>
-        <select
-          value={order}
-          onChange={(e) => setOrder(e.target.value)}
-          className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Choose an order…</option>
-          {mockOrders.map((o) => <option key={o} value={o}>{o}</option>)}
-        </select>
-      </div>
-
-      {/* Step 2: Devices */}
-      <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">2 · Devices</p>
-          <button onClick={addRow} className="flex items-center gap-1 text-xs font-medium text-[#0b1b3a] dark:text-blue-400 hover:underline">
-            <Plus size={13} /> Add device
-          </button>
-        </div>
-        <div className="space-y-2">
-          {rows.map((row, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <input
-                value={row.imei}
-                onChange={(e) => updateRow(i, 'imei', e.target.value)}
-                placeholder="15-digit IMEI"
-                maxLength={15}
-                className="flex-1 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-              />
-              <select
-                value={row.complaintReason}
-                onChange={(e) => updateRow(i, 'complaintReason', e.target.value)}
-                className="flex-1 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Complaint reason…</option>
-                {complaintReasons.map((r) => <option key={r} value={r}>{r}</option>)}
-              </select>
-              <button onClick={() => removeRow(i)} className="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                <Trash2 size={15} />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Step 3: Evidence */}
-      <div>
-        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">3 · Evidence</p>
-        <div className="border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg px-4 py-8 flex flex-col items-center justify-center text-center">
-          <UploadCloud size={26} className="text-gray-400 dark:text-blue-300/50 mb-2" />
-          <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">Drop photos here or click to upload</p>
-          <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-1">PNG, JPG up to 10MB each</p>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center gap-2 pt-1">
-        <button
-          onClick={onSubmit}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] transition-colors font-medium"
-        >
-          <CheckCircle2 size={14} /> Submit RMA
-        </button>
-        <button
-          onClick={onCancel}
-          className="px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors"
-        >
-          Cancel
-        </button>
-      </div>
+    <div className="border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-lg px-4 py-6 flex flex-col items-center justify-center text-center">
+      <UploadCloud size={24} className="text-gray-400 dark:text-blue-300/50 mb-2" />
+      <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">Upload additional images</p>
+      <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-1">Add more photos if the RMA team requests them · PNG, JPG up to 10MB</p>
     </div>
   )
 }
@@ -310,7 +105,6 @@ export default function ReturnsPage() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [selected, setSelected] = useState(returns[0])
   const [mobileSelected, setMobileSelected] = useState(null)
-  const [showNew, setShowNew] = useState(false)
 
   const filtered = activeFilter === 'All' ? returns : returns.filter((r) => r.status === activeFilter)
   const getCount = (filter) => (filter === 'All' ? returns.length : returns.filter((r) => r.status === filter).length)
@@ -320,19 +114,7 @@ export default function ReturnsPage() {
     <>
       {/* ── MOBILE ── */}
       <div className="md:hidden bg-[#f1f5f9] dark:bg-[#0d1829] pb-4">
-        {showNew ? (
-          <div>
-            <div className="flex items-center gap-3 px-4 pt-5 pb-4">
-              <button onClick={() => setShowNew(false)} className="text-blue-500"><ArrowLeft size={20} /></button>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white">New RMA</h1>
-            </div>
-            <div className="px-4">
-              <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
-                <NewRmaForm onCancel={() => setShowNew(false)} onSubmit={() => setShowNew(false)} />
-              </div>
-            </div>
-          </div>
-        ) : mobileSelected ? (
+        {mobileSelected ? (
           <div>
             <div className="flex items-center gap-3 px-4 pt-5 pb-4">
               <button onClick={() => setMobileSelected(null)} className="text-blue-500"><ArrowLeft size={20} /></button>
@@ -377,6 +159,9 @@ export default function ReturnsPage() {
               <div className="bg-white dark:bg-[#152035] rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Evidence</h3>
                 <EvidenceStrip evidence={mobileSelected.evidence} />
+                <div className="mt-3">
+                  <AdditionalImagesBox />
+                </div>
               </div>
 
               <div className="flex flex-col gap-2">
@@ -400,9 +185,9 @@ export default function ReturnsPage() {
           <>
             <div className="flex items-center justify-between px-4 pt-5 pb-4">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Returns (RMA)</h1>
-              <button onClick={() => setShowNew(true)} className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-xl">
+              <Link href="/returns/new" className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-xl">
                 <Plus size={15} /> New
-              </button>
+              </Link>
             </div>
 
             <div className="flex gap-3 overflow-x-auto px-4 pb-2 mb-4 scrollbar-none">
@@ -462,12 +247,12 @@ export default function ReturnsPage() {
             <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#152035] text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">
               <SlidersHorizontal size={14} /> Filter
             </button>
-            <button
-              onClick={() => setShowNew((v) => !v)}
+            <Link
+              href="/returns/new"
               className="flex items-center gap-1.5 px-4 py-2 text-sm bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] transition-colors font-medium"
             >
               <Plus size={15} /> New RMA
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -521,20 +306,9 @@ export default function ReturnsPage() {
             </div>
           </div>
 
-          {/* Right: Detail or New RMA */}
+          {/* Right: Detail */}
           <div className="flex-1 bg-white dark:bg-[#152035] rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-auto">
-            {showNew ? (
-              <div className="md:p-4 xl:p-6">
-                <div className="flex items-start justify-between mb-5">
-                  <div>
-                    <h2 className="md:text-base xl:text-xl font-bold text-gray-900 dark:text-white">New Return Request</h2>
-                    <p className="text-sm text-gray-400 dark:text-blue-300/50">Submit devices for return authorization</p>
-                  </div>
-                  <button onClick={() => setShowNew(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"><X size={18} /></button>
-                </div>
-                <NewRmaForm onCancel={() => setShowNew(false)} onSubmit={() => setShowNew(false)} />
-              </div>
-            ) : selected ? (
+            {selected ? (
               <div className="md:p-4 xl:p-6">
                 {/* RMA header */}
                 <div className="flex items-start justify-between mb-1">
@@ -580,6 +354,9 @@ export default function ReturnsPage() {
                 <div className="md:mb-3 xl:mb-5">
                   <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-1.5"><ImageIcon size={15} className="text-gray-400" /> Evidence</p>
                   <EvidenceStrip evidence={selected.evidence} />
+                  <div className="mt-3 max-w-md">
+                    <AdditionalImagesBox />
+                  </div>
                 </div>
 
                 {/* Actions */}

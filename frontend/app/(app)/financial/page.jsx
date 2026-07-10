@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, SlidersHorizontal, Search, ArrowLeft, FileText, CreditCard, RotateCcw } from 'lucide-react'
+import Link from 'next/link'
+import { Download, SlidersHorizontal, Search, ArrowLeft, FileText, CreditCard, RotateCcw, Undo2 } from 'lucide-react'
 
 const mobileStats = [
   { label: 'Outstanding', value: '$247,850', sub: '12 invoices', subColor: 'text-gray-400' },
@@ -324,6 +325,7 @@ export default function FinancialPage() {
                   </div>
                 </div>
               )}
+              <Link href={`/returns/new?invoice=${inv.id}`} className="w-full flex items-center justify-center gap-1.5 py-3 mb-2 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><Undo2 size={14} /> Return items</Link>
               <div className="flex gap-2">
                 <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><FileText size={14} /> PDF</button>
                 <button className="flex-1 flex items-center justify-center gap-1.5 py-3 text-sm border border-gray-200 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-[#152035]"><RotateCcw size={14} /> Dispute</button>
@@ -716,6 +718,9 @@ export default function FinancialPage() {
                     <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
                       <Download size={14} /> Download PDF
                     </button>
+                    <Link href={`/returns/new?invoice=${selectedInvoice.id}`} className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
+                      <Undo2 size={14} /> Return items
+                    </Link>
                     <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540] transition-colors">
                       <RotateCcw size={14} /> Dispute
                     </button>
