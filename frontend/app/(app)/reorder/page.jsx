@@ -9,9 +9,9 @@ const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 const sourceOrder = 'PCS-2024-1845'
 
 const initialItems = [
-  { id: 1, product: 'iPhone 13 Pro', sku: 'APL-13P-128-GRPH', grade: 'Grade A', storage: '128GB', qty: 50, price: 389.0 },
-  { id: 2, product: 'Samsung Galaxy S22', sku: 'SAM-S22-256-BLK', grade: 'Grade A/B', storage: '256GB', qty: 30, price: 271.5 },
-  { id: 3, product: 'iPhone 12', sku: 'APL-12-64-BLU', grade: 'Grade B', storage: '64GB', qty: 40, price: 214.0 },
+  { id: 1, product: 'iPhone 13 Pro', sku: 'APL-13P-128-GRPH', grade: 'C6', storage: '128GB', qty: 50, price: 389.0 },
+  { id: 2, product: 'Samsung Galaxy S22', sku: 'SAM-S22-256-BLK', grade: 'C5', storage: '256GB', qty: 30, price: 271.5 },
+  { id: 3, product: 'iPhone 12', sku: 'APL-12-64-BLU', grade: 'C2', storage: '64GB', qty: 40, price: 214.0 },
 ]
 
 const shipTo = { name: 'Wireless Depot', line1: '4820 NW 74th Ave', line2: 'Dallas, TX 75201', contact: 'John Davis' }

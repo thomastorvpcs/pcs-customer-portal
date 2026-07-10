@@ -16,8 +16,8 @@ const initialEstimates = [
     customer: 'John Davis',
     rep: 'Michael Torres',
     lineItems: [
-      { product: 'iPhone 13 Pro', sku: 'APL-13P-128', grade: 'A', storage: '128GB', qty: 200, yourPrice: 415.0, pcsPrice: 415.0 },
-      { product: 'iPhone 12', sku: 'APL-12-64', grade: 'B', storage: '64GB', qty: 150, yourPrice: 245.0, pcsPrice: 245.0 },
+      { product: 'iPhone 13 Pro', sku: 'APL-13P-128', grade: 'C6', storage: '128GB', qty: 200, yourPrice: 415.0, pcsPrice: 415.0 },
+      { product: 'iPhone 12', sku: 'APL-12-64', grade: 'C2', storage: '64GB', qty: 150, yourPrice: 245.0, pcsPrice: 245.0 },
     ],
     history: [
       { date: 'Mar 26', label: 'Draft created', note: 'Built from catalog cart' },
@@ -35,8 +35,8 @@ const initialEstimates = [
     customer: 'John Davis',
     rep: 'Michael Torres',
     lineItems: [
-      { product: 'Samsung Galaxy S23', sku: 'SAM-S23-256', grade: 'A', storage: '256GB', qty: 300, yourPrice: 380.0, pcsPrice: 398.0 },
-      { product: 'Galaxy A54', sku: 'SAM-A54-128', grade: 'B', storage: '128GB', qty: 200, yourPrice: 165.0, pcsPrice: 172.0 },
+      { product: 'Samsung Galaxy S23', sku: 'SAM-S23-256', grade: 'C6', storage: '256GB', qty: 300, yourPrice: 380.0, pcsPrice: 398.0 },
+      { product: 'Galaxy A54', sku: 'SAM-A54-128', grade: 'C4', storage: '128GB', qty: 200, yourPrice: 165.0, pcsPrice: 172.0 },
     ],
     history: [
       { date: 'Mar 25', label: 'Draft created' },
@@ -53,8 +53,8 @@ const initialEstimates = [
     customer: 'John Davis',
     rep: 'Michael Torres',
     lineItems: [
-      { product: 'Google Pixel 8', sku: 'GOO-P8-128', grade: 'A', storage: '128GB', qty: 120, yourPrice: 350.0, pcsPrice: null },
-      { product: 'Pixel 8 Pro', sku: 'GOO-P8P-256', grade: 'A', storage: '256GB', qty: 80, yourPrice: 520.0, pcsPrice: null },
+      { product: 'Google Pixel 8', sku: 'GOO-P8-128', grade: 'C5', storage: '128GB', qty: 120, yourPrice: 350.0, pcsPrice: null },
+      { product: 'Pixel 8 Pro', sku: 'GOO-P8P-256', grade: 'C6', storage: '256GB', qty: 80, yourPrice: 520.0, pcsPrice: null },
     ],
     history: [
       { date: 'Mar 24', label: 'Draft created' },
@@ -70,7 +70,7 @@ const initialEstimates = [
     customer: 'John Davis',
     rep: 'Michael Torres',
     lineItems: [
-      { product: 'iPhone 14', sku: 'APL-14-128', grade: 'A', storage: '128GB', qty: 250, yourPrice: 480.0, pcsPrice: null },
+      { product: 'iPhone 14', sku: 'APL-14-128', grade: 'C5', storage: '128GB', qty: 250, yourPrice: 480.0, pcsPrice: null },
     ],
     history: [
       { date: 'Mar 23', label: 'Draft created' },
@@ -85,8 +85,8 @@ const initialEstimates = [
     customer: 'John Davis',
     rep: 'Michael Torres',
     lineItems: [
-      { product: 'Samsung Galaxy S22', sku: 'SAM-S22-128', grade: 'B', storage: '128GB', qty: 100, yourPrice: 290.0, pcsPrice: null },
-      { product: 'iPhone 13', sku: 'APL-13-128', grade: 'A', storage: '128GB', qty: 60, yourPrice: 355.0, pcsPrice: null },
+      { product: 'Samsung Galaxy S22', sku: 'SAM-S22-128', grade: 'C4', storage: '128GB', qty: 100, yourPrice: 290.0, pcsPrice: null },
+      { product: 'iPhone 13', sku: 'APL-13-128', grade: 'C4', storage: '128GB', qty: 60, yourPrice: 355.0, pcsPrice: null },
     ],
     history: [
       { date: 'Mar 22', label: 'Draft created', note: 'Not yet submitted' },
@@ -100,7 +100,7 @@ const initialEstimates = [
     customer: 'John Davis',
     rep: 'Michael Torres',
     lineItems: [
-      { product: 'Google Pixel 7', sku: 'GOO-P7-128', grade: 'B', storage: '128GB', qty: 90, yourPrice: 210.0, pcsPrice: 265.0 },
+      { product: 'Google Pixel 7', sku: 'GOO-P7-128', grade: 'C4', storage: '128GB', qty: 90, yourPrice: 210.0, pcsPrice: 265.0 },
     ],
     history: [
       { date: 'Mar 18', label: 'Draft created' },

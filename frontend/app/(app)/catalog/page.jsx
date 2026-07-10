@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck } from 'lucide-react'
-import { GRADE_BY_CODE } from '@/lib/grades'
+import { GRADES, GRADE_BY_CODE, gradeBadgeClass } from '@/lib/grades'
 
 const OFFER_REASONS = ['Volume commitment', 'Competitor quote', 'Budget constraint', 'Repeat order', 'Other']
 
@@ -11,43 +11,43 @@ const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
 const devices = [
   // Smartphones
-  { id: 'D1', name: 'iPhone 13 Pro', brand: 'Apple', model: 'iPhone 13 Pro', category: 'Smartphones', grade: 'A', storage: 128, price: 229, qty: 1240, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'Spring Clearance' },
-  { id: 'D2', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'A', storage: 256, price: 389, qty: 860, color: 'Blue', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Best Seller' },
-  { id: 'D3', name: 'iPhone 13', brand: 'Apple', model: 'iPhone 13', category: 'Smartphones', grade: 'B', storage: 128, price: 199, qty: 2100, color: 'Black', carrier: 'AT&T', location: 'Chicago, IL', hot: false },
-  { id: 'D4', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'A', storage: 256, price: 349, qty: 540, color: 'Black', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'New Arrival' },
-  { id: 'D5', name: 'Samsung Galaxy S22', brand: 'Samsung', model: 'Galaxy S22', category: 'Smartphones', grade: 'B', storage: 128, price: 219, qty: 980, color: 'White', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
-  { id: 'D6', name: 'Google Pixel 8', brand: 'Google', model: 'Pixel 8', category: 'Smartphones', grade: 'A', storage: 128, price: 299, qty: 420, color: 'Black', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Limited' },
-  { id: 'D7', name: 'Google Pixel 7', brand: 'Google', model: 'Pixel 7', category: 'Smartphones', grade: 'B', storage: 128, price: 189, qty: 610, color: 'White', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
-  { id: 'D8', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'B', storage: 128, price: 319, qty: 730, color: 'Silver', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
-  { id: 'D9', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'B', storage: 512, price: 379, qty: 210, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
-  { id: 'D10', name: 'Samsung Galaxy S22', brand: 'Samsung', model: 'Galaxy S22', category: 'Smartphones', grade: 'A', storage: 256, price: 259, qty: 340, color: 'Blue', carrier: 'AT&T', location: 'Dallas, TX', hot: false },
-  { id: 'D11', name: 'Google Pixel 8', brand: 'Google', model: 'Pixel 8', category: 'Smartphones', grade: 'B', storage: 256, price: 269, qty: 155, color: 'White', carrier: 'Unlocked', location: 'Chicago, IL', hot: false },
-  { id: 'D12', name: 'iPhone 13 Pro', brand: 'Apple', model: 'iPhone 13 Pro', category: 'Smartphones', grade: 'A', storage: 256, price: 279, qty: 480, color: 'Silver', carrier: 'Unlocked', location: 'Los Angeles, CA', hot: false },
-  { id: 'D13', name: 'iPhone 12', brand: 'Apple', model: 'iPhone 12', category: 'Smartphones', grade: 'B', storage: 64, price: 159, qty: 1520, color: 'Black', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
-  { id: 'D14', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'A', storage: 512, price: 429, qty: 120, color: 'White', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
-  { id: 'D15', name: 'Google Pixel 7', brand: 'Google', model: 'Pixel 7', category: 'Smartphones', grade: 'A', storage: 256, price: 239, qty: 260, color: 'Blue', carrier: 'T-Mobile', location: 'Dallas, TX', hot: false },
-  { id: 'D16', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'A', storage: 512, price: 469, qty: 90, color: 'Graphite', carrier: 'AT&T', location: 'Los Angeles, CA', hot: false },
+  { id: 'D1', name: 'iPhone 13 Pro', brand: 'Apple', model: 'iPhone 13 Pro', category: 'Smartphones', grade: 'C6', storage: 128, price: 229, qty: 1240, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'Spring Clearance' },
+  { id: 'D2', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'C6', storage: 256, price: 389, qty: 860, color: 'Blue', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Best Seller' },
+  { id: 'D3', name: 'iPhone 13', brand: 'Apple', model: 'iPhone 13', category: 'Smartphones', grade: 'C4', storage: 128, price: 199, qty: 2100, color: 'Black', carrier: 'AT&T', location: 'Chicago, IL', hot: false },
+  { id: 'D4', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'C6', storage: 256, price: 349, qty: 540, color: 'Black', carrier: 'Unlocked', location: 'Miami, FL', hot: true, tag: 'New Arrival' },
+  { id: 'D5', name: 'Samsung Galaxy S22', brand: 'Samsung', model: 'Galaxy S22', category: 'Smartphones', grade: 'C4', storage: 128, price: 219, qty: 980, color: 'White', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
+  { id: 'D6', name: 'Google Pixel 8', brand: 'Google', model: 'Pixel 8', category: 'Smartphones', grade: 'C5', storage: 128, price: 299, qty: 420, color: 'Black', carrier: 'Unlocked', location: 'Dallas, TX', hot: true, tag: 'Limited' },
+  { id: 'D7', name: 'Google Pixel 7', brand: 'Google', model: 'Pixel 7', category: 'Smartphones', grade: 'C4', storage: 128, price: 189, qty: 610, color: 'White', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
+  { id: 'D8', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'C5', storage: 128, price: 319, qty: 730, color: 'Silver', carrier: 'T-Mobile', location: 'Los Angeles, CA', hot: false },
+  { id: 'D9', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'C5', storage: 512, price: 379, qty: 210, color: 'Graphite', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
+  { id: 'D10', name: 'Samsung Galaxy S22', brand: 'Samsung', model: 'Galaxy S22', category: 'Smartphones', grade: 'C6', storage: 256, price: 259, qty: 340, color: 'Blue', carrier: 'AT&T', location: 'Dallas, TX', hot: false },
+  { id: 'D11', name: 'Google Pixel 8', brand: 'Google', model: 'Pixel 8', category: 'Smartphones', grade: 'C4', storage: 256, price: 269, qty: 155, color: 'White', carrier: 'Unlocked', location: 'Chicago, IL', hot: false },
+  { id: 'D12', name: 'iPhone 13 Pro', brand: 'Apple', model: 'iPhone 13 Pro', category: 'Smartphones', grade: 'CPO', storage: 256, price: 279, qty: 480, color: 'Silver', carrier: 'Unlocked', location: 'Los Angeles, CA', hot: false },
+  { id: 'D13', name: 'iPhone 12', brand: 'Apple', model: 'iPhone 12', category: 'Smartphones', grade: 'C2', storage: 64, price: 159, qty: 1520, color: 'Black', carrier: 'Verizon', location: 'Chicago, IL', hot: false },
+  { id: 'D14', name: 'Samsung Galaxy S23', brand: 'Samsung', model: 'Galaxy S23', category: 'Smartphones', grade: 'CPO', storage: 512, price: 429, qty: 120, color: 'White', carrier: 'Unlocked', location: 'Miami, FL', hot: false },
+  { id: 'D15', name: 'Google Pixel 7', brand: 'Google', model: 'Pixel 7', category: 'Smartphones', grade: 'C5', storage: 256, price: 239, qty: 260, color: 'Blue', carrier: 'T-Mobile', location: 'Dallas, TX', hot: false },
+  { id: 'D16', name: 'iPhone 14', brand: 'Apple', model: 'iPhone 14', category: 'Smartphones', grade: 'C6', storage: 512, price: 469, qty: 90, color: 'Graphite', carrier: 'AT&T', location: 'Los Angeles, CA', hot: false },
   // Tablets
-  { id: 'D17', name: 'iPad Air', brand: 'Apple', model: 'iPad Air', category: 'Tablets', grade: 'A', storage: 256, price: 399, qty: 300, color: 'Blue', carrier: 'Wi-Fi', location: 'Miami, FL', hot: true, tag: 'New Arrival' },
-  { id: 'D18', name: 'iPad', brand: 'Apple', model: 'iPad', category: 'Tablets', grade: 'B', storage: 64, price: 219, qty: 540, color: 'Silver', carrier: 'Wi-Fi', location: 'Dallas, TX', hot: false },
-  { id: 'D19', name: 'Galaxy Tab S8', brand: 'Samsung', model: 'Galaxy Tab S8', category: 'Tablets', grade: 'A', storage: 128, price: 349, qty: 180, color: 'Graphite', carrier: 'Wi-Fi', location: 'Chicago, IL', hot: false },
+  { id: 'D17', name: 'iPad Air', brand: 'Apple', model: 'iPad Air', category: 'Tablets', grade: 'C6', storage: 256, price: 399, qty: 300, color: 'Blue', carrier: 'Wi-Fi', location: 'Miami, FL', hot: true, tag: 'New Arrival' },
+  { id: 'D18', name: 'iPad', brand: 'Apple', model: 'iPad', category: 'Tablets', grade: 'C4', storage: 64, price: 219, qty: 540, color: 'Silver', carrier: 'Wi-Fi', location: 'Dallas, TX', hot: false },
+  { id: 'D19', name: 'Galaxy Tab S8', brand: 'Samsung', model: 'Galaxy Tab S8', category: 'Tablets', grade: 'MD A', storage: 128, price: 349, qty: 180, color: 'Graphite', carrier: 'Wi-Fi', location: 'Chicago, IL', hot: false },
   // Laptops
-  { id: 'D20', name: 'MacBook Air 13"', brand: 'Apple', model: 'MacBook Air 13"', category: 'Laptops', grade: 'A', storage: 256, price: 749, qty: 90, color: 'Silver', carrier: null, location: 'Los Angeles, CA', hot: false },
-  { id: 'D21', name: 'MacBook Pro 14"', brand: 'Apple', model: 'MacBook Pro 14"', category: 'Laptops', grade: 'B', storage: 512, price: 1099, qty: 60, color: 'Graphite', carrier: null, location: 'Miami, FL', hot: false },
+  { id: 'D20', name: 'MacBook Air 13"', brand: 'Apple', model: 'MacBook Air 13"', category: 'Laptops', grade: 'CPO', storage: 256, price: 749, qty: 90, color: 'Silver', carrier: null, location: 'Los Angeles, CA', hot: false },
+  { id: 'D21', name: 'MacBook Pro 14"', brand: 'Apple', model: 'MacBook Pro 14"', category: 'Laptops', grade: 'MD B', storage: 512, price: 1099, qty: 60, color: 'Graphite', carrier: null, location: 'Miami, FL', hot: false },
   // Wearables
-  { id: 'D22', name: 'Apple Watch Series 8', brand: 'Apple', model: 'Apple Watch Series 8', category: 'Wearables', grade: 'A', storage: null, price: 199, qty: 260, color: 'Black', carrier: null, location: 'Dallas, TX', hot: false },
-  { id: 'D23', name: 'Galaxy Watch 5', brand: 'Samsung', model: 'Galaxy Watch 5', category: 'Wearables', grade: 'B', storage: null, price: 129, qty: 340, color: 'Black', carrier: null, location: 'Chicago, IL', hot: false },
-  { id: 'D24', name: 'Pixel Watch', brand: 'Google', model: 'Pixel Watch', category: 'Wearables', grade: 'A', storage: null, price: 149, qty: 150, color: 'Black', carrier: null, location: 'Los Angeles, CA', hot: false },
+  { id: 'D22', name: 'Apple Watch Series 8', brand: 'Apple', model: 'Apple Watch Series 8', category: 'Wearables', grade: 'C6', storage: null, price: 199, qty: 260, color: 'Black', carrier: null, location: 'Dallas, TX', hot: false },
+  { id: 'D23', name: 'Galaxy Watch 5', brand: 'Samsung', model: 'Galaxy Watch 5', category: 'Wearables', grade: 'C2', storage: null, price: 129, qty: 340, color: 'Black', carrier: null, location: 'Chicago, IL', hot: false },
+  { id: 'D24', name: 'Pixel Watch', brand: 'Google', model: 'Pixel Watch', category: 'Wearables', grade: 'C5', storage: null, price: 149, qty: 150, color: 'Black', carrier: null, location: 'Los Angeles, CA', hot: false },
   // Accessories
-  { id: 'D25', name: 'AirPods Pro', brand: 'Apple', model: 'AirPods Pro', category: 'Accessories', grade: 'A', storage: null, price: 129, qty: 800, color: 'White', carrier: null, location: 'Miami, FL', hot: false },
-  { id: 'D26', name: 'Galaxy Buds2', brand: 'Samsung', model: 'Galaxy Buds2', category: 'Accessories', grade: 'B', storage: null, price: 69, qty: 620, color: 'White', carrier: null, location: 'Dallas, TX', hot: false },
+  { id: 'D25', name: 'AirPods Pro', brand: 'Apple', model: 'AirPods Pro', category: 'Accessories', grade: 'COB', storage: null, price: 129, qty: 800, color: 'White', carrier: null, location: 'Miami, FL', hot: false },
+  { id: 'D26', name: 'Galaxy Buds2', brand: 'Samsung', model: 'Galaxy Buds2', category: 'Accessories', grade: 'COB', storage: null, price: 69, qty: 620, color: 'White', carrier: null, location: 'Dallas, TX', hot: false },
 ]
 
 const filterGroups = {
   category: ['Smartphones', 'Tablets', 'Laptops', 'Wearables', 'Accessories'],
   brand: ['Apple', 'Samsung', 'Google'],
   model: ['iPhone 14', 'iPhone 13 Pro', 'iPhone 13', 'iPhone 12', 'Galaxy S23', 'Galaxy S22', 'Pixel 8', 'Pixel 7', 'iPad Air', 'iPad', 'Galaxy Tab S8', 'MacBook Air 13"', 'MacBook Pro 14"', 'Apple Watch Series 8', 'Galaxy Watch 5', 'Pixel Watch', 'AirPods Pro', 'Galaxy Buds2'],
-  grade: ['A', 'B'],
+  grade: GRADES.map((g) => g.code),
   storage: [64, 128, 256, 512],
   location: ['Miami, FL', 'Dallas, TX', 'Los Angeles, CA', 'Chicago, IL'],
   color: ['Black', 'White', 'Blue', 'Graphite', 'Silver'],
@@ -58,7 +58,7 @@ const groupMeta = {
   category: { label: 'Category', fmt: (o) => o },
   brand: { label: 'Brand', fmt: (o) => o },
   model: { label: 'Model', fmt: (o) => o },
-  grade: { label: 'Grade', fmt: (o) => 'Grade ' + o },
+  grade: { label: 'Grade', fmt: (o) => o },
   storage: { label: 'Storage', fmt: (o) => o + 'GB' },
   location: { label: 'Location', fmt: (o) => o },
   color: { label: 'Color', fmt: (o) => o },
@@ -69,11 +69,6 @@ const catIcon = { Smartphones: Smartphone, Tablets: Tablet, Laptops: Laptop, Wea
 
 // Adaptive spec line — omits attributes that don't apply (e.g. laptops/wearables have no carrier)
 const specLine = (d) => [d.storage ? `${d.storage}GB` : null, d.color, d.carrier].filter(Boolean).join(' · ')
-
-const gradeBadge = {
-  A: 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  B: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-}
 
 // Per-location stock breakdown for the detail view. Derived deterministically
 // from the device's total quantity and primary location (mock data only — in
@@ -372,7 +367,7 @@ export default function CatalogPage() {
                 <DeviceIcon category={d.category} size={30} className="text-yellow-600 dark:text-yellow-400" />
               </div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{d.name}</p>
-              <p className="text-xs text-gray-400 dark:text-blue-300/50">Grade {d.grade}{d.storage ? ` · ${d.storage}GB` : ''}</p>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50">{d.grade}{d.storage ? ` · ${d.storage}GB` : ''}</p>
               <p className="text-yellow-600 dark:text-yellow-400 font-bold text-sm mt-1">from {fmt(d.price)}</p>
             </div>
           ))}
@@ -429,7 +424,7 @@ export default function CatalogPage() {
               </div>
               <div className="flex items-start justify-between gap-1">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{d.name}</p>
-                <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${gradeBadge[d.grade]}`}>{d.grade}</span>
+                <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${gradeBadgeClass(d.grade)}`}>{d.grade}</span>
               </div>
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{specLine(d)}</p>
               <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} avail</p>
@@ -507,7 +502,7 @@ export default function CatalogPage() {
                 <DeviceIcon category={d.category} size={38} className="text-yellow-600 dark:text-yellow-400" />
               </div>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">{d.name}</p>
-              <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">Grade {d.grade}{d.storage ? ` · ${d.storage}GB` : ''} · {d.qty.toLocaleString()} avail</p>
+              <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{d.grade}{d.storage ? ` · ${d.storage}GB` : ''} · {d.qty.toLocaleString()} avail</p>
               <div className="flex items-center justify-between mt-2">
                 <p className="text-yellow-600 dark:text-yellow-400 font-bold">from {fmt(d.price)}</p>
                 <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-[#0b1b3a] text-white hover:bg-[#0d2147]">Add</button>
@@ -586,7 +581,7 @@ export default function CatalogPage() {
                   </div>
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{d.name}</p>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap ${gradeBadge[d.grade]}`}>Grade {d.grade}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap ${gradeBadgeClass(d.grade)}`}>{d.grade}</span>
                   </div>
                   <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-1">{specLine(d)}</p>
                   <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} available</p>
@@ -757,7 +752,7 @@ function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFav
             <p className="text-xs font-semibold text-gray-400 dark:text-blue-300/50 uppercase tracking-wide">{d.brand}</p>
             <div className="flex items-start justify-between gap-3 mt-1 pr-8">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">{d.name}</h3>
-              <Link href={`/catalog/grades#${g?.slug || ''}`} className={`flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-medium hover:ring-2 hover:ring-blue-300 dark:hover:ring-blue-600 transition ${gradeBadge[d.grade]}`} title="See what this grade means">Grade {d.grade}</Link>
+              <Link href={`/catalog/grades#${g?.slug || ''}`} className={`flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-medium hover:ring-2 hover:ring-blue-300 dark:hover:ring-blue-600 transition ${gradeBadgeClass(d.grade)}`} title="See what this grade means">{d.grade}</Link>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-3xl font-bold text-gray-900 dark:text-white">{fmt(d.price)}</span>
@@ -943,7 +938,7 @@ function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{dev.name}</p>
-                <p className="text-xs text-gray-400 dark:text-blue-300/50">Grade {dev.grade}{dev.storage ? ` · ${dev.storage}GB` : ''}</p>
+                <p className="text-xs text-gray-400 dark:text-blue-300/50">{dev.grade}{dev.storage ? ` · ${dev.storage}GB` : ''}</p>
               </div>
               <button onClick={() => removeLine(i.id)} className="text-gray-300 hover:text-red-500"><Trash2 size={15} /></button>
             </div>

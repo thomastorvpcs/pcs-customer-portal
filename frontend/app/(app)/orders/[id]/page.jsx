@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle2, Circle, Truck, FileText, LayoutList, FileCheck, Download } from 'lucide-react'
+import { gradeBadgeClass } from '@/lib/grades'
 
 const statusSteps = [
   { label: 'Confirmed', date: 'Mar 25, 9:15 AM', done: true },
@@ -11,10 +12,10 @@ const statusSteps = [
 ]
 
 const lineItems = [
-  { product: 'iPhone 13 Pro Max', sku: 'IP13PM-256-GR', grade: 'Grade A', storage: '256GB', qty: 200, unitPrice: 245.0, total: 49000.0 },
-  { product: 'iPhone 12 Pro', sku: 'IP12P-128-3L', grade: 'Grade A', storage: '128GB', qty: 150, unitPrice: 185.0, total: 27750.0 },
-  { product: 'Samsung Galaxy S22 Ultra', sku: 'SGS22U-256-RK', grade: 'Grade B', storage: '256GB', qty: 100, unitPrice: 52.5, total: 5250.0 },
-  { product: 'Google Pixel 7 Pro', sku: 'GP7P-128-WH', grade: 'Grade A', storage: '128GB', qty: 50, unitPrice: 50.0, total: 2500.0 },
+  { product: 'iPhone 13 Pro Max', sku: 'IP13PM-256-GR', grade: 'C6', storage: '256GB', qty: 200, unitPrice: 245.0, total: 49000.0 },
+  { product: 'iPhone 12 Pro', sku: 'IP12P-128-3L', grade: 'C5', storage: '128GB', qty: 150, unitPrice: 185.0, total: 27750.0 },
+  { product: 'Samsung Galaxy S22 Ultra', sku: 'SGS22U-256-RK', grade: 'C4', storage: '256GB', qty: 100, unitPrice: 52.5, total: 5250.0 },
+  { product: 'Google Pixel 7 Pro', sku: 'GP7P-128-WH', grade: 'C6', storage: '128GB', qty: 50, unitPrice: 50.0, total: 2500.0 },
 ]
 
 const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
@@ -101,7 +102,7 @@ export default function OrderDetailPage({ params }) {
                   </div>
                   <p className="text-xs text-blue-500 font-mono mb-2">{item.sku}</p>
                   <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
-                    <span className={`px-2 py-0.5 rounded-full font-medium ${item.grade === 'Grade A' ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'}`}>{item.grade}</span>
+                    <span className={`px-2 py-0.5 rounded-full font-medium ${gradeBadgeClass(item.grade)}`}>{item.grade}</span>
                     <span>{item.storage}</span>
                     <span>Qty: {item.qty}</span>
                     <span className="ml-auto">{fmt(item.unitPrice)}/unit</span>
