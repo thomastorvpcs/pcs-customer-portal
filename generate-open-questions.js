@@ -1,10 +1,12 @@
 /*
  * generate-open-questions.js
  *
- * Builds a PPTX deck of the open questions for the business that have surfaced
- * while building the RMA submission flow and the catalog ordering-location
- * feature. Each question is paired with the current demo assumption/status so
- * stakeholders can simply confirm or correct.
+ * Builds a PPTX deck of the "Open questions for the business" captured in the
+ * Stage 2 Feature Tickets document
+ * (PCS-Customer-Portal-Delivery-Plan-Stage2.md → ...-v1.pdf), one slide per
+ * ticket (CQ-01 … CQ-11), grouped by module. Content is transcribed faithfully
+ * from that document's "Open questions for the business" sections; items marked
+ * "(Resolved)" there are omitted.
  *
  *   node generate-open-questions.js
  *
@@ -15,165 +17,170 @@ const path = require('path');
 const PptxGenJS = require('pptxgenjs');
 
 const ROOT = __dirname;
+const SOURCE = 'Stage 2 Feature Tickets — Catalog, Sales Estimates & Offers (v1.6, July 10, 2026)';
 const DATE = 'July 13, 2026';
 
-// Each category → rows of [Open question, Current demo assumption / status].
-const CATEGORIES = [
+// Module colours.
+const MODULES = {
+  Catalog: '1E40AF',
+  'Sales Estimates': '0F766E',
+  'Promotional Offers': 'B45309',
+};
+
+// Tickets in document order, each with its open questions (verbatim).
+const TICKETS = [
   {
-    title: 'RMA — Return Rules & Eligibility',
-    color: '1E40AF',
-    rows: [
-      ['Is the return window 60 days from the invoice date (not delivery / ship date)?', 'Assumed: accepted only if sold within 60 days of the invoice date.'],
-      ['Cracked-LCD 7-day rule — measured from delivery date; what is the authoritative delivery-date source?', 'Assumed: Cracked LCD accepted only within 7 days of delivery.'],
-      ['Which grades are non-returnable, and how are "AS IS (WIP)" and "UR JP (SoftBank)" identified on a device?', 'Assumed: grade codes "AS IS" and "UR JP" are blocked.'],
-      ['Which product categories are excluded ("brand products", iPads, accessories)? Exact list?', 'Assumed: iPad / Tablet / Accessory categories are blocked.'],
-      ['Are battery-related returns always rejected, with no exceptions?', 'Assumed: battery reason always "Not Accepted".'],
-      ['Minor vs. deep scratch — what is the exact criteria? Is it grade-based or reason-based?', 'Assumed: minor scratch / cosmetic rejected; deep scratch accepted.'],
-      ['iCloud lock = automatic rejection; MDM / carrier-unlock verified at approval — confirm portal behaviour.', 'Assumed: iCloud auto-rejected; MDM/carrier-lock flagged for manual review.'],
+    id: 'CQ-01', name: 'Catalog page layout & product display', module: 'Catalog', us: 'US-90',
+    questions: [
+      'Will real product photography be available per device, or should category placeholder imagery be used for now?',
+      'Should the card show a single "from" price, or a price range across grades / storage tiers?',
+      'Is quantity shown as an exact number, or banded (e.g. "1,000+ available") for commercial reasons?',
+      'With real inventory the grid could be large — should it paginate, load more on scroll, or cap results?',
     ],
   },
   {
-    title: 'RMA — Evidence & Images',
-    color: '0F766E',
-    rows: [
-      ['Authoritative "image request rule book": which return reasons require a photo/video upload?', 'Assumed: Cracked LCD, Water Damage, Cosmetic, Dead Pixel, Camera, etc.'],
-      ['Accepted file types and max size? Is video required or optional?', 'Assumed: PNG / JPG / MP4, up to 10 MB each.'],
-      ['Is an Azure Storage account + container provisioned (with credentials) for image storage?', 'Not provisioned — demo shows client-side previews only, nothing stored.'],
-      ['Image-link format sent to NetSuite, and which statuses start the 30-day deletion clock (Completed / Done / Closed)?', 'Assumed: delete 30 days after Completed/Done/Closed via a scheduled job.'],
+    id: 'CQ-02', name: 'Filter, search & sort the catalog', module: 'Catalog', us: 'US-91',
+    questions: [
+      'What is the default sort order on first load?',
+      'Should keyword search match on product name only, or also model, SKU, and other attributes?',
+      'Are there filter dimensions beyond those listed that customers will want (e.g. battery health, warranty, lot size)?',
     ],
   },
   {
-    title: 'RMA — NetSuite Integration',
-    color: '6D28D9',
-    rows: [
-      ['Is the createRMA / updateRMA RESTlet built? Endpoint URL, auth (TBA/OAuth), sandbox vs. production?', 'Not available — payloads are mocked; a preview is shown at submit.'],
-      ['Confirm the createRMA / updateRMA payload schema. Where does the NetSuite Item Internal ID come from?', 'Assumed: the provided structure, grouped by Item ID with Device IDs.'],
-      ['Will validation use a real-time "validateRMA" RESTlet (invoice date, grade, iCloud, MDM per IMEI) or a synced DB?', 'Assumed: real-time validateRMA lookup (stubbed with mock device facts).'],
-      ['How is the logged-in portal user mapped to a NetSuite Customer Internal ID / Subsidiary / Location?', 'Not built — a mock customer is used.'],
-      ['How does the portal receive RMA status updates back from NetSuite (webhook, polling, Boomi)?', 'Not built — statuses are mock data.'],
+    id: 'CQ-03', name: 'Save and re-apply a named search', module: 'Catalog', us: 'US-106',
+    questions: [
+      'Should saved searches be tied to the user’s account and available on any device, or only in the browser where they were created?',
+      'Is there a limit to how many saved searches a customer may keep?',
     ],
   },
   {
-    title: 'RMA — Submission & Workflow',
-    color: 'B45309',
-    rows: [
-      ['Should devices that fail validation still be submitted as "Pending" for manual review?', 'Assumed: yes — submission allowed; those lines are Pending, not auto-approved.'],
-      ['"Exception for all submissions from the back end" — what does this mean operationally?', 'Needs clarification.'],
-      ['Is tracking number + carrier mandatory, and enforced at which step? Multiple tracking numbers per RMA?', 'Assumed: optional at submit; addable/editable any time; multiple allowed.'],
-      ['Who is allowed to submit an RMA (role permissions)?', 'Assumed: Admin + Buyer (per Stage 2 requirements).'],
-      ['Confirm customers provide their own return label (PCS no longer offers a label download).', 'Implemented: "Download Return Label" removed.'],
-      ['Credit-memo download — source and format from NetSuite?', 'Placeholder button only in the demo.'],
+    id: 'CQ-04', name: 'Favorite devices and filter to favorites', module: 'Catalog', us: 'US-107',
+    questions: [
+      'Should favorites be tied to the user’s account and available on any device, or only in the browser where they were created?',
+      'If a favorited device goes out of stock or is delisted, should it still appear under Favorites (e.g. grayed out) or be dropped?',
     ],
   },
   {
-    title: 'Catalog — Locations & Inventory',
-    color: '0E7490',
-    rows: [
-      ['Which stock locations can each customer order from, and where does that list come from?', 'Demo uses four fixed locations for all customers.'],
-      ['Will per-location inventory quantities come from NetSuite / Boomi?', 'Demo derives per-location availability deterministically (mock).'],
-      ['Should the ordering location default to the customer’s primary/home location?', 'Demo defaults to the first location (Miami, FL).'],
-      ['Confirm a cart / sales estimate is limited to a single location.', 'Assumed: yes (per Stage 2 requirements).'],
-      ['On switching to a location missing some cart items: warn + remove, or block entirely?', 'Implemented: warn, confirm, then remove only the unavailable items.'],
+    id: 'CQ-10', name: 'Product detail view', module: 'Catalog', us: 'US-90',
+    questions: [
+      'When real imagery is available, should the detail view support multiple photos per device (a gallery / carousel)?',
+      'Should the detail view show a price breakdown per grade / storage tier rather than a single "from" price? (Carried over from CQ-01.)',
+      'Should it surface commercial detail not on the card — e.g. battery health, warranty terms, lead time, or per-location availability?',
+      'Should the detail view be individually addressable (its own link) so a specific device can be shared or bookmarked?',
     ],
   },
   {
-    title: 'Grades — Definitions',
-    color: 'BE185D',
-    rows: [
-      ['Authoritative definitions for placeholder grade codes: COB, MD A, MD B, TBG, TBG2, TBG FIN, CRC, CRD, CRX, D2, D3, D4.', 'Flagged as placeholders in the app, pending PCS definitions.'],
-      ['Which grades are returnable? Formal grade → RMA-eligibility mapping.', 'Not yet defined.'],
+    id: 'CQ-11', name: 'Device grading guide', module: 'Catalog', us: 'US-108',
+    questions: [
+      'What are the official definitions and cosmetic / battery thresholds for each PCS grade code (C2–C6, CPO, COB, MD A/B, TBG/TBG2/TBG FIN, CRC/CRD/CRX, D2–D4)? Several are flagged "definition to be confirmed".',
+      'Will PCS supply real example photography and walkthrough videos per grade, and who maintains them?',
+      'Should the full set of internal grades (beyond those currently on sale) be represented, or only the customer-facing grades?',
+      'Should the guide content be authored / editable in a back-office tool, or is a fixed page acceptable for now?',
+      'Should the guide be linked from further entry points — e.g. sales estimate lines, order history, or global navigation / footer?',
     ],
   },
   {
-    title: 'Cross-Cutting — Auth, Data & Notifications',
-    color: '334155',
-    rows: [
-      ['Auth0 timeline, and role permissions (Admin / Buyer / Viewer) for RMA and catalog actions.', 'Not built — login is a mock; roles not enforced.'],
-      ['Source of invoice / order / device-serial (IMEI) data in the portal — Boomi sync scope?', 'No real data yet — all mocked.'],
-      ['Are email / SMS status notifications (US-89) in scope? Which channels and preferences?', 'Deferred / not built.'],
-      ['Bulk-upload template format (CSV vs. XLSX) and required columns?', 'Demo uses CSV: Device ID, Return Reason, Customer Notes.'],
+    id: 'CQ-05', name: 'Build a sales estimate cart with quantities', module: 'Sales Estimates', us: 'US-92',
+    questions: [
+      'Should quantity adjust in single units, or in packs (e.g. steps of 10)? Is there a minimum order quantity per device?',
+      'Does stock availability cap the quantity a customer can request?',
+    ],
+  },
+  {
+    id: 'CQ-06', name: 'Propose custom pricing on a sales estimate', module: 'Sales Estimates', us: 'US-93',
+    questions: [
+      'Is the reason list fixed (Volume commitment, Competitor quote, Budget constraint, Repeat order, Other), or should a free-text reason be allowed?',
+      'Is there a floor / ceiling on how far a proposed price may deviate from the list price before it is auto-rejected or flagged?',
+    ],
+  },
+  {
+    id: 'CQ-07', name: 'Submit & track sales estimates, with status history', module: 'Sales Estimates', us: 'US-94, US-95, US-96',
+    questions: [
+      'Can a customer edit and resubmit a Rejected sales estimate, or must they start a new one?',
+      'Is there a limit to how many counter rounds (customer ↔ PCS) are allowed before a sales estimate must be accepted, declined, or expires?',
+      'What is the default validity period of a sales estimate, and can a customer request an extension near expiry?',
+      'Should the customer be notified (email / SMS / in-app) when a sales estimate’s status changes?',
+    ],
+  },
+  {
+    id: 'CQ-08', name: 'Automatic conversion of an accepted estimate to a sales order', module: 'Sales Estimates', us: 'US-97, US-109',
+    questions: [
+      'Should the customer be notified (email / SMS / in-app) when acceptance produces a sales order?',
+      'Does the resulting sales estimate move to a "Converted / Closed" state, or remain Accepted with a link to the order?',
+      'Are shipping and billing details taken from the account automatically, or confirmed on the resulting sales order before fulfillment?',
+    ],
+  },
+  {
+    id: 'CQ-09', name: 'Hottest Offers & promotional banners', module: 'Promotional Offers', us: 'US-98, US-99',
+    questions: [
+      'How are offers and banners curated and scheduled (start / end dates), and by whom?',
+      'How many featured items should Hottest Offers show, and in what order?',
+      'Can more than one banner run at once (a rotation), or only one at a time?',
     ],
   },
 ];
 
-const totalQuestions = CATEGORIES.reduce((n, c) => n + c.rows.length, 0);
+const totalQuestions = TICKETS.reduce((n, t) => n + t.questions.length, 0);
 const NAVY = '1E3A8A';
 const SLATE = '64748B';
-const MAX_ROWS = 6; // question rows per slide before splitting
-
-function chunk(arr, size) {
-  const out = [];
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-  return out;
-}
 
 async function main() {
   const pptx = new PptxGenJS();
   pptx.layout = 'LAYOUT_WIDE'; // 13.33 x 7.5 in
   pptx.author = 'PCS Development Team';
-  pptx.title = 'PCS Customer Portal — Open Questions for the Business';
+  pptx.title = 'PCS Customer Portal — Stage 2 Open Questions for the Business';
 
   // ── Title slide ──
   const title = pptx.addSlide();
   title.background = { color: 'F8FAFC' };
-  title.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 13.33, h: 1.6, fill: { color: NAVY } });
-  title.addText('PCS Wireless Customer Portal', { x: 0.6, y: 0.35, w: 12, h: 0.6, fontSize: 30, bold: true, color: 'FFFFFF' });
-  title.addText('Open Questions for the Business', { x: 0.6, y: 1.0, w: 12, h: 0.5, fontSize: 18, color: 'C7D2FE' });
+  title.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 13.33, h: 1.7, fill: { color: NAVY } });
+  title.addText('PCS Wireless Customer Portal — Stage 2', { x: 0.6, y: 0.4, w: 12.1, h: 0.6, fontSize: 28, bold: true, color: 'FFFFFF' });
+  title.addText('Open Questions for the Business', { x: 0.6, y: 1.05, w: 12.1, h: 0.5, fontSize: 18, color: 'C7D2FE' });
   title.addText(
     [
-      { text: 'Consolidated from building the RMA submission flow and the catalog ordering-location feature.', options: { fontSize: 14, color: '334155', breakLine: true } },
-      { text: 'Each question is paired with the current demo assumption/status — please confirm or correct.', options: { fontSize: 14, color: '334155' } },
+      { text: 'Product decisions still to be made, surfaced from the Stage 2 feature tickets rather than assumed.', options: { fontSize: 14, color: '334155', breakLine: true } },
+      { text: `Source: ${SOURCE}`, options: { fontSize: 12, color: SLATE } },
     ],
-    { x: 0.6, y: 2.2, w: 12, h: 1.0 }
+    { x: 0.6, y: 2.3, w: 12, h: 1.0 }
   );
-  title.addText(`${totalQuestions} open questions across ${CATEGORIES.length} areas`, { x: 0.6, y: 3.5, w: 12, h: 0.4, fontSize: 14, bold: true, color: NAVY });
+  title.addText(`${totalQuestions} open questions across ${TICKETS.length} tickets (CQ-01 … CQ-11)`, { x: 0.6, y: 3.6, w: 12, h: 0.4, fontSize: 14, bold: true, color: NAVY });
   title.addText(`Draft for stakeholder review  ·  ${DATE}`, { x: 0.6, y: 6.7, w: 12, h: 0.4, fontSize: 12, color: SLATE });
 
   // ── Agenda slide ──
   const agenda = pptx.addSlide();
   agenda.background = { color: 'FFFFFF' };
-  agenda.addText('Areas covered', { x: 0.6, y: 0.4, w: 12, h: 0.6, fontSize: 24, bold: true, color: NAVY });
-  const agendaRows = [[
-    { text: 'Area', options: { bold: true, color: 'FFFFFF', fill: { color: NAVY } } },
-    { text: 'Open questions', options: { bold: true, color: 'FFFFFF', fill: { color: NAVY }, align: 'center' } },
+  agenda.addText('Tickets with open questions', { x: 0.6, y: 0.4, w: 12, h: 0.6, fontSize: 24, bold: true, color: NAVY });
+  const rows = [[
+    { text: 'Module', options: { bold: true, color: 'FFFFFF', fill: { color: NAVY } } },
+    { text: 'Ticket', options: { bold: true, color: 'FFFFFF', fill: { color: NAVY } } },
+    { text: 'Open Qs', options: { bold: true, color: 'FFFFFF', fill: { color: NAVY }, align: 'center' } },
   ]];
-  for (const c of CATEGORIES) {
-    agendaRows.push([
-      { text: c.title, options: { bold: true, color: '1E293B' } },
-      { text: String(c.rows.length), options: { color: '334155', align: 'center' } },
+  for (const t of TICKETS) {
+    rows.push([
+      { text: t.module, options: { color: MODULES[t.module], bold: true } },
+      { text: `${t.id} · ${t.name}`, options: { color: '334155' } },
+      { text: String(t.questions.length), options: { color: '334155', align: 'center' } },
     ]);
   }
-  agenda.addTable(agendaRows, {
-    x: 0.6, y: 1.4, w: 12.1, colW: [10.1, 2.0], fontSize: 14,
-    border: { type: 'solid', color: 'CBD5E1', pt: 1 }, valign: 'middle', rowH: 0.5,
+  agenda.addTable(rows, {
+    x: 0.6, y: 1.35, w: 12.1, colW: [2.6, 8.3, 1.2], fontSize: 12.5,
+    border: { type: 'solid', color: 'CBD5E1', pt: 1 }, valign: 'middle', rowH: 0.42,
   });
 
-  // ── One (or more) slide(s) per category ──
-  for (const cat of CATEGORIES) {
-    const pages = chunk(cat.rows, MAX_ROWS);
-    pages.forEach((rows, idx) => {
-      const slide = pptx.addSlide();
-      slide.background = { color: 'FFFFFF' };
-      const heading = pages.length > 1 ? `${cat.title}  (${idx + 1}/${pages.length})` : cat.title;
-      slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 0.22, h: 7.5, fill: { color: cat.color } });
-      slide.addText(heading, { x: 0.55, y: 0.35, w: 12.4, h: 0.6, fontSize: 22, bold: true, color: cat.color });
+  // ── One slide per ticket ──
+  for (const t of TICKETS) {
+    const color = MODULES[t.module];
+    const slide = pptx.addSlide();
+    slide.background = { color: 'FFFFFF' };
+    slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: 0.22, h: 7.5, fill: { color } });
+    slide.addText(`${t.id} · ${t.name}`, { x: 0.55, y: 0.35, w: 12.4, h: 0.7, fontSize: 21, bold: true, color });
+    slide.addText(`${t.module}  ·  ${t.us}`, { x: 0.55, y: 1.02, w: 12.4, h: 0.35, fontSize: 12, italic: true, color: SLATE });
 
-      const table = [[
-        { text: 'Open question', options: { bold: true, color: 'FFFFFF', fill: { color: cat.color } } },
-        { text: 'Current demo assumption / status', options: { bold: true, color: 'FFFFFF', fill: { color: cat.color } } },
-      ]];
-      for (const [q, a] of rows) {
-        table.push([
-          { text: q, options: { color: '1E293B' } },
-          { text: a, options: { color: '475569', italic: true } },
-        ]);
-      }
-      slide.addTable(table, {
-        x: 0.55, y: 1.2, w: 12.4, colW: [7.2, 5.2], fontSize: 12,
-        border: { type: 'solid', color: 'E2E8F0', pt: 1 }, valign: 'top',
-        margin: [4, 6, 4, 6], autoPage: false,
-      });
-    });
+    const bullets = t.questions.map((q, i) => ({
+      text: q,
+      options: { bullet: { code: '2022' }, fontSize: 15, color: '1E293B', paraSpaceAfter: 10, breakLine: i < t.questions.length - 1 },
+    }));
+    slide.addText(bullets, { x: 0.7, y: 1.6, w: 12.1, h: 5.4, valign: 'top', lineSpacingMultiple: 1.05 });
   }
 
   // ── Closing slide ──
@@ -181,14 +188,15 @@ async function main() {
   end.background = { color: 'F8FAFC' };
   end.addText('Next step', { x: 0.6, y: 2.4, w: 12, h: 0.7, fontSize: 28, bold: true, color: NAVY });
   end.addText(
-    'Please review each area and mark every question Confirmed / Change required / Out of scope. ' +
-    'Answers unblock wiring the RMA flow to NetSuite + Azure and finalising the catalog inventory model.',
-    { x: 0.6, y: 3.2, w: 11.5, h: 1.2, fontSize: 15, color: '334155' }
+    'Please review each ticket and give a decision on its open questions. These are the product decisions ' +
+    'the Stage 2 feature tickets flagged for the business; resolving them lets development finalise the ' +
+    'catalog, sales estimates, and promotional-offer behaviour.',
+    { x: 0.6, y: 3.2, w: 11.6, h: 1.4, fontSize: 15, color: '334155' }
   );
 
-  const outPath = path.join(ROOT, 'PCS-Customer-Portal-Open-Questions.pptx');
+  const outPath = path.join(ROOT, 'PCS-Customer-Portal-Stage2-Open-Questions.pptx');
   await pptx.writeFile({ fileName: outPath });
-  console.log('PPTX written: PCS-Customer-Portal-Open-Questions.pptx  (' + totalQuestions + ' questions)');
+  console.log('PPTX written: PCS-Customer-Portal-Stage2-Open-Questions.pptx  (' + totalQuestions + ' questions, ' + TICKETS.length + ' tickets)');
 }
 
 main().catch((err) => { console.error(err); process.exit(1); });
