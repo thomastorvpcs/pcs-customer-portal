@@ -1,11 +1,13 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.3  
-**Date:** July 10, 2026  
+**Document Version:** 1.4  
+**Date:** July 13, 2026  
 **Stage:** Stage 2 — Customer Self-Service & Revenue  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
 **Review Required From:** Business Stakeholders
+
+**Revision 1.4 (July 13, 2026):** Expanded **Returns (RMA)** to the full submission flow now prototyped — sales-order / invoice / bulk-upload entry, device selection with IMEI search, the return-eligibility rule book with per-IMEI validation, evidence with required-image gating, submission to NetSuite, and the post-submission steps (customer-provided tracking and return label, return-policy acceptance, additional images on request). Added a customer **ordering location** to the **Catalog**: browse inventory across all locations or order from one, with the chosen location filtering the catalog and governing the single-location cart.
 
 ---
 
@@ -48,48 +50,65 @@ Please review each section and indicate:
 
 ## 1. Returns (RMA)
 
-Customers can request returns against delivered orders, track the return through its lifecycle, and access the resulting documentation. This module surfaces on the customer side of the return process; PCS staff review and action requests through the Sales Portal RMA Management Queue.
+Customers can request returns for devices they have purchased, validate each device against PCS's return rules before submitting, attach the required evidence, and track the return through its lifecycle. The portal owns the **RMA submission** experience; PCS staff review, approve, and process returns in **NetSuite**, and status updates flow back to the portal. This module pairs with the Sales Portal RMA Management Queue.
 
 ### User Stories
 
-**US-80** — As a customer, I want to submit an RMA request against a specific order so that I can return devices that have problems.
+**US-80** — As a customer, I want to start a return from a **sales order, an invoice, or a bulk device upload** so that I can raise an RMA whichever way fits how I track my stock. A bulk upload uses a template with Device ID (required), Return Reason (required), and Customer Notes (optional), and does not require a specific order or invoice.
 
-**US-81** — As a customer, I want to enter the affected device IMEIs on an RMA request so that PCS can identify exactly which units are being returned.
+**US-81** — As a customer, I want to see the devices on the selected order/invoice and **choose which ones to return** on a selection step, searching by IMEI to find them quickly, so that I include only the units I mean to.
 
-**US-82** — As a customer, I want to select a complaint reason for each returned device so that PCS understands the nature of the fault.
+**US-82** — As a customer, I want to confirm each device's **IMEI**, choose a **return reason**, and add optional **per-device notes** so that PCS understands exactly what is being returned and why.
 
-**US-83** — As a customer, I want to optionally upload supporting evidence (photos or documents) with an RMA request so that I can substantiate the fault.
+**US-83** — As a customer, I want to run **"Validate RMA Data"** and see a per-IMEI verdict — accepted, or the specific reason it is not (out of return period, reason not accepted, iCloud lock, grade/product not eligible) — plus which devices require an image, so that I know what will and won't be accepted before I submit.
 
-**US-84** — As a customer, I want to track the status of my RMA request through each stage so that I know where it is in the returns process.
+**US-84** — As a customer, I want to attach **photos or video per device**, and I want the form to prevent submission when a reason requires an image and none is attached, so that my request carries the substantiation PCS needs.
 
-**US-85** — As a customer, I want to view the full details of an RMA — including IMEIs, models, complaint reasons, and resolution — so that I have a complete record of the return.
+**US-85** — As a customer, I want to be able to **submit even when some devices fail validation** — they are submitted as *Pending* for manual review rather than blocked — so that edge cases are not silently dropped; the portal never auto-approves a device.
 
-**US-86** — As a customer, I want to see a list of all my open and historical RMA requests with status filtering so that I can manage my returns in one place.
+**US-86** — As a customer, I want a **reference number** on submission and to track the RMA through its lifecycle so that I always know where it stands.
 
-**US-87** — As a customer, I want to download the credit memo generated from an approved RMA so that I have a record of the credit I received.
+**US-87** — As a customer, I want to add and update **tracking number(s) and carrier** on an RMA at any time — including more than one tracking number — so that PCS can follow the shipment(s) back. I supply my own return label.
 
-**US-88** — As a customer, I want to download or request a pre-paid return shipping label so that I can ship the returned devices back to PCS.
+**US-88** — As a customer, I want to see the **return instructions**, **accept the return policy**, and upload **additional images** if the RMA team requests them, so that I can complete the return and answer follow-ups.
 
-**US-89** — As a customer, I want to receive email and SMS notifications when my RMA status changes so that I am kept informed without logging in.
+**US-89** — As a customer, I want to **view a list of all my RMAs with status filtering** and open any RMA to see its devices, reasons, validation outcomes, tracking, evidence, resolution, and the credit memo from a completed RMA, so that I can manage returns in one place. (Email/SMS status notifications are a later enhancement.)
 
 ### Use Cases
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-80 | Submit RMA request | Customer | Customer selects a delivered order, enters IMEIs, selects complaint reason(s), optionally uploads evidence, and submits; RMA created with status Submitted and a reference number |
-| UC-81 | Enter device IMEIs | Customer | One or more device IMEIs are recorded against the RMA and validated against the selected order |
-| UC-82 | Select complaint reason | Customer | A complaint category is assigned to each returned device |
-| UC-83 | Upload evidence | Customer | Photos or documents are attached to the RMA request |
-| UC-84 | Track RMA status | Customer | Current RMA status is displayed with a progress timeline |
-| UC-85 | View RMA detail | Customer | Full RMA record shown: IMEIs, models, complaint reasons, status timeline, and resolution |
-| UC-86 | View RMA list | Customer | All RMAs shown with reference, order, date, device count, and status; list can be filtered by status |
-| UC-87 | Download credit memo | Customer | Credit memo generated from the approved RMA is downloaded to the user's device |
-| UC-88 | Obtain return label | Customer | A pre-paid return shipping label is downloaded, or requested if not yet available |
-| UC-89 | Receive RMA notification | Customer | On each RMA status change, an email and/or SMS alert is sent per the customer's notification preferences |
+| UC-80 | Start an RMA | Customer | Customer starts from a sales order, an invoice, or a bulk upload (Device ID + Return Reason + optional Notes); an RMA draft is begun |
+| UC-81 | Select devices | Customer | The source's devices are listed and searchable by IMEI; the customer selects which to return |
+| UC-82 | Enter reason & notes | Customer | Each selected device is given a return reason and optional notes |
+| UC-83 | Validate RMA data | Customer / System | Each device is checked against the rule book; a per-IMEI verdict (Accepted or the not-accepted reason) and any image requirement are shown |
+| UC-84 | Attach evidence | Customer | Photos/video are attached per device; submission is blocked while a required image is missing |
+| UC-85 | Submit RMA | Customer / System | The RMA is sent to NetSuite (createRMA) and created with a reference number; devices that failed validation are submitted as Pending for manual review |
+| UC-86 | Track RMA status | Customer | Current RMA status is shown on a progress timeline |
+| UC-87 | Manage tracking | Customer | The customer adds/edits one or more carrier + tracking-number entries on the RMA at any time |
+| UC-88 | Complete return steps | Customer | The customer views return instructions, accepts the return policy, and can upload additional images on request (updateRMA) |
+| UC-89 | View RMA list & detail | Customer | All RMAs shown with reference, order, date, device count, and status (filterable); detail shows devices, reasons, validation outcomes, tracking, evidence, resolution, and the credit memo |
+
+### Return eligibility rule book
+
+Validation applies these rules per device. A device that fails may still be submitted, but it is not auto-approved (it is submitted as *Pending* for manual review):
+
+- **Return period** — accepted only if sold within **60 days** of the invoice date.
+- **Cracked LCD** — accepted only if the RMA is raised within **7 days** of delivery.
+- **iCloud lock** — **automatically rejected**.
+- **MDM / carrier unlock** — allowed, but the IMEI is verified at approval.
+- **Battery** — battery-related returns are **not accepted**.
+- **Cosmetic** — minor scratches / cosmetic-only damage are **not accepted**; deep scratches are accepted.
+- **Excluded stock** — **AS IS (WIP)** and **UR JP (SoftBank)** grades, and **brand products (iPads / accessories)**, are not eligible.
+- **Evidence** — reasons that require a photo/video cannot be submitted without one attached.
+
+### Submission & integration
+
+On submit the portal sends a **createRMA** request to NetSuite (customer internal ID, subsidiary, location, and line items grouped by item, each carrying its device IDs and image links); NetSuite creates the RMA record and returns its reference. Additional images requested later trigger an **updateRMA**. Evidence is held in object storage (Azure) with links passed to NetSuite, and is deleted **30 days after** the RMA reaches Completed / Done / Closed. Approval and processing remain in NetSuite; the portal reflects the resulting status.
 
 ### Complaint Categories
 
-Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Port, Speaker/Mic, Face ID, Touch ID, Camera, Water Damage, Cosmetic Damage, Wrong Item, Missing Accessories, Software Issue, Carrier Lock, IMEI Mismatch, Other.
+Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Port, Speaker/Mic, Face ID, Touch ID, Camera, Water Damage, Cosmetic Damage, Minor Scratch, Deep Scratch, Wrong Item, Missing Accessories, Software Issue, Carrier Lock, IMEI Mismatch, Other.
 
 ### RMA Status Flow
 
@@ -97,25 +116,29 @@ Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Po
 |--------|---------|
 | Submitted | Request received; awaiting PCS review |
 | Under Review | PCS is assessing the request |
-| Approved | Return authorised; return label available |
-| Shipped | Customer has shipped the devices back |
+| Approved | Return authorised |
+| Shipped | Customer has shipped the devices back (tracking added on the RMA) |
 | Received | Devices received at PCS |
 | Diagnostic | Devices under inspection |
 | Complete | Return resolved; credit memo or replacement issued |
+
+### Access
+
+Submitting an RMA is available to **Admin and Buyer** roles; viewing RMAs and their documents is available to all roles (Viewer is read-only).
 
 ---
 
 ## 2. Catalog, Sales Estimates & Promotional Offers
 
-Customers can browse available inventory, build a sales estimate with custom per-unit pricing, and submit it to PCS for review. A sales estimate is fulfilled from a **single stock location**, so its cart is limited to items from one location. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Sales Estimate review and approval are handled by PCS staff through the Sales Portal.
+Customers can browse available inventory — across all stock locations or focused on one — build a sales estimate with custom per-unit pricing, and submit it to PCS for review. Customers choose an **ordering location**; a sales estimate is fulfilled from a **single stock location**, so the cart is limited to items from the chosen location. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Sales Estimate review and approval are handled by PCS staff through the Sales Portal.
 
 ### User Stories
 
-**US-90** — As a customer, I want to browse the device catalog so that I can see what inventory is available to purchase.
+**US-90** — As a customer, I want to browse the device catalog — across all stock locations, or focused on a single location — so that I can see what inventory is available to purchase and where.
 
-**US-91** — As a customer, I want to filter and sort the catalog (by category, brand, model, grade, storage, location, color, carrier, and price) so that I can find the products I am interested in quickly. Filter options that would return no results given my current selection are disabled.
+**US-91** — As a customer, I want to filter and sort the catalog (by category, brand, model, grade, storage, color, carrier, and price) so that I can find the products I am interested in quickly. (Stock location is chosen separately via the **ordering-location** control — see US-92 and "Stock location & ordering" below.) Filter options that would return no results given my current selection are disabled.
 
-**US-92** — As a customer, I want to add devices to a sales estimate cart with the quantity I need so that I can request pricing for a specific set of items. A cart is limited to items from a **single stock location**; adding an item from a different location prompts me to keep my current cart or start a new one for that location.
+**US-92** — As a customer, I want to add devices to a sales estimate cart with the quantity I need so that I can request pricing for a specific set of items. I choose an **ordering location** (or browse *All locations*), and the cart is limited to that **single stock location**. Changing the ordering location warns me if the cart holds items the new location does not stock and, on confirm, removes only those; adding an item from another location while browsing all prompts me to start a new cart for it.
 
 **US-93** — As a customer, I want to propose a custom per-unit price on sales estimate line items so that I can negotiate pricing with PCS. Proposing prices is a deliberate action taken on a separate pricing step, after the cart is built at list prices. On that step each line stays at list price until I explicitly request custom pricing, select a reason, and acknowledge that any proposed price is a request subject to PCS review.
 
@@ -143,9 +166,10 @@ Customers can browse available inventory, build a sales estimate with custom per
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
-| UC-90 | Browse catalog | Customer | Available devices displayed with product, grade, storage, and indicative price |
+| UC-90 | Browse catalog | Customer | Available devices displayed with product, grade, storage, per-location availability, and indicative price; the All-locations view shows every location's inventory |
+| UC-90a | Choose ordering location | Customer | Customer browses *All locations* or picks a specific one; the catalog filters to it, cards show its quantity, and the cart is bound to it |
 | UC-91 | Filter / sort catalog | Customer | Catalog filtered and sorted by the selected criteria |
-| UC-92 | Add to sales estimate cart | Customer | Selected device and quantity added to the cart; the cart is limited to one stock location — an item from a different location prompts keep-cart vs start-new-cart |
+| UC-92 | Add to sales estimate cart | Customer | Selected device and quantity added; the cart is limited to the chosen ordering location — adding an item from another location prompts start-new-cart, and switching the ordering location drops only the cart items the new location does not stock |
 | UC-93 | Set custom price | Customer | On the dedicated pricing step, each line stays at list price until the customer requests custom pricing, selects a reason, and acknowledges PCS review; the per-unit offer field then unlocks for that line |
 | UC-94 | Submit sales estimate | Customer | Sales Estimate submitted to PCS; status set to Submitted and a reference number issued |
 | UC-95 | View sales estimate list | Customer | All sales estimates shown with reference, date, item count, total, and status |
@@ -157,6 +181,13 @@ Customers can browse available inventory, build a sales estimate with custom per
 | UC-107 | Favorite a device | Customer | Customer marks/unmarks a device as a favorite; a Favorites filter shows only favorited devices; the customer's favorites persist across visits |
 | UC-108 | View grading guide | Customer | Customer opens a guide explaining each catalog grade, with descriptions, example media, a side-by-side comparison, and an FAQ; reachable from the grade shown on a product and from the catalog |
 | UC-109 | Respond to a counter-offer | Customer | On a counter-offered sales estimate the customer accepts it (agreement reached → auto-converts to a sales order), declines it, or counters with revised pricing (returns to PCS for review) |
+
+### Stock location & ordering
+
+- The customer selects an **ordering location**. **All locations** is the default and shows the full catalog for browsing; selecting a specific location filters the catalog (grid, hottest offers, and filter options) to what that location stocks.
+- **Per-location availability** is shown on each product card: when browsing all locations a card shows how many locations stock the device and the total quantity; once an ordering location is set, the card shows that location's available quantity (or a "not stocked here" note for devices it does not carry).
+- The **cart is limited to one location**. The first item added commits the ordering location; only items stocked there can be added afterwards, and adding an item from another location prompts the customer to start a new cart for it.
+- **Changing the ordering location** with items in the cart warns the customer if any are not stocked at the new location and lists them; on confirm, only those items are removed and the location switches. Emptying the cart releases the location lock.
 
 ### Sales Estimate Status Definitions
 
