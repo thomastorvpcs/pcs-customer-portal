@@ -95,6 +95,14 @@ function stockByLocation(d) {
   return rows.filter((r) => r.qty > 0)
 }
 
+const qtyAt = (d, loc) => { const r = stockByLocation(d).find((x) => x.location === loc); return r ? r.qty : 0 }
+
+// Card availability text. In "All locations" browse mode we show where the
+// device is stocked; for a specific location we show that location's quantity.
+const availabilityLabel = (d, loc) => loc === 'ALL'
+  ? `${locationsFor(d).length} location${locationsFor(d).length !== 1 ? 's' : ''} · ${d.qty.toLocaleString()} total`
+  : `${loc} · ${qtyAt(d, loc).toLocaleString()} avail`
+
 const DEFAULT_MAX = 1200
 const SAVED_KEY = 'pcs.catalog.savedSearches.v2'
 const FAV_KEY = 'pcs.catalog.favorites'
@@ -129,8 +137,10 @@ export default function CatalogPage() {
   const [quoteStep, setQuoteStep] = useState('cart') // 'cart' | 'pricing'
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [activeProduct, setActiveProduct] = useState(null) // device shown in the detail view
-  const [activeLocation, setActiveLocation] = useState(ALL_LOCATIONS[0]) // the location the customer is ordering from
-  const [pendingLocation, setPendingLocation] = useState(null) // { location, orphaned:[cartItems] } — awaiting confirm to switch
+  const [activeLocation, setActiveLocation] = useState('ALL') // catalog view: 'ALL' (browse) or a specific location
+  const [orderLocation, setOrderLocation] = useState(null) // the cart's single ordering location (null when cart empty)
+  const [pendingLocation, setPendingLocation] = useState(null) // { location, orphaned:[cartItems] } — confirm switch that drops items
+  const [addConflict, setAddConflict] = useState(null) // { id, amount, itemLoc } — adding an item not stocked at the order location
 
   // Saved searches + favorites (persisted to localStorage)
   const [savedSearches, setSavedSearches] = useState([])
@@ -175,13 +185,16 @@ export default function CatalogPage() {
   const toggle = (list, setList, val) =>
     setList(list.includes(val) ? list.filter((x) => x !== val) : [...list, val])
 
+  // In "All locations" the grid shows every device; a specific location filters to it.
+  const inView = (d) => activeLocation === 'ALL' || availableAt(d, activeLocation)
+
   const filtered = devices
     .filter((d) => (categories.length ? categories.includes(d.category) : true))
     .filter((d) => (brands.length ? brands.includes(d.brand) : true))
     .filter((d) => (models.length ? models.includes(d.model) : true))
     .filter((d) => (grades.length ? grades.includes(d.grade) : true))
     .filter((d) => (storages.length ? storages.includes(d.storage) : true))
-    .filter((d) => availableAt(d, activeLocation))
+    .filter((d) => inView(d))
     .filter((d) => (colors.length ? colors.includes(d.color) : true))
     .filter((d) => (carriers.length ? carriers.includes(d.carrier) : true))
     .filter((d) => d.price <= maxPrice)
@@ -194,7 +207,7 @@ export default function CatalogPage() {
   // Facet auto-disable: which option values still yield ≥1 device given the OTHER
   // active filter groups + search + price (mirrors the Online Catalog's matchesOtherFilters).
   const selByKey = { category: categories, brand: brands, model: models, grade: grades, storage: storages, location: locations, color: colors, carrier: carriers }
-  const matchesSearchPrice = (d) => d.price <= maxPrice && d.name.toLowerCase().includes(search.toLowerCase()) && availableAt(d, activeLocation)
+  const matchesSearchPrice = (d) => d.price <= maxPrice && d.name.toLowerCase().includes(search.toLowerCase()) && inView(d)
   const deviceMatchesExcept = (d, exceptKey) =>
     Object.entries(selByKey).every(([k, vals]) => (k === exceptKey || !vals.length ? true : vals.includes(d[k])))
   const enabledByKey = {}
@@ -206,13 +219,13 @@ export default function CatalogPage() {
     enabledByKey[key] = set
   }
 
-  const hottest = devices.filter((d) => d.hot && availableAt(d, activeLocation))
+  const hottest = devices.filter((d) => d.hot && inView(d))
 
   const deviceById = (id) => devices.find((d) => d.id === id)
 
   // A cart (and the sales estimate built from it) is limited to a single stock
-  // location — the customer's active ordering location.
-  const cartLocation = activeLocation
+  // location. Browsing ("All locations") is separate from that ordering location.
+  const cartLocation = orderLocation
 
   const addLine = (id, amount) => {
     setCart((c) => (c.find((i) => i.id === id) ? c.map((i) => (i.id === id ? { ...i, qty: i.qty + amount } : i)) : [...c, { id, qty: amount, customPrice: '' }]))
@@ -220,21 +233,47 @@ export default function CatalogPage() {
     setCartOpen(true)
   }
 
-  // Everything shown is available at the active location, so adding never conflicts.
-  const addToQuote = (id, amount = 10) => addLine(id, amount)
+  // Adding an item: the first item commits the cart's ordering location (the
+  // active location, or the item's primary location when browsing all). Once a
+  // location is committed, only items stocked there can be added — otherwise the
+  // customer is prompted to start a new cart at the item's location.
+  const addToQuote = (id, amount = 10) => {
+    const dev = deviceById(id)
+    if (orderLocation) {
+      if (availableAt(dev, orderLocation)) addLine(id, amount)
+      else setAddConflict({ id, amount, itemLoc: dev.location })
+    } else {
+      setOrderLocation(activeLocation === 'ALL' ? dev.location : activeLocation)
+      addLine(id, amount)
+    }
+  }
 
-  // Switching the ordering location: if any cart items aren't stocked at the new
-  // location, warn and confirm; on confirm, drop those items and switch.
+  // Start a fresh cart for a different location (from the add-conflict prompt).
+  const startNewCartFromConflict = () => {
+    if (!addConflict) return
+    setCart([{ id: addConflict.id, qty: addConflict.amount, customPrice: '' }])
+    setOrderLocation(addConflict.itemLoc)
+    setQuoteStep('cart'); setCartOpen(true)
+    setAddConflict(null)
+  }
+
+  // Choosing a location: 'ALL' just changes the browse view. A specific location
+  // becomes the ordering location; if the cart has items not stocked there, warn
+  // and confirm, then drop those items on switch.
   const requestLocationChange = (newLoc) => {
     if (!newLoc || newLoc === activeLocation) return
+    if (newLoc === 'ALL') { setActiveLocation('ALL'); return }
     const orphaned = cart.filter((i) => !availableAt(deviceById(i.id), newLoc))
-    if (orphaned.length > 0) setPendingLocation({ location: newLoc, orphaned })
-    else setActiveLocation(newLoc)
+    if (orphaned.length > 0) { setPendingLocation({ location: newLoc, orphaned }); return }
+    setActiveLocation(newLoc)
+    if (cart.length) setOrderLocation(newLoc)
   }
   const confirmLocationChange = () => {
     if (!pendingLocation) return
     const newLoc = pendingLocation.location
-    setCart((c) => c.filter((i) => availableAt(deviceById(i.id), newLoc)))
+    const kept = cart.filter((i) => availableAt(deviceById(i.id), newLoc))
+    setCart(kept)
+    setOrderLocation(kept.length ? newLoc : null)
     setActiveLocation(newLoc)
     setPendingLocation(null)
   }
@@ -269,6 +308,17 @@ export default function CatalogPage() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [pendingLocation])
+
+  // Dismiss the add-conflict prompt on Escape
+  useEffect(() => {
+    if (!addConflict) return
+    const onKey = (e) => { if (e.key === 'Escape') setAddConflict(null) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [addConflict])
+
+  // Releasing the ordering-location lock once the cart is empty.
+  useEffect(() => { if (cart.length === 0 && orderLocation !== null) setOrderLocation(null) }, [cart, orderLocation])
   const changeQty = (id, delta) =>
     setCart((c) => c.map((i) => (i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)))
   const setCustomPrice = (id, val) =>
@@ -398,6 +448,9 @@ export default function CatalogPage() {
             </button>
           </div>
           <LocationPicker value={activeLocation} onChange={requestLocationChange} className="mt-2 w-full" />
+          <p className="mt-1 text-[11px] text-gray-400 dark:text-blue-300/50">
+            {orderLocation ? `Ordering from ${orderLocation}` : activeLocation === 'ALL' ? 'Browsing all locations — pick one, or add an item, to start an order' : `Ordering from ${activeLocation}`}
+          </p>
         </div>
 
         {/* Favorites toggle + saved chips */}
@@ -442,7 +495,7 @@ export default function CatalogPage() {
                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${gradeBadgeClass(d.grade)}`}>{d.grade}</span>
               </div>
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{specLine(d)}</p>
-              <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} avail</p>
+              <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{availabilityLabel(d, activeLocation)}</p>
               <p className="text-gray-900 dark:text-white font-bold text-sm mt-1">from {fmt(d.price)}</p>
               <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Cart</button>
             </div>
@@ -584,7 +637,10 @@ export default function CatalogPage() {
               </div>
             )}
 
-            <p className="text-xs text-gray-400 mb-3">{filtered.length} devices {showFavorites ? 'in favorites' : 'available'}</p>
+            <div className="flex items-center justify-between mb-3 gap-3">
+              <p className="text-xs text-gray-400">{filtered.length} devices {showFavorites ? 'in favorites' : activeLocation === 'ALL' ? 'across all locations' : `at ${activeLocation}`}</p>
+              <p className="text-xs text-gray-400">{orderLocation ? `Ordering from ${orderLocation}` : activeLocation === 'ALL' ? 'Browsing — pick a location or add an item to order' : `Ordering from ${activeLocation}`}</p>
+            </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((d) => (
@@ -600,7 +656,7 @@ export default function CatalogPage() {
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap ${gradeBadgeClass(d.grade)}`}>{d.grade}</span>
                   </div>
                   <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-1">{specLine(d)}</p>
-                  <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{d.location} · {d.qty.toLocaleString()} available</p>
+                  <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{availabilityLabel(d, activeLocation)}</p>
                   <div className="flex items-end justify-between mt-3 pt-3 border-t border-gray-50 dark:border-gray-700">
                     <div>
                       <p className="text-[10px] text-gray-400 uppercase tracking-wide">from</p>
@@ -675,6 +731,29 @@ export default function CatalogPage() {
         />
       )}
 
+      {/* ── ADD FROM ANOTHER LOCATION ── a cart holds one location; offer a new cart */}
+      {addConflict && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setAddConflict(null)}>
+          <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Different location" className="w-full max-w-sm bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-5">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0">
+                <MapPin size={18} className="text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Item from a different location</h3>
+                <p className="text-sm text-gray-500 dark:text-blue-300/60 mt-1 leading-snug">
+                  Your cart is ordering from <span className="font-medium text-gray-700 dark:text-gray-200">{orderLocation}</span>, and a cart can only contain items from one location. <span className="font-medium text-gray-700 dark:text-gray-200">{deviceById(addConflict.id)?.name}</span> isn&apos;t stocked there. Start a new cart at <span className="font-medium text-gray-700 dark:text-gray-200">{addConflict.itemLoc}</span>?
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-5">
+              <button onClick={() => setAddConflict(null)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Keep current cart</button>
+              <button onClick={startNewCartFromConflict} className="flex-1 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Start new cart</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── LOCATION SWITCH ── confirm dropping items not stocked at the new location */}
       {pendingLocation && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setPendingLocation(null)}>
@@ -697,7 +776,7 @@ export default function CatalogPage() {
               </div>
             </div>
             <div className="flex gap-2 mt-5">
-              <button onClick={() => setPendingLocation(null)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Keep {activeLocation}</button>
+              <button onClick={() => setPendingLocation(null)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Keep {orderLocation}</button>
               <button onClick={confirmLocationChange} className="flex-1 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Switch &amp; remove {pendingLocation.orphaned.length}</button>
             </div>
           </div>
@@ -718,8 +797,9 @@ function LocationPicker({ value, onChange, className = '' }) {
   return (
     <label className={`flex items-center gap-2 bg-white dark:bg-[#152035] border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 ${className}`}>
       <MapPin size={15} className="text-[#0b1b3a] dark:text-blue-400 flex-shrink-0" />
-      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide hidden lg:inline">Ordering from</span>
+      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide hidden lg:inline">Location</span>
       <select value={value} onChange={(e) => onChange(e.target.value)} className="flex-1 min-w-0 bg-transparent text-sm font-medium text-gray-800 dark:text-gray-200 focus:outline-none cursor-pointer">
+        <option value="ALL">All locations</option>
         {ALL_LOCATIONS.map((l) => <option key={l} value={l}>{l}</option>)}
       </select>
     </label>
