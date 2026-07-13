@@ -1,13 +1,15 @@
 # PCS Wireless Customer Portal — Stage 2 Feature Tickets
 
-**Document Version:** 1.6
-**Date:** July 10, 2026
+**Document Version:** 1.7
+**Date:** July 13, 2026
 **Stage / Module:** Stage 2 — Catalog, Sales Estimates & Offers
 **Status:** Draft — For Development Refinement
 **Prepared by:** Business Analysis
 **Audience:** Development team (to write technical requirements); open questions flagged for Business
 
 ---
+
+> **Revision 1.7 (July 13, 2026):** Updated the Catalog & Sales Estimates tickets to reflect the built **ordering-location** picker — browse *All locations* or order from one, the location filtering the catalog with per-location availability shown on cards, and the single-location cart that warns and drops only the unavailable items when the location is switched (CQ-01, CQ-02, CQ-05).
 
 ## Purpose
 
@@ -65,7 +67,7 @@ Every ticket uses the same fields:
   - The **device name**.
   - A **grade badge** (the PCS grade code, e.g. C6, CPO, TBG).
   - A **spec line** of the attributes that apply: storage, color, and carrier. Attributes that do not apply to a product (e.g. carrier for a laptop, storage for a wearable) are omitted rather than shown blank.
-  - The **stock location** and **quantity available**.
+  - **Availability**: when browsing *All locations*, how many locations stock the device and the total quantity; once an ordering location is chosen, that location's **available quantity** (or a "not stocked here" note).
   - An indicative **"from" price**.
   - An **Add to Sales Estimate** action (see CQ-05).
   - An optional **highlight tag** on featured items (e.g. "New Arrival", "Best Seller", "Limited").
@@ -79,7 +81,7 @@ Every ticket uses the same fields:
 
 **Acceptance criteria**
 - The catalog displays the available devices as a grid of product cards.
-- Each card shows: name, grade, the applicable spec line, stock location, quantity available, an indicative "from" price, a favorite toggle, and an Add to Sales Estimate action.
+- Each card shows: name, grade, the applicable spec line, location availability (all-locations count/total, or the chosen ordering location's quantity), an indicative "from" price, a favorite toggle, and an Add to Sales Estimate action.
 - The grid reflows to the screen width (two cards per row on mobile, up to three on desktop) without dropping any of that information.
 - A count of the devices currently shown is displayed and stays accurate as filters change.
 - When nothing matches, an appropriate empty-state message is shown.
@@ -100,7 +102,7 @@ Every ticket uses the same fields:
 **Summary.** A customer narrows down the catalog using filters, keyword search, and sorting to find the products they are interested in quickly.
 
 **How it works**
-- The customer can filter by: **category, brand, model, grade, storage, location, color, carrier,** and a **maximum price**.
+- The customer can filter by: **category, brand, model, grade, storage, color, carrier,** and a **maximum price**. (Stock **location** is chosen via the ordering-location control — see CQ-05 — rather than as a filter facet.)
 - Within a single filter (e.g. Brand), selecting more than one value **widens** the results (Apple *or* Samsung). Across different filters, selections **narrow** the results (Brand *and* Grade *and* …).
 - Filter options that would return **no results** given the customer's other current selections are shown but **disabled**, so the customer cannot accidentally reach an empty list. This is recalculated every time any filter changes.
 - The customer can search by keyword and sort results by **price, name, or newest**.
@@ -267,6 +269,7 @@ Every ticket uses the same fields:
 **Summary.** A customer adds devices to a sales estimate cart with the quantities they need, so they can request pricing for a specific set of items.
 
 **How it works**
+- The customer picks an **ordering location** (defaulting to *All locations* for browsing); selecting a specific location filters the catalog to it and becomes the cart's location.
 - From the catalog (list or Hottest Offers), the customer adds a device to the **sales estimate cart**.
 - Each cart line shows the device, its grade/storage, the quantity, the list unit price, and the line total.
 - The customer can increase or decrease the quantity per line, and remove a line.
@@ -278,7 +281,7 @@ Every ticket uses the same fields:
 - A line quantity must be at least 1.
 - Adding a device already in the cart increases that line's quantity rather than creating a duplicate line.
 - The cart shows list prices only; proposing different pricing is a separate, deliberate step (CQ-06).
-- **A cart — and the sales estimate built from it — may contain items from only one stock location.** The cart adopts the location of the first item added and displays it. Adding an item from a different location does not silently mix locations: the customer is prompted to keep the current cart or start a new cart for the new location. Emptying the cart clears the location lock.
+- **A cart — and the sales estimate built from it — may contain items from only one stock location.** The customer chooses an **ordering location** (or browses *All locations*); selecting a specific location filters the catalog to it. The first item added commits the ordering location; adding an item stocked at a different location prompts the customer to start a new cart for it. **Changing the ordering location** warns the customer if the cart holds items the new location does not stock and lists them; on confirm, only those items are removed and the location switches. Emptying the cart releases the location.
 
 **Acceptance criteria**
 - A customer can add a device to the cart and see it as a line with quantity and list price.
@@ -286,11 +289,11 @@ Every ticket uses the same fields:
 - Adding an already-carted device increases its quantity instead of duplicating it.
 - The cart's unit count and list subtotal update as lines and quantities change.
 - A Viewer cannot build or submit a sales estimate.
-- The cart never mixes stock locations; it shows its current location, and adding an item from a different location prompts the customer to keep the cart or start a new one for that location.
+- The customer can browse *All locations* or order from one; the cart is limited to the chosen ordering location, adding an item from another location prompts a new cart, and switching the ordering location drops only the cart items the new location does not stock.
 
 **Open questions for the business**
 - Should quantity adjust in single units, or in packs (e.g. steps of 10)? Is there a minimum order quantity per device?
-- *(Resolved)* A cart / sales estimate is limited to a **single stock location** (see Rules above). Reactive lock for now; a proactive "shopping location" picker can be added once real per-location inventory is available.
+- *(Resolved)* A cart / sales estimate is limited to a **single stock location** (see Rules above), and the proactive **ordering-location picker** (All-locations browse + per-location availability) is now implemented. Real per-location inventory quantities are still to come from NetSuite.
 - Does stock availability cap the quantity a customer can request?
 
 ---
