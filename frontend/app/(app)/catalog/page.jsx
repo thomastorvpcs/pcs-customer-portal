@@ -97,11 +97,18 @@ function stockByLocation(d) {
 
 const qtyAt = (d, loc) => { const r = stockByLocation(d).find((x) => x.location === loc); return r ? r.qty : 0 }
 
-// Card availability text. In "All locations" browse mode we show where the
-// device is stocked; for a specific location we show that location's quantity.
-const availabilityLabel = (d, loc) => loc === 'ALL'
-  ? `${locationsFor(d).length} location${locationsFor(d).length !== 1 ? 's' : ''} · ${d.qty.toLocaleString()} total`
-  : `${loc} · ${qtyAt(d, loc).toLocaleString()} avail`
+// Card availability text. With no specific location in context we show where
+// the device is stocked; once a location is in context (selected view or the
+// committed order location) we show that location's available quantity, or a
+// "not stocked" note for devices that location doesn't carry.
+const availabilityLabel = (d, loc) => {
+  if (!loc || loc === 'ALL') {
+    const n = locationsFor(d).length
+    return `${n} location${n !== 1 ? 's' : ''} · ${d.qty.toLocaleString()} total`
+  }
+  if (!availableAt(d, loc)) return `Not stocked at ${loc}`
+  return `${loc} · ${qtyAt(d, loc).toLocaleString()} avail`
+}
 
 const DEFAULT_MAX = 1200
 const SAVED_KEY = 'pcs.catalog.savedSearches.v2'
@@ -226,6 +233,10 @@ export default function CatalogPage() {
   // A cart (and the sales estimate built from it) is limited to a single stock
   // location. Browsing ("All locations") is separate from that ordering location.
   const cartLocation = orderLocation
+
+  // The location a card's quantity reflects: the committed order location if set
+  // (even while browsing all), otherwise the selected view, otherwise all.
+  const displayLoc = orderLocation || (activeLocation !== 'ALL' ? activeLocation : null)
 
   const addLine = (id, amount) => {
     setCart((c) => (c.find((i) => i.id === id) ? c.map((i) => (i.id === id ? { ...i, qty: i.qty + amount } : i)) : [...c, { id, qty: amount, customPrice: '' }]))
@@ -495,7 +506,7 @@ export default function CatalogPage() {
                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${gradeBadgeClass(d.grade)}`}>{d.grade}</span>
               </div>
               <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-0.5">{specLine(d)}</p>
-              <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{availabilityLabel(d, activeLocation)}</p>
+              <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{availabilityLabel(d, displayLoc)}</p>
               <p className="text-gray-900 dark:text-white font-bold text-sm mt-1">from {fmt(d.price)}</p>
               <button onClick={(e) => { e.stopPropagation(); addToQuote(d.id) }} className="mt-2 w-full py-2 text-xs font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Add to Cart</button>
             </div>
@@ -656,7 +667,7 @@ export default function CatalogPage() {
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap ${gradeBadgeClass(d.grade)}`}>{d.grade}</span>
                   </div>
                   <p className="text-xs text-gray-400 dark:text-blue-300/50 mt-1">{specLine(d)}</p>
-                  <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{availabilityLabel(d, activeLocation)}</p>
+                  <p className="text-[11px] text-gray-400 dark:text-blue-300/40 mt-0.5">{availabilityLabel(d, displayLoc)}</p>
                   <div className="flex items-end justify-between mt-3 pt-3 border-t border-gray-50 dark:border-gray-700">
                     <div>
                       <p className="text-[10px] text-gray-400 uppercase tracking-wide">from</p>
