@@ -43,13 +43,25 @@ const devices = [
   { id: 'D26', name: 'Galaxy Buds2', brand: 'Samsung', model: 'Galaxy Buds2', category: 'Accessories', grade: 'COB', storage: null, price: 69, qty: 620, color: 'White', carrier: null, location: 'Dallas, TX', hot: false },
 ]
 
+// The stock locations available to this customer. In production this comes from
+// the customer's NetSuite locations; here all four are available for the demo.
+const ALL_LOCATIONS = ['Miami, FL', 'Dallas, TX', 'Los Angeles, CA', 'Chicago, IL']
+
+// Which locations stock a given device. Deterministic from the id so it's stable:
+// always the device's primary location, plus a varied subset of the others — so
+// switching the ordering location genuinely changes what's available.
+function locationsFor(d) {
+  const n = parseInt(String(d.id).replace(/\D/g, ''), 10) || 0
+  return ALL_LOCATIONS.filter((loc, i) => loc === d.location || (n + i * 7) % 3 === 0)
+}
+const availableAt = (d, loc) => locationsFor(d).includes(loc)
+
 const filterGroups = {
   category: ['Smartphones', 'Tablets', 'Laptops', 'Wearables', 'Accessories'],
   brand: ['Apple', 'Samsung', 'Google'],
   model: ['iPhone 14', 'iPhone 13 Pro', 'iPhone 13', 'iPhone 12', 'Galaxy S23', 'Galaxy S22', 'Pixel 8', 'Pixel 7', 'iPad Air', 'iPad', 'Galaxy Tab S8', 'MacBook Air 13"', 'MacBook Pro 14"', 'Apple Watch Series 8', 'Galaxy Watch 5', 'Pixel Watch', 'AirPods Pro', 'Galaxy Buds2'],
   grade: GRADES.map((g) => g.code),
   storage: [64, 128, 256, 512],
-  location: ['Miami, FL', 'Dallas, TX', 'Los Angeles, CA', 'Chicago, IL'],
   color: ['Black', 'White', 'Blue', 'Graphite', 'Silver'],
   carrier: ['Unlocked', 'AT&T', 'T-Mobile', 'Verizon'],
 }
@@ -60,7 +72,6 @@ const groupMeta = {
   model: { label: 'Model', fmt: (o) => o },
   grade: { label: 'Grade', fmt: (o) => o },
   storage: { label: 'Storage', fmt: (o) => o + 'GB' },
-  location: { label: 'Location', fmt: (o) => o },
   color: { label: 'Color', fmt: (o) => o },
   carrier: { label: 'Carrier', fmt: (o) => o },
 }
@@ -76,10 +87,11 @@ const specLine = (d) => [d.storage ? `${d.storage}GB` : null, d.color, d.carrier
 // Catalog ↔ NetSuite mapping). The primary location holds the largest share.
 const LOCATION_WEIGHTS = [0.55, 0.25, 0.12, 0.08]
 function stockByLocation(d) {
-  const ordered = [d.location, ...filterGroups.location.filter((l) => l !== d.location)]
+  const locs = locationsFor(d)
+  const ordered = [d.location, ...locs.filter((l) => l !== d.location)]
   const rows = ordered.map((location, i) => ({ location, qty: Math.floor(d.qty * (LOCATION_WEIGHTS[i] || 0)) }))
   const allocated = rows.reduce((sum, r) => sum + r.qty, 0)
-  rows[0].qty += d.qty - allocated // give the rounding remainder to the primary location so the total matches exactly
+  rows[0].qty += d.qty - allocated // remainder to the primary location so the total matches exactly
   return rows.filter((r) => r.qty > 0)
 }
 
@@ -117,7 +129,8 @@ export default function CatalogPage() {
   const [quoteStep, setQuoteStep] = useState('cart') // 'cart' | 'pricing'
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [activeProduct, setActiveProduct] = useState(null) // device shown in the detail view
-  const [locationConflict, setLocationConflict] = useState(null) // { id, amount, location } — pending add from another location
+  const [activeLocation, setActiveLocation] = useState(ALL_LOCATIONS[0]) // the location the customer is ordering from
+  const [pendingLocation, setPendingLocation] = useState(null) // { location, orphaned:[cartItems] } — awaiting confirm to switch
 
   // Saved searches + favorites (persisted to localStorage)
   const [savedSearches, setSavedSearches] = useState([])
@@ -168,7 +181,7 @@ export default function CatalogPage() {
     .filter((d) => (models.length ? models.includes(d.model) : true))
     .filter((d) => (grades.length ? grades.includes(d.grade) : true))
     .filter((d) => (storages.length ? storages.includes(d.storage) : true))
-    .filter((d) => (locations.length ? locations.includes(d.location) : true))
+    .filter((d) => availableAt(d, activeLocation))
     .filter((d) => (colors.length ? colors.includes(d.color) : true))
     .filter((d) => (carriers.length ? carriers.includes(d.carrier) : true))
     .filter((d) => d.price <= maxPrice)
@@ -181,7 +194,7 @@ export default function CatalogPage() {
   // Facet auto-disable: which option values still yield ≥1 device given the OTHER
   // active filter groups + search + price (mirrors the Online Catalog's matchesOtherFilters).
   const selByKey = { category: categories, brand: brands, model: models, grade: grades, storage: storages, location: locations, color: colors, carrier: carriers }
-  const matchesSearchPrice = (d) => d.price <= maxPrice && d.name.toLowerCase().includes(search.toLowerCase())
+  const matchesSearchPrice = (d) => d.price <= maxPrice && d.name.toLowerCase().includes(search.toLowerCase()) && availableAt(d, activeLocation)
   const deviceMatchesExcept = (d, exceptKey) =>
     Object.entries(selByKey).every(([k, vals]) => (k === exceptKey || !vals.length ? true : vals.includes(d[k])))
   const enabledByKey = {}
@@ -193,11 +206,13 @@ export default function CatalogPage() {
     enabledByKey[key] = set
   }
 
-  const hottest = devices.filter((d) => d.hot)
+  const hottest = devices.filter((d) => d.hot && availableAt(d, activeLocation))
+
+  const deviceById = (id) => devices.find((d) => d.id === id)
 
   // A cart (and the sales estimate built from it) is limited to a single stock
-  // location. The cart adopts the location of the first item added.
-  const cartLocation = cart.length ? devices.find((d) => d.id === cart[0].id)?.location : null
+  // location — the customer's active ordering location.
+  const cartLocation = activeLocation
 
   const addLine = (id, amount) => {
     setCart((c) => (c.find((i) => i.id === id) ? c.map((i) => (i.id === id ? { ...i, qty: i.qty + amount } : i)) : [...c, { id, qty: amount, customPrice: '' }]))
@@ -205,24 +220,23 @@ export default function CatalogPage() {
     setCartOpen(true)
   }
 
-  const addToQuote = (id, amount = 10) => {
-    const loc = devices.find((d) => d.id === id)?.location
-    const alreadyInCart = cart.some((i) => i.id === id)
-    // Block adds from a different location than the cart; prompt the customer instead.
-    if (cartLocation && loc !== cartLocation && !alreadyInCart) {
-      setLocationConflict({ id, amount, location: loc })
-      return
-    }
-    addLine(id, amount)
-  }
+  // Everything shown is available at the active location, so adding never conflicts.
+  const addToQuote = (id, amount = 10) => addLine(id, amount)
 
-  // Location conflict: replace the cart with the pending item at its location
-  const startNewCartFromConflict = () => {
-    if (!locationConflict) return
-    setCart([{ id: locationConflict.id, qty: locationConflict.amount, customPrice: '' }])
-    setQuoteStep('cart')
-    setCartOpen(true)
-    setLocationConflict(null)
+  // Switching the ordering location: if any cart items aren't stocked at the new
+  // location, warn and confirm; on confirm, drop those items and switch.
+  const requestLocationChange = (newLoc) => {
+    if (!newLoc || newLoc === activeLocation) return
+    const orphaned = cart.filter((i) => !availableAt(deviceById(i.id), newLoc))
+    if (orphaned.length > 0) setPendingLocation({ location: newLoc, orphaned })
+    else setActiveLocation(newLoc)
+  }
+  const confirmLocationChange = () => {
+    if (!pendingLocation) return
+    const newLoc = pendingLocation.location
+    setCart((c) => c.filter((i) => availableAt(deviceById(i.id), newLoc)))
+    setActiveLocation(newLoc)
+    setPendingLocation(null)
   }
 
   // Product detail view
@@ -248,13 +262,13 @@ export default function CatalogPage() {
     return () => document.removeEventListener('keydown', onKey)
   }, [cartOpen, quoteStep])
 
-  // Dismiss the location-conflict prompt on Escape (keeps the current cart)
+  // Dismiss the location-switch prompt on Escape (keeps the current location)
   useEffect(() => {
-    if (!locationConflict) return
-    const onKey = (e) => { if (e.key === 'Escape') setLocationConflict(null) }
+    if (!pendingLocation) return
+    const onKey = (e) => { if (e.key === 'Escape') setPendingLocation(null) }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [locationConflict])
+  }, [pendingLocation])
   const changeQty = (id, delta) =>
     setCart((c) => c.map((i) => (i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)))
   const setCustomPrice = (id, val) =>
@@ -383,6 +397,7 @@ export default function CatalogPage() {
               {activeFilterCount > 0 && <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#0b1b3a] text-white text-[9px] font-bold flex items-center justify-center">{activeFilterCount}</span>}
             </button>
           </div>
+          <LocationPicker value={activeLocation} onChange={requestLocationChange} className="mt-2 w-full" />
         </div>
 
         {/* Favorites toggle + saved chips */}
@@ -536,6 +551,7 @@ export default function CatalogPage() {
           {/* Catalog main */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-4 gap-3">
+              <LocationPicker value={activeLocation} onChange={requestLocationChange} className="flex-shrink-0" />
               <div className="relative flex-1 max-w-xs">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search devices..." className="w-full pl-8 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -659,24 +675,30 @@ export default function CatalogPage() {
         />
       )}
 
-      {/* ── LOCATION CONFLICT ── a sales estimate can only contain items from one location */}
-      {locationConflict && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setLocationConflict(null)}>
-          <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Different location" className="w-full max-w-sm bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-5">
+      {/* ── LOCATION SWITCH ── confirm dropping items not stocked at the new location */}
+      {pendingLocation && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setPendingLocation(null)}>
+          <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Switch location" className="w-full max-w-sm bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-5">
             <div className="flex items-start gap-3">
               <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0">
                 <MapPin size={18} className="text-amber-600 dark:text-amber-400" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-base font-bold text-gray-900 dark:text-white">Items from a different location</h3>
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Switch to {pendingLocation.location}?</h3>
                 <p className="text-sm text-gray-500 dark:text-blue-300/60 mt-1 leading-snug">
-                  Your cart is for <span className="font-medium text-gray-700 dark:text-gray-200">{cartLocation}</span>. A sales estimate can only contain items from one location. Start a new cart for <span className="font-medium text-gray-700 dark:text-gray-200">{locationConflict.location}</span>?
+                  {pendingLocation.orphaned.length} item{pendingLocation.orphaned.length !== 1 ? 's' : ''} in your cart {pendingLocation.orphaned.length !== 1 ? 'are' : 'is'} not available at <span className="font-medium text-gray-700 dark:text-gray-200">{pendingLocation.location}</span> and will be removed:
                 </p>
+                <ul className="mt-2 space-y-1">
+                  {pendingLocation.orphaned.map((i) => {
+                    const dev = deviceById(i.id)
+                    return <li key={i.id} className="text-xs text-gray-600 dark:text-gray-300 truncate">• {dev?.name} <span className="text-gray-400">×{i.qty}</span></li>
+                  })}
+                </ul>
               </div>
             </div>
             <div className="flex gap-2 mt-5">
-              <button onClick={() => setLocationConflict(null)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Keep current cart</button>
-              <button onClick={startNewCartFromConflict} className="flex-1 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Start new cart</button>
+              <button onClick={() => setPendingLocation(null)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Keep {activeLocation}</button>
+              <button onClick={confirmLocationChange} className="flex-1 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Switch &amp; remove {pendingLocation.orphaned.length}</button>
             </div>
           </div>
         </div>
@@ -688,6 +710,20 @@ export default function CatalogPage() {
 function DeviceIcon({ category, size, className }) {
   const Icon = catIcon[category] || Smartphone
   return <Icon size={size} className={className} />
+}
+
+// Ordering-location selector. Changing it flows through requestLocationChange,
+// which may prompt before dropping cart items not stocked at the new location.
+function LocationPicker({ value, onChange, className = '' }) {
+  return (
+    <label className={`flex items-center gap-2 bg-white dark:bg-[#152035] border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 ${className}`}>
+      <MapPin size={15} className="text-[#0b1b3a] dark:text-blue-400 flex-shrink-0" />
+      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide hidden lg:inline">Ordering from</span>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="flex-1 min-w-0 bg-transparent text-sm font-medium text-gray-800 dark:text-gray-200 focus:outline-none cursor-pointer">
+        {ALL_LOCATIONS.map((l) => <option key={l} value={l}>{l}</option>)}
+      </select>
+    </label>
+  )
 }
 
 function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFavorite }) {
