@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck, AlertTriangle, CreditCard, Clock } from 'lucide-react'
 import { GRADES, GRADE_BY_CODE, gradeBadgeClass } from '@/lib/grades'
+import { ACCOUNT, spendingBudget, usd, checkoutStatus, STOCK_HOLD_HOURS } from '@/lib/account'
 
 const OFFER_REASONS = ['Volume commitment', 'Competitor quote', 'Budget constraint', 'Repeat order', 'Other']
 
@@ -43,6 +45,19 @@ const devices = [
   { id: 'D26', name: 'Galaxy Buds2', brand: 'Samsung', model: 'Galaxy Buds2', category: 'Accessories', grade: 'COB', storage: null, price: 69, qty: 620, color: 'White', carrier: null, location: 'Dallas, TX', hot: false },
 ]
 
+// SIM type is a first-class catalog filter (per the confirmed filter list).
+// Derived deterministically for the mock: iPhone 14 US stock is eSIM-only, the
+// rest of the phones vary, and non-phones have no SIM. Attached to each device
+// so it filters and displays like any other attribute.
+const SIM_TYPES = ['Physical SIM', 'eSIM', 'Dual SIM']
+function simTypeFor(d) {
+  if (d.category !== 'Smartphones') return null
+  if (d.model === 'iPhone 14') return 'eSIM'
+  const n = parseInt(String(d.id).replace(/\D/g, ''), 10) || 0
+  return SIM_TYPES[n % SIM_TYPES.length]
+}
+devices.forEach((d) => { d.simType = simTypeFor(d) })
+
 // The stock locations available to this customer. In production this comes from
 // the customer's NetSuite locations; here all four are available for the demo.
 const ALL_LOCATIONS = ['Miami, FL', 'Dallas, TX', 'Los Angeles, CA', 'Chicago, IL']
@@ -56,24 +71,27 @@ function locationsFor(d) {
 }
 const availableAt = (d, loc) => locationsFor(d).includes(loc)
 
+// Filter dimensions in the order confirmed on the commercial side:
+// Product Category (LOB), Manufacturer, Model, Storage, Color, Grade, SIM Type
+// — plus the Price control and the ordering-Location picker rendered separately.
 const filterGroups = {
   category: ['Smartphones', 'Tablets', 'Laptops', 'Wearables', 'Accessories'],
   brand: ['Apple', 'Samsung', 'Google'],
   model: ['iPhone 14', 'iPhone 13 Pro', 'iPhone 13', 'iPhone 12', 'Galaxy S23', 'Galaxy S22', 'Pixel 8', 'Pixel 7', 'iPad Air', 'iPad', 'Galaxy Tab S8', 'MacBook Air 13"', 'MacBook Pro 14"', 'Apple Watch Series 8', 'Galaxy Watch 5', 'Pixel Watch', 'AirPods Pro', 'Galaxy Buds2'],
-  grade: GRADES.map((g) => g.code),
   storage: [64, 128, 256, 512],
   color: ['Black', 'White', 'Blue', 'Graphite', 'Silver'],
-  carrier: ['Unlocked', 'AT&T', 'T-Mobile', 'Verizon'],
+  grade: GRADES.map((g) => g.code),
+  simType: ['Physical SIM', 'eSIM', 'Dual SIM'],
 }
 
 const groupMeta = {
   category: { label: 'Category', fmt: (o) => o },
-  brand: { label: 'Brand', fmt: (o) => o },
+  brand: { label: 'Manufacturer', fmt: (o) => o },
   model: { label: 'Model', fmt: (o) => o },
-  grade: { label: 'Grade', fmt: (o) => o },
   storage: { label: 'Storage', fmt: (o) => o + 'GB' },
   color: { label: 'Color', fmt: (o) => o },
-  carrier: { label: 'Carrier', fmt: (o) => o },
+  grade: { label: 'Grade', fmt: (o) => o },
+  simType: { label: 'SIM Type', fmt: (o) => o },
 }
 
 const catIcon = { Smartphones: Smartphone, Tablets: Tablet, Laptops: Laptop, Wearables: Watch, Accessories: Headphones }
@@ -111,7 +129,7 @@ const availabilityLabel = (d, loc) => {
 }
 
 const DEFAULT_MAX = 1200
-const SAVED_KEY = 'pcs.catalog.savedSearches.v2'
+const SAVED_KEY = 'pcs.catalog.savedSearches.v3'
 const FAV_KEY = 'pcs.catalog.favorites'
 
 const normPayload = (p) => JSON.stringify({
@@ -123,7 +141,7 @@ const normPayload = (p) => JSON.stringify({
   storages: [...(p.storages || [])].sort(),
   locations: [...(p.locations || [])].sort(),
   colors: [...(p.colors || [])].sort(),
-  carriers: [...(p.carriers || [])].sort(),
+  simTypes: [...(p.simTypes || [])].sort(),
   maxPrice: p.maxPrice ?? DEFAULT_MAX,
 })
 
@@ -135,7 +153,7 @@ export default function CatalogPage() {
   const [storages, setStorages] = useState([])
   const [locations, setLocations] = useState([])
   const [colors, setColors] = useState([])
-  const [carriers, setCarriers] = useState([])
+  const [simTypes, setSimTypes] = useState([])
   const [maxPrice, setMaxPrice] = useState(DEFAULT_MAX)
   const [sort, setSort] = useState('Price')
   const [search, setSearch] = useState('')
@@ -148,6 +166,13 @@ export default function CatalogPage() {
   const [orderLocation, setOrderLocation] = useState(null) // the cart's single ordering location (null when cart empty)
   const [pendingLocation, setPendingLocation] = useState(null) // { location, orphaned:[cartItems] } — confirm switch that drops items
   const [addConflict, setAddConflict] = useState(null) // { id, amount, itemLoc } — adding an item not stocked at the order location
+
+  // Checkout / account-standing guardrails (past-due block, credit / spending-budget hold)
+  const router = useRouter()
+  const [demoStatus, setDemoStatus] = useState('good') // demo control: 'good' | 'past_due' | 'over_limit'
+  const [cartApproved, setCartApproved] = useState(false) // simulates a PCS Finance / back-office cart override
+  const [checkoutBlock, setCheckoutBlock] = useState(false) // past-due block modal
+  const [holdConfirm, setHoldConfirm] = useState(false) // over-limit 24h-hold confirm modal
 
   // Saved searches + favorites (persisted to localStorage)
   const [savedSearches, setSavedSearches] = useState([])
@@ -186,7 +211,7 @@ export default function CatalogPage() {
     storage: [storages, setStorages],
     location: [locations, setLocations],
     color: [colors, setColors],
-    carrier: [carriers, setCarriers],
+    simType: [simTypes, setSimTypes],
   }
 
   const toggle = (list, setList, val) =>
@@ -194,6 +219,11 @@ export default function CatalogPage() {
 
   // In "All locations" the grid shows every device; a specific location filters to it.
   const inView = (d) => activeLocation === 'ALL' || availableAt(d, activeLocation)
+
+  // Keyword search matches (contains) across the searchable attributes, not just the name.
+  const q = search.trim().toLowerCase()
+  const matchesSearch = (d) =>
+    !q || [d.name, d.model, d.brand, d.color, d.grade, d.simType].filter(Boolean).some((v) => String(v).toLowerCase().includes(q))
 
   const filtered = devices
     .filter((d) => (categories.length ? categories.includes(d.category) : true))
@@ -203,9 +233,9 @@ export default function CatalogPage() {
     .filter((d) => (storages.length ? storages.includes(d.storage) : true))
     .filter((d) => inView(d))
     .filter((d) => (colors.length ? colors.includes(d.color) : true))
-    .filter((d) => (carriers.length ? carriers.includes(d.carrier) : true))
+    .filter((d) => (simTypes.length ? simTypes.includes(d.simType) : true))
     .filter((d) => d.price <= maxPrice)
-    .filter((d) => d.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((d) => matchesSearch(d))
     .filter((d) => (showFavorites ? favorites.includes(d.id) : true))
     .sort((a, b) =>
       sort === 'Price' ? a.price - b.price : sort === 'Name' ? a.name.localeCompare(b.name) : b.qty - a.qty
@@ -213,8 +243,8 @@ export default function CatalogPage() {
 
   // Facet auto-disable: which option values still yield ≥1 device given the OTHER
   // active filter groups + search + price (mirrors the Online Catalog's matchesOtherFilters).
-  const selByKey = { category: categories, brand: brands, model: models, grade: grades, storage: storages, location: locations, color: colors, carrier: carriers }
-  const matchesSearchPrice = (d) => d.price <= maxPrice && d.name.toLowerCase().includes(search.toLowerCase()) && inView(d)
+  const selByKey = { category: categories, brand: brands, model: models, grade: grades, storage: storages, location: locations, color: colors, simType: simTypes }
+  const matchesSearchPrice = (d) => d.price <= maxPrice && matchesSearch(d) && inView(d)
   const deviceMatchesExcept = (d, exceptKey) =>
     Object.entries(selByKey).every(([k, vals]) => (k === exceptKey || !vals.length ? true : vals.includes(d[k])))
   const enabledByKey = {}
@@ -328,6 +358,20 @@ export default function CatalogPage() {
     return () => document.removeEventListener('keydown', onKey)
   }, [addConflict])
 
+  // Dismiss the checkout guardrail modals on Escape
+  useEffect(() => {
+    if (!checkoutBlock) return
+    const onKey = (e) => { if (e.key === 'Escape') setCheckoutBlock(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [checkoutBlock])
+  useEffect(() => {
+    if (!holdConfirm) return
+    const onKey = (e) => { if (e.key === 'Escape') setHoldConfirm(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [holdConfirm])
+
   // Releasing the ordering-location lock once the cart is empty.
   useEffect(() => { if (cart.length === 0 && orderLocation !== null) setOrderLocation(null) }, [cart, orderLocation])
   const changeQty = (id, delta) =>
@@ -356,10 +400,31 @@ export default function CatalogPage() {
   const listSubtotal = cart.reduce((sum, i) => sum + (devices.find((d) => d.id === i.id)?.price || 0) * i.qty, 0)
 
   const activeFilterCount =
-    categories.length + brands.length + models.length + grades.length + storages.length + locations.length + colors.length + carriers.length + (maxPrice < DEFAULT_MAX ? 1 : 0)
+    categories.length + brands.length + models.length + grades.length + storages.length + locations.length + colors.length + simTypes.length + (maxPrice < DEFAULT_MAX ? 1 : 0)
 
   const clearFilters = () => {
-    setCategories([]); setBrands([]); setModels([]); setGrades([]); setStorages([]); setLocations([]); setColors([]); setCarriers([]); setMaxPrice(DEFAULT_MAX); setSearch('')
+    setCategories([]); setBrands([]); setModels([]); setGrades([]); setStorages([]); setLocations([]); setColors([]); setSimTypes([]); setMaxPrice(DEFAULT_MAX); setSearch('')
+  }
+
+  // ── Checkout guardrails ──
+  // The order value the customer would commit at "Submit for Review" is the
+  // pricing-step subtotal. The effective standing is the demo status, unless the
+  // order would breach the remaining spending budget (then it is over-limit).
+  const orderTotal = subtotal
+  const budget = spendingBudget()
+  const effectiveStatus = checkoutStatus(demoStatus, orderTotal)
+  const checkoutBlocked = effectiveStatus === 'past_due' && !cartApproved
+
+  const proceedToSubmit = () => {
+    setHoldConfirm(false)
+    setCartOpen(false)
+    router.push('/sales-estimates')
+  }
+  // Past due → block and route to Finance; over budget/limit → allow but confirm the 24h hold.
+  const attemptCheckout = () => {
+    if (effectiveStatus === 'past_due' && !cartApproved) { setCheckoutBlock(true); return }
+    if (effectiveStatus === 'over_limit') { setHoldConfirm(true); return }
+    proceedToSubmit()
   }
 
   // ── Favorites ──
@@ -368,7 +433,7 @@ export default function CatalogPage() {
     setFavorites((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]))
 
   // ── Saved searches ──
-  const currentPayload = { search, categories, brands, models, grades, storages, locations, colors, carriers, maxPrice }
+  const currentPayload = { search, categories, brands, models, grades, storages, locations, colors, simTypes, maxPrice }
   const activeSavedId = (() => {
     const cur = normPayload(currentPayload)
     const hit = savedSearches.find((s) => normPayload(s.payload) === cur)
@@ -386,7 +451,7 @@ export default function CatalogPage() {
     setSearch(p.search || '')
     setCategories(p.categories || []); setBrands(p.brands || []); setModels(p.models || [])
     setGrades(p.grades || []); setStorages(p.storages || [])
-    setLocations(p.locations || []); setColors(p.colors || []); setCarriers(p.carriers || [])
+    setLocations(p.locations || []); setColors(p.colors || []); setSimTypes(p.simTypes || [])
     setMaxPrice(p.maxPrice ?? DEFAULT_MAX)
     setShowFavorites(false)
     setFiltersOpen(false)
@@ -724,9 +789,16 @@ export default function CatalogPage() {
               </div>
               <button onClick={() => setQuoteStep('cart')} aria-label="Close" className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
             </div>
-            <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-4">Review each line and optionally propose your own per-unit pricing before submitting.</p>
+            <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-4">Review each line and optionally propose your own per-unit pricing before submitting. List (buy-it-now) pricing is confirmed instantly; custom offers are reviewed by PCS.</p>
             <CartLines cart={cart} mode="pricing" lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
-            <CartFooter cart={cart} step="pricing" subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} />
+            {cart.length > 0 && (
+              <CheckoutAccountCheck
+                status={effectiveStatus} budget={budget} orderTotal={orderTotal}
+                approved={cartApproved} demoStatus={demoStatus}
+                onDemoChange={(v) => { setDemoStatus(v); setCartApproved(false) }}
+              />
+            )}
+            <CartFooter cart={cart} step="pricing" subtotal={subtotal} listSubtotal={listSubtotal} cartCount={cartCount} onContinue={() => setQuoteStep('pricing')} onSubmit={attemptCheckout} blocked={checkoutBlocked} />
           </div>
         </div>
       )}
@@ -793,6 +865,67 @@ export default function CatalogPage() {
           </div>
         </div>
       )}
+
+      {/* ── PAST-DUE CHECKOUT BLOCK ── orders can't be created while the account is past due */}
+      {checkoutBlock && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setCheckoutBlock(false)}>
+          <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Payment required" className="w-full max-w-md bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-5">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle size={18} className="text-red-600 dark:text-red-400" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Payment required before checkout</h3>
+                <p className="text-sm text-gray-500 dark:text-blue-300/60 mt-1 leading-snug">
+                  Your account is past due — <span className="font-medium text-gray-700 dark:text-gray-200">{usd(ACCOUNT.pastDueAmount)}</span> across {ACCOUNT.pastDueInvoices} invoices. You can keep building your cart, but a sales order can&apos;t be created until the balance is brought current.
+                </p>
+                <p className="text-sm text-gray-500 dark:text-blue-300/60 mt-2 leading-snug">
+                  Please contact our Finance team to post a payment, or ask them to approve an override if funds are already on the way.
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-gray-700 p-3 text-sm">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">PCS Finance</p>
+              <a href="mailto:finance@pcsww.com" className="flex items-center gap-1.5 text-[#0b1b3a] dark:text-blue-300 hover:underline"><CreditCard size={14} /> finance@pcsww.com</a>
+              <p className="text-gray-500 dark:text-blue-300/60 mt-1">Mon–Fri, 9am–6pm ET · +1 (201) 758-1474</p>
+            </div>
+            <div className="flex gap-2 mt-5">
+              <button onClick={() => setCheckoutBlock(false)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Back to cart</button>
+              <Link href="/financial" className="flex-1 py-2 text-center text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">View balance</Link>
+            </div>
+            {/* Demo affordance — represents a back-office cart approval / override from PCS Finance */}
+            <button
+              onClick={() => { setCartApproved(true); setCheckoutBlock(false) }}
+              className="mt-2 w-full py-2 text-xs font-medium text-gray-500 dark:text-blue-300/60 border border-dashed border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1a2540]"
+            >
+              Demo: simulate Finance approving this cart
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── OVER-LIMIT 24H HOLD ── over the spending budget / credit: allow, but hold stock 24h */}
+      {holdConfirm && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setHoldConfirm(false)}>
+          <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Order exceeds available credit" className="w-full max-w-md bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-5">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0">
+                <Clock size={18} className="text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Order exceeds your available credit</h3>
+                <p className="text-sm text-gray-500 dark:text-blue-300/60 mt-1 leading-snug">
+                  This <span className="font-medium text-gray-700 dark:text-gray-200">{fmt(orderTotal)}</span> order takes you over your spending budget of <span className="font-medium text-gray-700 dark:text-gray-200">{usd(budget)}</span>. We can still place it and hold the stock for <span className="font-medium text-gray-700 dark:text-gray-200">{STOCK_HOLD_HOURS} hours</span> — if payment or approval isn&apos;t received in that window, the order is released.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-5">
+              <button onClick={() => setHoldConfirm(false)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Back to cart</button>
+              <button onClick={proceedToSubmit} className="flex-1 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Submit &amp; hold {STOCK_HOLD_HOURS}h</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
@@ -823,11 +956,12 @@ function ProductDetail({ device: d, onClose, onAddToQuote, isFavorite, toggleFav
   const lineTotal = d.price * (Number(qty) || 0)
   const specs = [
     ['Category', d.category],
-    ['Brand', d.brand],
+    ['Manufacturer', d.brand],
     ['Model', d.model],
     ['Storage', d.storage ? `${d.storage}GB` : '—'],
     ['Color', d.color || '—'],
     ['Carrier', d.carrier || '—'],
+    ['SIM Type', d.simType || '—'],
   ]
 
   return (
@@ -1129,7 +1263,59 @@ function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine
   )
 }
 
-function CartFooter({ cart, step, subtotal, listSubtotal, cartCount, onContinue }) {
+// Account-standing & spending-budget check shown at the checkout (pricing) step.
+// Surfaces the guardrails confirmed on the commercial side: a past-due account
+// blocks sales-order creation; an order over the spending budget is allowed but
+// its stock is held for 24h. The "Demo" selector simulates each standing.
+function CheckoutAccountCheck({ status, budget, orderTotal, approved, demoStatus, onDemoChange }) {
+  const banner =
+    status === 'past_due' && !approved
+      ? { cls: 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300', icon: AlertTriangle, text: `Account past due ${usd(ACCOUNT.pastDueAmount)} (${ACCOUNT.pastDueInvoices} invoices). Sales-order creation is blocked until resolved.` }
+      : status === 'past_due' && approved
+      ? { cls: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300', icon: Check, text: 'PCS Finance approved this cart — you can submit.' }
+      : status === 'over_limit'
+      ? { cls: 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300', icon: Clock, text: `Over your spending budget — order allowed, stock held ${STOCK_HOLD_HOURS}h then released.` }
+      : { cls: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300', icon: Check, text: 'Account in good standing — ready to submit.' }
+  const BannerIcon = banner.icon
+  // Over-limit means the budget is already fully committed, so this order is entirely over.
+  const committed = status === 'over_limit' ? budget : ACCOUNT.outstanding
+  const remaining = budget - committed - orderTotal
+  const rows = [
+    ['Spending budget', usd(budget)],
+    ['Committed (open balance)', usd(committed)],
+    ['This order', fmt(orderTotal)],
+    ['Remaining after order', usd(remaining), remaining < 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-white'],
+  ]
+  return (
+    <div className="mb-4 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-white/5">
+        <span className="text-[11px] font-semibold text-gray-500 dark:text-blue-300/70 uppercase tracking-wide">Account &amp; order check</span>
+        <label className="flex items-center gap-1.5 text-[10px] text-gray-400">
+          <span className="uppercase tracking-wide">Demo</span>
+          <select value={demoStatus} onChange={(e) => onDemoChange(e.target.value)} className="bg-transparent text-[11px] font-medium text-gray-600 dark:text-gray-300 focus:outline-none cursor-pointer">
+            <option value="good">Good standing</option>
+            <option value="past_due">Past due</option>
+            <option value="over_limit">Over credit limit</option>
+          </select>
+        </label>
+      </div>
+      <div className="px-3 py-2.5 space-y-1.5">
+        {rows.map(([label, value, valueCls]) => (
+          <div key={label} className="flex items-center justify-between text-xs">
+            <span className="text-gray-400 dark:text-blue-300/60">{label}</span>
+            <span className={`font-medium ${valueCls || 'text-gray-900 dark:text-white'}`}>{value}</span>
+          </div>
+        ))}
+        <div className={`mt-2 flex items-start gap-1.5 rounded-lg px-2.5 py-2 text-[11px] leading-snug ${banner.cls}`}>
+          <BannerIcon size={13} className="flex-shrink-0 mt-0.5" />
+          <span>{banner.text}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CartFooter({ cart, step, subtotal, listSubtotal, cartCount, onContinue, onSubmit, blocked }) {
   if (cart.length === 0) return null
   const shownSubtotal = step === 'pricing' ? subtotal : listSubtotal
   return (
@@ -1144,9 +1330,12 @@ function CartFooter({ cart, step, subtotal, listSubtotal, cartCount, onContinue 
       </div>
       {step === 'pricing' ? (
         <>
-          <Link href="/sales-estimates" className="block w-full text-center py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] mb-2">
-            Submit for Review
-          </Link>
+          <button
+            onClick={onSubmit}
+            className={`w-full flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium rounded-lg mb-2 ${blocked ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-[#0b1b3a] text-white hover:bg-[#0d2147]'}`}
+          >
+            {blocked ? <><Lock size={14} /> Payment required to submit</> : 'Submit for Review'}
+          </button>
           <p className="text-[11px] text-gray-400 dark:text-blue-300/50 text-center leading-snug">
             Prices shown are indicative. PCS will respond with confirmed pricing after review.
           </p>

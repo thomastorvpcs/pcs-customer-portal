@@ -1,11 +1,13 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.4  
-**Date:** July 13, 2026  
+**Document Version:** 1.5  
+**Date:** July 23, 2026  
 **Stage:** Stage 2 — Customer Self-Service & Revenue  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
 **Review Required From:** Business Stakeholders
+
+**Revision 1.5 (July 23, 2026):** Recorded the commercial decisions from the catalog open-questions review. Finalised the **catalog filter list** (US-91). Added **ordering controls** tied to account standing: a past-due account can build a cart but cannot create a sales order (US-156); an order over the customer's available credit / spending budget is accepted but its stock is held for 24 hours, then released (US-157); and a default **spending budget** caps open exposure — baseline $500K, or up to 2× peak monthly sales for large accounts (US-158). Confirmed that **buy-it-now (list) pricing is auto-approved** while custom offers remain PCS-reviewed. Listed the catalog decisions still open on the commercial side (approved grade list & media, customer pricing tiers, inventory-visibility rules, exact quantity-display thresholds, competitor benchmark).
 
 **Revision 1.4 (July 13, 2026):** Expanded **Returns (RMA)** to the full submission flow now prototyped — sales-order / invoice / bulk-upload entry, device selection with IMEI search, the return-eligibility rule book with per-IMEI validation, evidence with required-image gating, submission to NetSuite, and the post-submission steps (customer-provided tracking and return label, return-policy acceptance, additional images on request). Added a customer **ordering location** to the **Catalog**: browse inventory across all locations or order from one, with the chosen location filtering the catalog and governing the single-location cart.
 
@@ -136,11 +138,13 @@ Customers can browse available inventory — across all stock locations or focus
 
 **US-90** — As a customer, I want to browse the device catalog — across all stock locations, or focused on a single location — so that I can see what inventory is available to purchase and where.
 
-**US-91** — As a customer, I want to filter and sort the catalog (by category, brand, model, grade, storage, color, carrier, and price) so that I can find the products I am interested in quickly. (Stock location is chosen separately via the **ordering-location** control — see US-92 and "Stock location & ordering" below.) Filter options that would return no results given my current selection are disabled.
+**US-91** — As a customer, I want to filter, search, and sort the catalog so that I can find the products I am interested in quickly. The confirmed filter set is **Product Category (line of business), Manufacturer, Model, Storage, Color, Grade, SIM Type,** and a **Pricing** filter; the keyword search matches on a *contains* basis across product name, model, manufacturer, color, and grade. (Stock **Location** is chosen via the **ordering-location** control — see US-92 and "Stock location & ordering" below.) Filter options that would return no results given my current selection are disabled.
 
 **US-92** — As a customer, I want to add devices to a sales estimate cart with the quantity I need so that I can request pricing for a specific set of items. I choose an **ordering location** (or browse *All locations*), and the cart is limited to that **single stock location**. Changing the ordering location warns me if the cart holds items the new location does not stock and, on confirm, removes only those; adding an item from another location while browsing all prompts me to start a new cart for it.
 
 **US-93** — As a customer, I want to propose a custom per-unit price on sales estimate line items so that I can negotiate pricing with PCS. Proposing prices is a deliberate action taken on a separate pricing step, after the cart is built at list prices. On that step each line stays at list price until I explicitly request custom pricing, select a reason, and acknowledge that any proposed price is a request subject to PCS review.
+
+> **Offer approval (confirmed):** For the initial build, **buy-it-now (list / price-sheet) pricing is auto-approved** — a customer can order it directly. **Custom offers and counter-offers are always reviewed by PCS**; there is no automatic approval of a proposed price at launch. Automatic approval ranges and an AI pricing agent for bidding counters are being explored separately and are **out of scope** for this stage (see Section 7).
 
 **US-94** — As a customer, I want to submit my sales estimate to PCS for review so that a sales rep can respond with confirmed pricing.
 
@@ -158,7 +162,7 @@ Customers can browse available inventory — across all stock locations or focus
 
 **US-107** — As a customer, I want to mark individual devices as favorites and filter the catalog to just my favorites so that I can quickly return to products I am interested in.
 
-**US-108** — As a customer, I want to open a guide that explains what each device grade means — with plain-language descriptions and example images and video — so that I understand exactly what condition I am buying before I add a device to a sales estimate.
+**US-108** — As a customer, I want to open a guide that explains what each device grade means — with plain-language descriptions and example images and video — so that I understand exactly what condition I am buying before I add a device to a sales estimate. The guide presents the **main sellable grades**, each with a description and example photos/video; the final approved grade list and supporting media are being confirmed by the commercial team (see "Open commercial decisions" below).
 
 **US-109** — As a customer, when PCS returns a counter-offer on my sales estimate, I want to accept it, decline it, or counter it with my own revised pricing so that I can negotiate to an agreed price. Accepting a counter-offer reaches agreement, so the sales estimate is automatically converted into a sales order without any further step.
 
@@ -188,6 +192,40 @@ Customers can browse available inventory — across all stock locations or focus
 - **Per-location availability** is shown on each product card: when browsing all locations a card shows how many locations stock the device and the total quantity; once an ordering location is set, the card shows that location's available quantity (or a "not stocked here" note for devices it does not carry).
 - The **cart is limited to one location**. The first item added commits the ordering location; only items stocked there can be added afterwards, and adding an item from another location prompts the customer to start a new cart for it.
 - **Changing the ordering location** with items in the cart warns the customer if any are not stocked at the new location and lists them; on confirm, only those items are removed and the location switches. Emptying the cart releases the location lock.
+
+### Ordering controls — account standing, credit & spending budget
+
+Sales-order creation is governed by the customer's financial standing. These rules were confirmed on the commercial side and mirror NetSuite's account data (AR balance, past-due aging, credit limit). A customer can always **browse the catalog and build a cart**; the controls apply at **checkout**, when the sales estimate / order is submitted.
+
+**US-156** — As a past-due customer, I want to still build a cart, but I understand that I **cannot create a sales order** until my balance is brought current. At checkout I am shown a message asking me to contact the Finance department to post a payment, or to request an **override** if funds are on the way. PCS can **approve a customer's cart for order creation from the back office**, which releases the block.
+
+**US-157** — As a customer whose order would take me **over my available credit / spending budget**, I want the order to still be created, with the **stock held for 24 hours**; if payment or approval is not received within that window, the order is **released**.
+
+**US-158** — As a customer, I want a **spending budget** that caps how much open order value I can hold at any one time. The default baseline is **$500,000**; a customer whose monthly sales reach $500K or more is allowed up to **double their peak monthly sales**.
+
+| Standing | Cart | Checkout / SO creation |
+|----------|------|------------------------|
+| Good standing | Allowed | Sales order created normally |
+| **Past due** | Allowed | **Blocked** — prompt to contact Finance; back-office cart approval / override can release it |
+| **Over credit / spending budget** | Allowed | **Allowed with a 24-hour stock hold** — released if payment/approval is not received |
+
+| ID | Use Case | Actor | Outcome |
+|----|----------|-------|---------|
+| UC-156 | Past-due checkout block | Customer / System | A past-due account can build a cart but cannot submit; the customer is directed to Finance, and PCS can approve the cart from the back office |
+| UC-157 | Over-limit 24h hold | Customer / System | An order over available credit / budget is created with stock held for 24h and released if unpaid/unapproved |
+| UC-158 | Spending-budget cap | System | Open order exposure is capped at the spending budget (baseline $500K, or 2× peak monthly sales for large accounts) |
+
+> **Auto-conversion note (US-97 / US-109):** When an accepted sales estimate auto-converts to a sales order, the same standing checks apply — a past-due account holds the conversion (Finance notified) rather than creating the order.
+
+### Open commercial decisions (pending)
+
+The following catalog decisions are **not yet finalised** on the commercial side and are tracked here so the build can be completed once they land:
+
+- **Approved grade list & media** — the final set of customer-facing grades, their descriptions, and supporting photos/videos (Morris / Sal to confirm).
+- **Customer pricing tiers** — definition and setup of pricing tiers per region, created on the commercial side before pricing can be loaded.
+- **Inventory-visibility rules** — whether availability/grouping is defined per customer group or per customer (dedicated commercial session).
+- **Quantity-display thresholds** — the exact max display thresholds and how they map to customer classifications (e.g. 100+ standard vs. 300+/500+ for large wholesalers). Until confirmed, the catalog shows exact available quantities.
+- **Competitor benchmark** — review of a competitor's offer and checkout journey before the offer flow is finalised.
 
 ### Sales Estimate Status Definitions
 
@@ -295,6 +333,7 @@ The following remain deferred and are addressed in the Stage 3 requirements or t
 - Shipment Enhancements (carrier tracking link, customer pickup authorization, delivery SMS)
 - New Customer Application wizard (self-service prospect onboarding)
 - Meeting Scheduler
+- **Automatic offer approval & AI pricing agent** — auto-approval ranges for custom offers and an AI-driven agent for bidding counters (only buy-it-now / list pricing is auto-approved at launch; see US-93)
 - Live chat, custom reporting / analytics dashboard, multi-currency billing, native mobile app, passwordless / passkey login
 
 ---
