@@ -17,7 +17,14 @@ export const ACCOUNT = {
   pastDueAmount: 45200,
   pastDueInvoices: 3,
   maxMonthlySales: 380000, // trailing peak monthly sales — drives the budget tier
+  // Defaults for the sales-order confirmation step (pre-filled, editable).
+  shipTo: '1240 Logistics Pkwy, Dallas, TX 75201',
+  billTo: 'Wireless Depot Inc. · Dallas, TX 75201',
+  paymentTerms: 'Net 30',
 }
+
+// Allowed payment terms at order confirmation (default is the account's own).
+export const PAYMENT_TERMS = ['Net 30', 'Net 60', 'Prepaid / Wire']
 
 // The default spending budget: the maximum open order value allowed at any one
 // point in time. Baseline is $500K; a customer whose monthly sales reach $500K+

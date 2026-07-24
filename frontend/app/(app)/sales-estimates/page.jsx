@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, SlidersHorizontal, Plus, Download, Copy, ShoppingCart, FileText, Check, X, ArrowLeft, ArrowRight, CircleDot, Reply, PackageCheck } from 'lucide-react'
+import { Search, SlidersHorizontal, Plus, Download, Copy, ShoppingCart, FileText, Check, X, ArrowLeft, ArrowRight, CircleDot, Reply, PackageCheck, MapPin, Truck, Store, CreditCard, Clock } from 'lucide-react'
+import { ACCOUNT, PAYMENT_TERMS, spendingBudget, checkoutStatus, usd, STOCK_HOLD_HOURS } from '@/lib/account'
 
 const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
@@ -12,7 +13,6 @@ const initialEstimates = [
     created: 'Mar 26, 2024',
     validUntil: 'Apr 9, 2024',
     status: 'Accepted',
-    orderId: 'SO-2024-0142',
     customer: 'John Davis',
     rep: 'Michael Torres',
     lineItems: [
@@ -23,8 +23,7 @@ const initialEstimates = [
       { date: 'Mar 26', label: 'Draft created', note: 'Built from catalog cart' },
       { date: 'Mar 26', label: 'Submitted', note: 'Sent to PCS for review' },
       { date: 'Mar 27', label: 'Under Review', note: 'Michael Torres reviewing' },
-      { date: 'Mar 28', label: 'Accepted by PCS', note: 'Pricing confirmed by PCS' },
-      { date: 'Mar 28', label: 'Converted to Sales Order', note: 'SO-2024-0142 created automatically on acceptance' },
+      { date: 'Mar 28', label: 'Accepted by PCS', note: 'Pricing confirmed — confirm order details to place your sales order' },
     ],
   },
   {
@@ -138,6 +137,7 @@ export default function SalesEstimatesPage() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [selectedId, setSelectedId] = useState(initialEstimates[0].id)
   const [mobileSelectedId, setMobileSelectedId] = useState(null)
+  const [orderConfirmId, setOrderConfirmId] = useState(null) // estimate being confirmed into a sales order
 
   const filtered = activeFilter === 'All' ? estimates : estimates.filter((q) => q.status === activeFilter)
   const selected = estimates.find((q) => q.id === selectedId)
@@ -153,16 +153,31 @@ export default function SalesEstimatesPage() {
   const updateEstimate = (id, updater) => setEstimates((list) => list.map((e) => (e.id === id ? updater(e) : e)))
   const withHistory = (e, label, note) => ({ ...e, history: [...e.history, { date: 'Today', label, note }] })
 
-  // Accepting PCS's counter-offer reaches agreement, so the estimate is
-  // automatically converted into a sales order — no separate accept step.
-  const acceptCounter = (id) =>
+  // Accepting PCS's counter-offer reaches agreement on price. Pricing is locked
+  // in and the customer is taken to the order-confirmation step to place the SO.
+  const acceptCounter = (id) => {
+    updateEstimate(id, (e) => {
+      const lineItems = e.lineItems.map((li) => ({ ...li, yourPrice: li.pcsPrice ?? li.yourPrice }))
+      const ne = withHistory(e, 'Counter-offer accepted', 'You accepted the revised PCS pricing — confirm order details to place your sales order')
+      return { ...ne, status: 'Accepted', lineItems }
+    })
+    setOrderConfirmId(id)
+  }
+
+  const startOrderConfirm = (id) => setOrderConfirmId(id)
+
+  // Placing the order from the confirmation step creates the sales order and
+  // links it from the estimate. Standing checks (past due / credit / budget)
+  // are applied here; see the catalog checkout for the blocking behaviour.
+  const placeOrder = (id, details) => {
     updateEstimate(id, (e) => {
       const orderId = e.id.replace('SE', 'SO')
-      const lineItems = e.lineItems.map((li) => ({ ...li, yourPrice: li.pcsPrice ?? li.yourPrice }))
-      let ne = withHistory(e, 'Counter-offer accepted', 'You accepted the revised PCS pricing')
-      ne = withHistory(ne, 'Converted to Sales Order', `${orderId} created automatically on acceptance`)
-      return { ...ne, status: 'Accepted', orderId, lineItems }
+      let ne = withHistory(e, 'Order details confirmed', `${details.method} · ${details.terms}`)
+      ne = withHistory(ne, 'Sales Order created', `${orderId} created from this estimate`)
+      return { ...ne, status: 'Accepted', orderId, order: details }
     })
+    setOrderConfirmId(null)
+  }
 
   const declineCounter = (id) =>
     updateEstimate(id, (e) => ({ ...withHistory(e, 'Counter-offer declined', 'You declined the revised PCS pricing'), status: 'Declined' }))
@@ -221,12 +236,25 @@ export default function SalesEstimatesPage() {
 
   const ActionButtons = ({ estimate }) => (
     <div className="md:mb-3 xl:mb-5">
+      {estimate.status === 'Accepted' && !estimate.orderId && (
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/40 rounded-lg px-4 py-3">
+          <div className="flex items-start gap-2 flex-1">
+            <PackageCheck size={16} className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-gray-600 dark:text-gray-300 leading-snug">
+              Pricing agreed. Confirm your shipping, fulfilment, and payment terms to place the sales order.
+            </p>
+          </div>
+          <button onClick={() => startOrderConfirm(estimate.id)} className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] transition-colors font-medium whitespace-nowrap">
+            Confirm &amp; place order <ArrowRight size={14} />
+          </button>
+        </div>
+      )}
       {estimate.status === 'Accepted' && estimate.orderId && (
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800/40 rounded-lg px-4 py-3">
           <div className="flex items-start gap-2 flex-1">
             <PackageCheck size={16} className="text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-gray-600 dark:text-gray-300 leading-snug">
-              Accepted by PCS and automatically converted to Sales Order <span className="font-semibold text-gray-900 dark:text-white">{estimate.orderId}</span>.
+              Confirmed and placed as Sales Order <span className="font-semibold text-gray-900 dark:text-white">{estimate.orderId}</span>.
             </p>
           </div>
           <Link href="/orders" className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147] transition-colors font-medium whitespace-nowrap">
@@ -530,6 +558,13 @@ export default function SalesEstimatesPage() {
           )}
         </div>
       </div>
+      {orderConfirmId && estimates.find((e) => e.id === orderConfirmId) && (
+        <OrderConfirmModal
+          estimate={estimates.find((e) => e.id === orderConfirmId)}
+          onClose={() => setOrderConfirmId(null)}
+          onPlace={(details) => placeOrder(orderConfirmId, details)}
+        />
+      )}
     </>
   )
 }
@@ -595,6 +630,104 @@ function CounterPanel({ estimate, onAccept, onDecline, onSendCounter }) {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+// Order-confirmation step (US-159): once pricing is agreed, the customer confirms
+// shipping, delivery vs. pickup, and payment terms — pre-filled from the account —
+// then places the order, which creates the sales order. The account-standing
+// checks (past due / credit / spending budget) apply at this point.
+function OrderConfirmModal({ estimate, onClose, onPlace }) {
+  const [method, setMethod] = useState('Delivery')
+  const [shipTo, setShipTo] = useState(ACCOUNT.shipTo)
+  const [terms, setTerms] = useState(ACCOUNT.paymentTerms)
+  const [po, setPo] = useState('')
+
+  const orderTotal = estimateTotal(estimate)
+  const status = checkoutStatus(null, orderTotal) // natural standing from budget headroom
+  const overLimit = status === 'over_limit'
+
+  const place = () =>
+    onPlace({ method, shipTo: method === 'Pickup' ? 'Pickup at ordering location' : shipTo, terms, po: po.trim() })
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-end md:items-center justify-center bg-black/50 md:backdrop-blur-sm p-0 md:p-4" onMouseDown={onClose}>
+      <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Confirm your order" className="w-full md:max-w-lg max-h-[92vh] md:max-h-[88vh] overflow-y-auto bg-white dark:bg-[#152035] rounded-t-2xl md:rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-4 md:p-5">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-base font-bold text-gray-900 dark:text-white">Confirm your order</h3>
+          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+        </div>
+        <p className="text-xs text-gray-400 dark:text-blue-300/50 mb-4">{estimate.id} · pricing agreed. Confirm the details below to create the sales order.</p>
+
+        {/* Order summary */}
+        <div className="rounded-xl border border-gray-100 dark:border-gray-700 p-3 mb-4">
+          <div className="flex items-center justify-between text-xs mb-1">
+            <span className="text-gray-400 dark:text-blue-300/60">{itemCount(estimate).toLocaleString()} units · {estimate.lineItems.length} line{estimate.lineItems.length !== 1 ? 's' : ''}</span>
+            <span className="font-semibold text-gray-900 dark:text-white">{fmt(orderTotal)}</span>
+          </div>
+          {estimate.lineItems.map((li) => (
+            <div key={li.sku} className="flex items-center justify-between text-[11px] text-gray-500 dark:text-blue-300/60">
+              <span className="truncate">{li.product} · {li.grade} · ×{li.qty}</span>
+              <span>{fmt(li.yourPrice * li.qty)}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Fulfilment */}
+        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Fulfilment</p>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {[{ v: 'Delivery', Icon: Truck }, { v: 'Pickup', Icon: Store }].map(({ v, Icon }) => (
+            <button key={v} onClick={() => setMethod(v)} className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors ${method === v ? 'border-[#0b1b3a] bg-[#0b1b3a]/5 dark:bg-blue-900/20 text-[#0b1b3a] dark:text-blue-300' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]'}`}>
+              <Icon size={16} /> {v}
+            </button>
+          ))}
+        </div>
+
+        {/* Shipping address (delivery only) */}
+        {method === 'Delivery' && (
+          <div className="mb-4">
+            <label className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2"><MapPin size={12} /> Shipping address</label>
+            <textarea value={shipTo} onChange={(e) => setShipTo(e.target.value)} rows={2} className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+            <p className="text-[10px] text-gray-400 mt-1">Pre-filled from your account — edit for this order if needed.</p>
+          </div>
+        )}
+        {method === 'Pickup' && (
+          <div className="mb-4 flex items-start gap-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-gray-700 px-3 py-2.5 text-xs text-gray-500 dark:text-blue-300/60">
+            <Store size={14} className="flex-shrink-0 mt-0.5" /> Pickup at the ordering location. Our team will confirm a pickup window once the order is placed.
+          </div>
+        )}
+
+        {/* Payment terms */}
+        <div className="mb-4">
+          <label className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2"><CreditCard size={12} /> Payment terms</label>
+          <select value={terms} onChange={(e) => setTerms(e.target.value)} className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            {PAYMENT_TERMS.map((t) => <option key={t} value={t}>{t}{t === ACCOUNT.paymentTerms ? ' (account default)' : ''}</option>)}
+          </select>
+        </div>
+
+        {/* PO number (optional) */}
+        <div className="mb-4">
+          <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2 block">PO number <span className="normal-case text-gray-300">(optional)</span></label>
+          <input value={po} onChange={(e) => setPo(e.target.value)} placeholder="Your purchase-order reference" className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        {/* Account standing note (US-156–158 apply at order placement) */}
+        {overLimit ? (
+          <div className="mb-4 flex items-start gap-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 px-3 py-2 text-[11px] leading-snug">
+            <Clock size={13} className="flex-shrink-0 mt-0.5" /> This order is over your spending budget ({usd(spendingBudget())}). It will be placed with a {STOCK_HOLD_HOURS}-hour stock hold, released if payment/approval isn&apos;t received.
+          </div>
+        ) : (
+          <div className="mb-4 flex items-start gap-1.5 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-3 py-2 text-[11px] leading-snug">
+            <Check size={13} className="flex-shrink-0 mt-0.5" /> Account in good standing. Past-due / credit / spending-budget checks are applied when the order is placed.
+          </div>
+        )}
+
+        <div className="flex gap-2">
+          <button onClick={onClose} className="flex-1 py-2.5 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Cancel</button>
+          <button onClick={place} className="flex-1 py-2.5 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Place sales order</button>
+        </div>
+      </div>
     </div>
   )
 }

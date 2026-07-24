@@ -1,11 +1,13 @@
 # PCS Wireless Customer Portal — Business Requirements
 
-**Document Version:** 1.5  
-**Date:** July 23, 2026  
+**Document Version:** 1.6  
+**Date:** July 24, 2026  
 **Stage:** Stage 2 — Customer Self-Service & Revenue  
 **Status:** Draft — Pending Business Sign-Off  
 **Prepared by:** Development Team  
 **Review Required From:** Business Stakeholders
+
+**Revision 1.6 (July 24, 2026):** Removed **Returns (RMA)** — it is now maintained in a separate document. This document focuses on the **Catalog**, the **Grading Guide**, and **Sales Order creation**, and retains **Online Payments**, **Reorder**, and the dashboard/offer additions. Sales-order creation now includes an **order-confirmation step** (US-159, revising US-97 / US-109): once pricing is agreed, the customer confirms the shipping address, delivery vs. pickup, and payment terms — defaults pulled from the account — before the sales order is created. The past-due / credit / spending-budget checks (US-156–158) still apply at that point.
 
 **Revision 1.5 (July 23, 2026):** Recorded the commercial decisions from the catalog open-questions review. Finalised the **catalog filter list** (US-91). Added **ordering controls** tied to account standing: a past-due account can build a cart but cannot create a sales order (US-156); an order over the customer's available credit / spending budget is accepted but its stock is held for 24 hours, then released (US-157); and a default **spending budget** caps open exposure — baseline $500K, or up to 2× peak monthly sales for large accounts (US-158). Confirmed that **buy-it-now (list) pricing is auto-approved** while custom offers remain PCS-reviewed. Listed the catalog decisions still open on the commercial side (approved grade list & media, customer pricing tiers, inventory-visibility rules, exact quantity-display thresholds, competitor benchmark).
 
@@ -15,9 +17,11 @@
 
 ## Purpose
 
-This document describes all functionality included in **Stage 2** of the PCS Wireless Customer Portal. Stage 2 builds on the Stage 1 foundation (Authentication, Dashboard, Orders, Shipments, Financial, Support, Settings) with self-service and revenue-generating features: **Returns (RMA)**, **Catalog & Sales Estimates**, **Online Payments**, and **Reorder**.
+This document describes the **Catalog, Sales Estimates & Sales Orders** functionality of the PCS Wireless Customer Portal (part of Stage 2). It builds on the Stage 1 foundation (Authentication, Dashboard, Orders, Shipments, Financial, Support, Settings) with self-service and revenue-generating features: the **Catalog** (browse, filter, favorites, saved searches, grading guide), **Sales Estimates & Sales Order creation**, **Online Payments**, and **Reorder**.
 
-It is intended for business stakeholder review to confirm the Stage 2 feature set is complete and accurate before development begins. Stage 2 features were previously listed under "Out of Scope" in the Stage 1 requirements; they are now formalised here as user stories and use cases.
+> **Scope note:** **Returns (RMA)** was previously part of this document and is now maintained in a **separate Returns/RMA requirements document**. It is therefore out of scope here.
+
+It is intended for business stakeholder review to confirm the feature set is complete and accurate before development begins. These features were previously listed under "Out of Scope" in the Stage 1 requirements; they are now formalised here as user stories and use cases.
 
 Please review each section and indicate:
 - **Approved** — functionality is correct as described
@@ -31,106 +35,25 @@ Please review each section and indicate:
 | Stage | Scope | Status |
 |-------|-------|--------|
 | Stage 1 | Authentication (Auth0), Dashboard, Orders, Shipments, Financial, Support, Settings & Profile | Delivered / In progress |
-| **Stage 2** | Returns (RMA), Catalog & Sales Estimates, Online Payments, Reorder | **This document** |
+| **Stage 2** | Catalog & Grading Guide, Sales Estimates & Sales Orders, Online Payments, Reorder *(Returns/RMA tracked separately)* | **This document** |
 | Stage 3 | Integrations, Shipment Enhancements, New Customer Application, Meeting Scheduler, and advanced backlog | Upcoming |
 
-> **Cross-portal note:** Customer-side Returns pair with the Sales Portal "RMA Management Queue", and customer-side Sales Estimates pair with the Sales Portal "Sales Estimate Creation & Approvals". Those back-office capabilities are tracked separately in the Sales Portal requirements and are **not** in scope for this document.
+> **Cross-portal note:** Customer-side Sales Estimates pair with the Sales Portal "Sales Estimate Creation & Approvals". That back-office capability is tracked separately in the Sales Portal requirements and is **not** in scope for this document.
 
 ---
 
 ## Table of Contents
 
-1. [Returns (RMA)](#1-returns-rma)
-2. [Catalog, Sales Estimates & Promotional Offers](#2-catalog-sales-estimates--promotional-offers)
-3. [Online Payments](#3-online-payments)
-4. [Reorder](#4-reorder)
-5. [Dashboard Additions](#5-dashboard-additions)
-6. [User Roles & Permissions](#6-user-roles--permissions)
-7. [Out of Scope for Stage 2](#7-out-of-scope-for-stage-2)
+1. [Catalog, Sales Estimates & Promotional Offers](#1-catalog-sales-estimates--promotional-offers)
+2. [Online Payments](#2-online-payments)
+3. [Reorder](#3-reorder)
+4. [Dashboard Additions](#4-dashboard-additions)
+5. [User Roles & Permissions](#5-user-roles--permissions)
+6. [Out of Scope for Stage 2](#6-out-of-scope-for-stage-2)
 
 ---
 
-## 1. Returns (RMA)
-
-Customers can request returns for devices they have purchased, validate each device against PCS's return rules before submitting, attach the required evidence, and track the return through its lifecycle. The portal owns the **RMA submission** experience; PCS staff review, approve, and process returns in **NetSuite**, and status updates flow back to the portal. This module pairs with the Sales Portal RMA Management Queue.
-
-### User Stories
-
-**US-80** — As a customer, I want to start a return from a **sales order, an invoice, or a bulk device upload** so that I can raise an RMA whichever way fits how I track my stock. A bulk upload uses a template with Device ID (required), Return Reason (required), and Customer Notes (optional), and does not require a specific order or invoice.
-
-**US-81** — As a customer, I want to see the devices on the selected order/invoice and **choose which ones to return** on a selection step, searching by IMEI to find them quickly, so that I include only the units I mean to.
-
-**US-82** — As a customer, I want to confirm each device's **IMEI**, choose a **return reason**, and add optional **per-device notes** so that PCS understands exactly what is being returned and why.
-
-**US-83** — As a customer, I want to run **"Validate RMA Data"** and see a per-IMEI verdict — accepted, or the specific reason it is not (out of return period, reason not accepted, iCloud lock, grade/product not eligible) — plus which devices require an image, so that I know what will and won't be accepted before I submit.
-
-**US-84** — As a customer, I want to attach **photos or video per device**, and I want the form to prevent submission when a reason requires an image and none is attached, so that my request carries the substantiation PCS needs.
-
-**US-85** — As a customer, I want to be able to **submit even when some devices fail validation** — they are submitted as *Pending* for manual review rather than blocked — so that edge cases are not silently dropped; the portal never auto-approves a device.
-
-**US-86** — As a customer, I want a **reference number** on submission and to track the RMA through its lifecycle so that I always know where it stands.
-
-**US-87** — As a customer, I want to add and update **tracking number(s) and carrier** on an RMA at any time — including more than one tracking number — so that PCS can follow the shipment(s) back. I supply my own return label.
-
-**US-88** — As a customer, I want to see the **return instructions**, **accept the return policy**, and upload **additional images** if the RMA team requests them, so that I can complete the return and answer follow-ups.
-
-**US-89** — As a customer, I want to **view a list of all my RMAs with status filtering** and open any RMA to see its devices, reasons, validation outcomes, tracking, evidence, resolution, and the credit memo from a completed RMA, so that I can manage returns in one place. (Email/SMS status notifications are a later enhancement.)
-
-### Use Cases
-
-| ID | Use Case | Actor | Outcome |
-|----|----------|-------|---------|
-| UC-80 | Start an RMA | Customer | Customer starts from a sales order, an invoice, or a bulk upload (Device ID + Return Reason + optional Notes); an RMA draft is begun |
-| UC-81 | Select devices | Customer | The source's devices are listed and searchable by IMEI; the customer selects which to return |
-| UC-82 | Enter reason & notes | Customer | Each selected device is given a return reason and optional notes |
-| UC-83 | Validate RMA data | Customer / System | Each device is checked against the rule book; a per-IMEI verdict (Accepted or the not-accepted reason) and any image requirement are shown |
-| UC-84 | Attach evidence | Customer | Photos/video are attached per device; submission is blocked while a required image is missing |
-| UC-85 | Submit RMA | Customer / System | The RMA is sent to NetSuite (createRMA) and created with a reference number; devices that failed validation are submitted as Pending for manual review |
-| UC-86 | Track RMA status | Customer | Current RMA status is shown on a progress timeline |
-| UC-87 | Manage tracking | Customer | The customer adds/edits one or more carrier + tracking-number entries on the RMA at any time |
-| UC-88 | Complete return steps | Customer | The customer views return instructions, accepts the return policy, and can upload additional images on request (updateRMA) |
-| UC-89 | View RMA list & detail | Customer | All RMAs shown with reference, order, date, device count, and status (filterable); detail shows devices, reasons, validation outcomes, tracking, evidence, resolution, and the credit memo |
-
-### Return eligibility rule book
-
-Validation applies these rules per device. A device that fails may still be submitted, but it is not auto-approved (it is submitted as *Pending* for manual review):
-
-- **Return period** — accepted only if sold within **60 days** of the invoice date.
-- **Cracked LCD** — accepted only if the RMA is raised within **7 days** of delivery.
-- **iCloud lock** — **automatically rejected**.
-- **MDM / carrier unlock** — allowed, but the IMEI is verified at approval.
-- **Battery** — battery-related returns are **not accepted**.
-- **Cosmetic** — minor scratches / cosmetic-only damage are **not accepted**; deep scratches are accepted.
-- **Excluded stock** — **AS IS (WIP)** and **UR JP (SoftBank)** grades, and **brand products (iPads / accessories)**, are not eligible.
-- **Evidence** — reasons that require a photo/video cannot be submitted without one attached.
-
-### Submission & integration
-
-On submit the portal sends a **createRMA** request to NetSuite (customer internal ID, subsidiary, location, and line items grouped by item, each carrying its device IDs and image links); NetSuite creates the RMA record and returns its reference. Additional images requested later trigger an **updateRMA**. Evidence is held in object storage (Azure) with links passed to NetSuite, and is deleted **30 days after** the RMA reaches Completed / Done / Closed. Approval and processing remain in NetSuite; the portal reflects the resulting status.
-
-### Complaint Categories
-
-Dead Pixel, Cracked LCD, Battery Drain, WiFi Not Working, Bluetooth, Charging Port, Speaker/Mic, Face ID, Touch ID, Camera, Water Damage, Cosmetic Damage, Minor Scratch, Deep Scratch, Wrong Item, Missing Accessories, Software Issue, Carrier Lock, IMEI Mismatch, Other.
-
-### RMA Status Flow
-
-| Status | Meaning |
-|--------|---------|
-| Submitted | Request received; awaiting PCS review |
-| Under Review | PCS is assessing the request |
-| Approved | Return authorised |
-| Shipped | Customer has shipped the devices back (tracking added on the RMA) |
-| Received | Devices received at PCS |
-| Diagnostic | Devices under inspection |
-| Complete | Return resolved; credit memo or replacement issued |
-
-### Access
-
-Submitting an RMA is available to **Admin and Buyer** roles; viewing RMAs and their documents is available to all roles (Viewer is read-only).
-
----
-
-## 2. Catalog, Sales Estimates & Promotional Offers
+## 1. Catalog, Sales Estimates & Promotional Offers
 
 Customers can browse available inventory — across all stock locations or focused on one — build a sales estimate with custom per-unit pricing, and submit it to PCS for review. Customers choose an **ordering location**; a sales estimate is fulfilled from a **single stock location**, so the cart is limited to items from the chosen location. Featured deals are surfaced on the dashboard and catalog. Customers can also save frequently-used filter/search combinations and favorite individual devices for quick return visits. Sales Estimate review and approval are handled by PCS staff through the Sales Portal.
 
@@ -144,7 +67,7 @@ Customers can browse available inventory — across all stock locations or focus
 
 **US-93** — As a customer, I want to propose a custom per-unit price on sales estimate line items so that I can negotiate pricing with PCS. Proposing prices is a deliberate action taken on a separate pricing step, after the cart is built at list prices. On that step each line stays at list price until I explicitly request custom pricing, select a reason, and acknowledge that any proposed price is a request subject to PCS review.
 
-> **Offer approval (confirmed):** For the initial build, **buy-it-now (list / price-sheet) pricing is auto-approved** — a customer can order it directly. **Custom offers and counter-offers are always reviewed by PCS**; there is no automatic approval of a proposed price at launch. Automatic approval ranges and an AI pricing agent for bidding counters are being explored separately and are **out of scope** for this stage (see Section 7).
+> **Offer approval (confirmed):** For the initial build, **buy-it-now (list / price-sheet) pricing is auto-approved** — a customer can order it directly. **Custom offers and counter-offers are always reviewed by PCS**; there is no automatic approval of a proposed price at launch. Automatic approval ranges and an AI pricing agent for bidding counters are being explored separately and are **out of scope** for this stage (see Section 6).
 
 **US-94** — As a customer, I want to submit my sales estimate to PCS for review so that a sales rep can respond with confirmed pricing.
 
@@ -152,7 +75,7 @@ Customers can browse available inventory — across all stock locations or focus
 
 **US-96** — As a customer, I want to view the full history and status changes of a sales estimate so that I can follow the negotiation.
 
-**US-97** — As a customer, when PCS accepts my sales estimate, I want it to be automatically converted into a sales order so that I can complete my purchase without any extra steps — I do not need to separately accept or convert it.
+**US-97** — As a customer, when PCS accepts my sales estimate, I want to move straight to a short **order-confirmation step** — with the agreed line items and pricing already carried over — so that placing the sales order takes one quick confirmation rather than rebuilding the order. (See US-159 for the confirmation step.)
 
 **US-98** — As a customer, I want to see a "Hottest Offers" section on my dashboard so that I am aware of current deals and featured inventory.
 
@@ -164,7 +87,9 @@ Customers can browse available inventory — across all stock locations or focus
 
 **US-108** — As a customer, I want to open a guide that explains what each device grade means — with plain-language descriptions and example images and video — so that I understand exactly what condition I am buying before I add a device to a sales estimate. The guide presents the **main sellable grades**, each with a description and example photos/video; the final approved grade list and supporting media are being confirmed by the commercial team (see "Open commercial decisions" below).
 
-**US-109** — As a customer, when PCS returns a counter-offer on my sales estimate, I want to accept it, decline it, or counter it with my own revised pricing so that I can negotiate to an agreed price. Accepting a counter-offer reaches agreement, so the sales estimate is automatically converted into a sales order without any further step.
+**US-109** — As a customer, when PCS returns a counter-offer on my sales estimate, I want to accept it, decline it, or counter it with my own revised pricing so that I can negotiate to an agreed price. Accepting a counter-offer reaches agreement and takes me to the same **order-confirmation step** (US-159) to place the sales order.
+
+**US-159** — As a customer, once pricing is agreed (PCS accepted my estimate, or I accepted a counter-offer), I want an **order-confirmation step** where I confirm the **shipping address**, choose **delivery or pickup**, and confirm the **payment terms** — all pre-filled from my account — and then place the order, so that the sales order is created with the right fulfilment and billing details. The past-due / credit / spending-budget checks (US-156–158) are applied at this point.
 
 ### Use Cases
 
@@ -178,13 +103,14 @@ Customers can browse available inventory — across all stock locations or focus
 | UC-94 | Submit sales estimate | Customer | Sales Estimate submitted to PCS; status set to Submitted and a reference number issued |
 | UC-95 | View sales estimate list | Customer | All sales estimates shown with reference, date, item count, total, and status |
 | UC-96 | View sales estimate detail & history | Customer | Full sales estimate shown with line items, pricing, and a chronological status history |
-| UC-97 | Auto-convert accepted sales estimate | System | When PCS accepts a sales estimate, a sales order is created automatically, pre-populated with its line items and agreed pricing — no separate customer action is required |
+| UC-97 | Accepted estimate → order confirmation | Customer / System | When pricing is agreed, the customer is taken to the order-confirmation step (UC-159) with line items and agreed pricing carried over |
+| UC-159 | Confirm & place sales order | Customer / System | Customer confirms shipping address, delivery vs. pickup, and payment terms (pre-filled from the account); on placing the order the sales order is created, subject to the account-standing checks (UC-156–158) |
 | UC-98 | View hottest offers | Customer | Dashboard displays a curated set of current deals and featured inventory |
 | UC-99 | View promotional banner | Customer | Full-width promotional banners are displayed on the dashboard and catalog |
 | UC-106 | Save & apply a search | Customer | Customer names and saves the current filter/search combination; saved searches appear as one-click shortcuts and can be applied, renamed, or deleted |
 | UC-107 | Favorite a device | Customer | Customer marks/unmarks a device as a favorite; a Favorites filter shows only favorited devices; the customer's favorites persist across visits |
 | UC-108 | View grading guide | Customer | Customer opens a guide explaining each catalog grade, with descriptions, example media, a side-by-side comparison, and an FAQ; reachable from the grade shown on a product and from the catalog |
-| UC-109 | Respond to a counter-offer | Customer | On a counter-offered sales estimate the customer accepts it (agreement reached → auto-converts to a sales order), declines it, or counters with revised pricing (returns to PCS for review) |
+| UC-109 | Respond to a counter-offer | Customer | On a counter-offered sales estimate the customer accepts it (agreement reached → order-confirmation step), declines it, or counters with revised pricing (returns to PCS for review) |
 
 ### Stock location & ordering
 
@@ -215,7 +141,17 @@ Sales-order creation is governed by the customer's financial standing. These rul
 | UC-157 | Over-limit 24h hold | Customer / System | An order over available credit / budget is created with stock held for 24h and released if unpaid/unapproved |
 | UC-158 | Spending-budget cap | System | Open order exposure is capped at the spending budget (baseline $500K, or 2× peak monthly sales for large accounts) |
 
-> **Auto-conversion note (US-97 / US-109):** When an accepted sales estimate auto-converts to a sales order, the same standing checks apply — a past-due account holds the conversion (Finance notified) rather than creating the order.
+> **Order-creation note (US-97 / US-109 / US-159):** These checks run at the **order-confirmation step**, when the customer places the order — a past-due account is blocked (Finance notified) and an over-budget order is placed with the 24-hour stock hold.
+
+### Sales order creation
+
+Once pricing is agreed — PCS accepts the estimate, or the customer accepts a counter-offer — the customer completes a short **order-confirmation step** and the sales order is created. This answers the previously-open question of how fulfilment and billing details are set (CQ-08):
+
+- **Line items & pricing** are carried over from the agreed sales estimate; they are not re-entered.
+- **Shipping address** is pre-filled from the account's default and can be edited for this order.
+- **Fulfilment** is chosen as **delivery** or **pickup** (pickup uses the ordering location).
+- **Payment terms** default to the account's terms (e.g. Net 30) and can be changed to another allowed term.
+- On **Place order**, the account-standing checks (US-156–158) are applied, then the sales order is created and linked from the sales estimate. The estimate keeps its **Accepted** status with a link to the resulting order.
 
 ### Open commercial decisions (pending)
 
@@ -235,14 +171,14 @@ The following catalog decisions are **not yet finalised** on the commercial side
 | Submitted | Sent to PCS; awaiting review |
 | Under Review | PCS is reviewing the requested pricing |
 | Counter-Offered | PCS has responded with revised pricing; the customer can accept, decline, or counter it |
-| Accepted | Pricing agreed (by PCS, or by the customer accepting a counter-offer); the sales estimate is automatically converted into a sales order |
+| Accepted | Pricing agreed (by PCS, or by the customer accepting a counter-offer); the customer completes the order-confirmation step to create the sales order, which is then linked from the estimate |
 | Declined | Customer declined PCS's counter-offer |
 | Rejected | PCS declined the sales estimate |
 | Expired | Sales Estimate validity period has lapsed |
 
 ---
 
-## 3. Online Payments
+## 2. Online Payments
 
 Customers can pay outstanding invoices directly in the portal. This extends the Stage 1 Financial module, which was view-and-download only.
 
@@ -279,7 +215,7 @@ Customers can pay outstanding invoices directly in the portal. This extends the 
 
 ---
 
-## 4. Reorder
+## 3. Reorder
 
 ### User Stories
 
@@ -293,13 +229,12 @@ Customers can pay outstanding invoices directly in the portal. This extends the 
 
 ---
 
-## 5. Dashboard Additions
+## 4. Dashboard Additions
 
 Stage 2 adds the following to the Dashboard, consistent with how Stage 1 built the dashboard progressively.
 
 | Addition | Description |
 |----------|-------------|
-| Open RMAs KPI card | Count of RMA requests not yet in Complete status |
 | Open Sales Estimates KPI card | Count of submitted sales estimates awaiting resolution |
 | Hottest Offers section | Curated current deals and featured inventory |
 | Promotional banner | Full-width banner surfacing featured deals |
@@ -307,25 +242,22 @@ Stage 2 adds the following to the Dashboard, consistent with how Stage 1 built t
 
 ---
 
-## 6. User Roles & Permissions
+## 5. User Roles & Permissions
 
 Stage 2 features are added to the Stage 1 access matrix. Role definitions are unchanged (Admin, Buyer, Viewer).
 
 | Feature | Admin | Buyer | Viewer |
 |---------|-------|-------|--------|
-| View catalog | ✓ | ✓ | ✓ |
-| Submit RMA request | ✓ | ✓ | — |
-| View RMA list & detail | ✓ | ✓ | ✓ |
-| Download credit memo / return label | ✓ | ✓ | ✓ |
+| View catalog & grading guide | ✓ | ✓ | ✓ |
 | Build & submit sales estimate | ✓ | ✓ | — |
 | View sales estimates | ✓ | ✓ | ✓ |
-| Convert sales estimate to order | ✓ | ✓ | — |
+| Confirm & place sales order | ✓ | ✓ | — |
 | Initiate invoice payment | ✓ | ✓ | — |
 | Reorder previous order | ✓ | ✓ | — |
 
 ---
 
-## 7. Out of Scope for Stage 2
+## 6. Out of Scope for Stage 2
 
 The following remain deferred and are addressed in the Stage 3 requirements or the residual backlog:
 
