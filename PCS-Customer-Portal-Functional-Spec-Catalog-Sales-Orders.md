@@ -5,7 +5,7 @@
 **Date:** July 24, 2026
 **Status:** Draft — for review
 **Prepared by:** Development Team
-**Companion to:** *PCS Customer Portal — Business Requirements, Stage 2* (v1.6)
+**Companion to:** *PCS Customer Portal — Product Requirements: Catalog, Sales Estimates & Sales Orders, and Reorder* (v1.0)
 
 ---
 
