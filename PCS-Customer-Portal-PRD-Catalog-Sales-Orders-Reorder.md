@@ -49,7 +49,7 @@ Customers can browse available inventory — across all stock locations or focus
 
 **US-90** — As a customer, I want to browse the device catalog — across all stock locations, or focused on a single location — so that I can see what inventory is available to purchase and where.
 
-**US-91** — As a customer, I want to filter, search, and sort the catalog so that I can find the products I am interested in quickly. The confirmed filter set is **Product Category (line of business), Manufacturer, Model, Storage, Color, Grade, SIM Type,** and a **Pricing** filter; the keyword search matches on a *contains* basis across product name, model, manufacturer, color, and grade. (Stock **Location** is chosen via the **ordering-location** control — see US-92 and "Stock location & ordering" below.) Filter options that would return no results given my current selection are disabled.
+**US-91** — As a customer, I want to filter, search, and sort the catalog so that I can find the products I am interested in quickly. The confirmed filter set is **Product Category (line of business), Manufacturer, Model, Storage, Color, Grade, SIM Type,** and a **Price** ceiling (a maximum unit price, not a range); the keyword search matches on a *contains* basis across product name, model, manufacturer, color, grade, and SIM type. (Stock **Location** is chosen via the **ordering-location** control — see US-92 and "Stock location & ordering" below.) Filter options that would return no results given my current selection are disabled.
 
 **US-92** — As a customer, I want to add devices to a sales estimate cart with the quantity I need so that I can request pricing for a specific set of items. I choose an **ordering location** (or browse *All locations*), and the cart is limited to that **single stock location**. Changing the ordering location warns me if the cart holds items the new location does not stock and, on confirm, removes only those; adding an item from another location while browsing all prompts me to start a new cart for it.
 
@@ -122,6 +122,8 @@ Sales-order creation is governed by the customer's financial standing. These rul
 | Good standing | Allowed | Sales order created normally |
 | **Past due** | Allowed | **Blocked** — prompt to contact Finance; back-office cart approval / override can release it |
 | **Over credit / spending budget** | Allowed | **Allowed with a 24-hour stock hold** — released if payment/approval is not received |
+
+> **Standing display note:** After a back-office cart approval releases a past-due block, the account is still in the **Past due** standing — the portal simply shows a distinct *"past due — approved"* banner for that released state. It is a display state of the Past-due row, not a fourth account standing.
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|

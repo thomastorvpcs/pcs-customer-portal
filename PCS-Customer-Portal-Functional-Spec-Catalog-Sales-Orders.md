@@ -1,11 +1,13 @@
 # PCS Wireless Customer Portal — Functional Specification
 ## Catalog, Grading Guide & Sales Order Creation
 
-**Document Version:** 1.0
-**Date:** July 24, 2026
+**Document Version:** 1.1
+**Date:** July 28, 2026 (originally v1.0, July 24, 2026)
 **Status:** Draft — for review
 **Prepared by:** Development Team
-**Companion to:** *PCS Customer Portal — Product Requirements: Catalog, Sales Estimates & Sales Orders, and Reorder* (v1.0)
+**Companion to:** *PCS Customer Portal — Product Requirements: Catalog, Sales Estimates & Sales Orders, and Reorder* (v1.0, July 27, 2026)
+
+> **v1.1 reconciliation (July 28, 2026):** Corrections applied after reconciling against the PRD (v1.0) and the Stage-2 UI prototype; the affected requirements are marked *(reconciled v1.1)*. Note the PRD was split out of the Stage 2 requirements (v1.6) on July 27 — after this spec's original v1.0 (July 24) — so earlier references to the PRD have been re-pointed to the split-out document.
 
 ---
 
@@ -74,7 +76,7 @@ The catalog page is composed of these regions, top to bottom:
 
 **FR-C-06 — Effect of a specific location.** Selecting a location filters the grid, the Hottest Offers, and the filter facets to what that location stocks, and binds the cart to it (1.7).
 
-**FR-C-07 — Availability label.** Each card's availability label depends on context: in **All locations** it shows "{n} locations · {total} total"; with an ordering location set it shows "{location} · {qty} avail", or "Not stocked at {location}" for devices that location does not carry.
+**FR-C-07 — Availability label.** Each card's availability label depends on context: in **All locations** it shows "{n} locations · {total} total"; with an ordering location set it shows "{location} · {qty} avail", or "Not stocked at {location}" for devices that location does not carry. The "Not stocked at {location}" case arises **only** when a location is the *committed ordering location* while the browse view is still *All locations*; selecting that location as the **browse view** instead filters those cards out per FR-C-06. FR-C-06 (filter) and this label therefore apply to different states and are not in conflict. *(reconciled v1.1)*
 
 **FR-C-08 — Switching location with a non-empty cart.** Covered by the location-switch rules in 1.7 (warn + drop only unavailable items on confirm).
 
@@ -84,7 +86,7 @@ The catalog page is composed of these regions, top to bottom:
 
 ### 1.3 Filter, search & sort  *(US-91 / UC-91)*
 
-**FR-C-09 — Filter dimensions.** The filter set is exactly: **Product Category (line of business), Manufacturer, Model, Storage, Color, Grade, SIM Type**, a **Price** ceiling, and **Location** (via the picker in 1.2). Each dimension (except Price/Location) is a multi-select list; selecting values narrows results; selecting none means "no constraint".
+**FR-C-09 — Filter dimensions.** The multi-select filter facets are exactly: **Product Category (line of business), Manufacturer, Model, Storage, Color, Grade, SIM Type**. Selecting values narrows results; selecting none means "no constraint". **Price** is a separate ceiling control (FR-C-11), and **Location** is the ordering-location picker (1.2) — *not* a filter facet. *(reconciled v1.1)*
 
 **FR-C-10 — Facet auto-disable.** Within a dimension, an option that would yield zero results given the *other* active filters + search + price + location is shown **disabled** (not hidden). Already-selected options are never disabled.
 
@@ -266,7 +268,7 @@ Reached from **Continue to checkout** (1.7). Each line starts at **list price**.
 
 The pricing/checkout step shows an **Account & order check** and the submit action. The checks below are the ordering controls confirmed on the commercial side.
 
-**FR-O-05 — Account & order check panel.** Displays **Spending budget**, **Committed (open balance)**, **This order** (the step subtotal), and **Remaining after order**, plus a **status banner**: *good standing*, *over budget* (amber), *past due — blocked* (red), or *past due — approved* (green). A clearly-labelled **Demo** selector (Good standing / Past due / Over credit limit) lets a reviewer simulate each standing in the prototype.
+**FR-O-05 — Account & order check panel.** Displays **Spending budget**, **Committed (open balance)**, **This order** (the step subtotal), and **Remaining after order**, plus a **status banner**: *good standing*, *over budget* (amber), *past due — blocked* (red), or *past due — approved* (green — the released display state of the **Past due** standing after a back-office cart approval, **not** a fourth account standing). A clearly-labelled **Demo** selector (Good standing / Past due / Over credit limit) lets a reviewer simulate each standing in the prototype.
 
 **FR-O-06 — Spending budget rule *(US-158)*.** The budget caps open order value at any time: **baseline $500,000**, or **2× the account's peak monthly sales** when monthly sales are **≥ $500,000**. Remaining = budget − committed − this order.
 
@@ -379,7 +381,7 @@ Carried from the requirements doc and the answers to the catalog open-questions 
 | Requirement (US/UC) | Realised by |
 |---------------------|-------------|
 | US-90 / UC-90 (browse) | FR-C-01 – FR-C-04, FR-C-22 |
-| US-90a / UC-90a (ordering location) | FR-C-05 – FR-C-08 |
+| US-92 / UC-90a (ordering location) | FR-C-05 – FR-C-08 |
 | US-91 / UC-91 (filter/search/sort) | FR-C-09 – FR-C-14 |
 | US-92 / UC-92 (cart) | FR-C-25 – FR-C-30 |
 | US-98 / UC-98, US-99 / UC-99 (offers/banner) | FR-C-31 – FR-C-33 |
