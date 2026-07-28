@@ -1,13 +1,15 @@
 # PCS Wireless Customer Portal — Functional Specification
 ## Catalog, Grading Guide & Sales Order Creation
 
-**Document Version:** 1.1
+**Document Version:** 1.2
 **Date:** July 28, 2026 (originally v1.0, July 24, 2026)
 **Status:** Draft — for review
 **Prepared by:** Development Team
 **Companion to:** *PCS Customer Portal — Product Requirements: Catalog, Sales Estimates & Sales Orders, and Reorder* (v1.0, July 27, 2026)
 
 > **v1.1 reconciliation (July 28, 2026):** Corrections applied after reconciling against the PRD (v1.0) and the Stage-2 UI prototype; the affected requirements are marked *(reconciled v1.1)*. Note the PRD was split out of the Stage 2 requirements (v1.6) on July 27 — after this spec's original v1.0 (July 24) — so earlier references to the PRD have been re-pointed to the split-out document.
+
+> **v1.2 change (July 28, 2026):** Removed the **spending-budget cap** (FR-O-06 / US-158) and the **over-credit 24-hour stock hold** (FR-O-09 / US-157) — never a confirmed commercial decision, and unbacked by NetSuite (no trailing/peak-monthly-sales feed; no inventory/availability service to hold stock against). The only remaining account-standing control is the **past-due block** (FR-O-08 / US-156). The FR-O-06 and FR-O-09 numbers are retired; all other FR numbers are unchanged.
 
 ---
 
@@ -32,7 +34,7 @@ These apply to every screen in this document.
 
 - **Responsive**: each screen has a **mobile** layout (single column; cart and detail open as bottom sheets/full-screen dialogs) and a **desktop** layout (multi-column; cart and filters shown as side panels). Behaviour and information are equivalent across both.
 - **Theme**: every screen supports light and dark themes.
-- **Money**: unit and line prices display as `$#,###.00` (two decimals). Account-level figures (budget, balances) display as whole dollars `$#,###`.
+- **Money**: unit and line prices display as `$#,###.00` (two decimals). Account-level figures (balances) display as whole dollars `$#,###`.
 - **Quantity**: cart quantities step in units of **10** and never go below 1. Minimum-order-quantity, pack size, and stock caps are **(pending)** — see Section 5.
 - **Dialogs**: every modal / bottom sheet closes on **Escape**, on clicking the backdrop, and via its explicit close (✕) control. Opening a full-screen dialog locks background scroll.
 - **Persistence**: saved searches and favorites persist between visits. *(Proposed: tied to the user account so they follow the user across devices; the prototype persists them per-browser — see Section 5.)*
@@ -245,7 +247,7 @@ Top to bottom:
 
 ## 3. Sales Order Creation
 
-The path from a built cart to a created sales order: **pricing step → submit sales estimate → PCS review / counter → order confirmation → sales order**. Realises **US-93, US-94, US-95, US-96, US-97, US-109, US-159** and the ordering controls **US-156, US-157, US-158**; use cases **UC-93 … UC-97, UC-109, UC-156 … UC-159**.
+The path from a built cart to a created sales order: **pricing step → submit sales estimate → PCS review / counter → order confirmation → sales order**. Realises **US-93, US-94, US-95, US-96, US-97, US-109, US-159** and the ordering control **US-156**; use cases **UC-93 … UC-97, UC-109, UC-156, UC-159**.
 
 ### 3.1 Pricing step — propose custom pricing  *(US-93 / UC-93)*
 
@@ -264,27 +266,26 @@ Reached from **Continue to checkout** (1.7). Each line starts at **list price**.
 - **Given** a line, **when** the customer requests custom pricing, **then** the offer input stays locked until both a reason is chosen and the acknowledgement is ticked, after which it unlocks.
 - **Given** an unlocked line, **when** "Use list price" is chosen, **then** the line reverts to list price and re-locks.
 
-### 3.2 Account & order check, and submit  *(US-94, US-156–158 / UC-94, UC-156–158)*
+### 3.2 Account & order check, and submit  *(US-94, US-156 / UC-94, UC-156)*
 
-The pricing/checkout step shows an **Account & order check** and the submit action. The checks below are the ordering controls confirmed on the commercial side.
+The pricing/checkout step shows an **Account & order check** and the submit action. The check below is the past-due ordering control.
 
-**FR-O-05 — Account & order check panel.** Displays **Spending budget**, **Committed (open balance)**, **This order** (the step subtotal), and **Remaining after order**, plus a **status banner**: *good standing*, *over budget* (amber), *past due — blocked* (red), or *past due — approved* (green — the released display state of the **Past due** standing after a back-office cart approval, **not** a fourth account standing). A clearly-labelled **Demo** selector (Good standing / Past due / Over credit limit) lets a reviewer simulate each standing in the prototype.
+**FR-O-05 — Account & order check panel.** Displays the account's **open balance** and **This order** (the step subtotal), plus a **status banner**: *good standing*, *past due — blocked* (red), or *past due — approved* (green — the released display state of the **Past due** standing after a back-office cart approval, **not** a separate standing). A clearly-labelled **Demo** selector (Good standing / Past due) lets a reviewer simulate each standing in the prototype. *(reconciled v1.2)*
 
-**FR-O-06 — Spending budget rule *(US-158)*.** The budget caps open order value at any time: **baseline $500,000**, or **2× the account's peak monthly sales** when monthly sales are **≥ $500,000**. Remaining = budget − committed − this order.
+**FR-O-06 — [Removed in v1.2].** The spending-budget rule (US-158) was removed — never a confirmed commercial decision, and unbacked by NetSuite data (no trailing/peak-monthly-sales feed).
 
 **FR-O-07 — Good standing → submit.** When standing is good, **Submit for Review** submits the sales estimate: it is created with status **Submitted** and a reference number, and the customer is taken to the Sales Estimates list (3.3).
 
 **FR-O-08 — Past due → block *(US-156)*.** When the account is past due, the submit button is shown as **"Payment required to submit"** and, when pressed, opens a **Payment-required dialog**: it states the past-due amount and invoice count, explains a cart can be built but an order cannot be created until the balance is current, and offers **contact Finance** details and a link to **View balance**. It also exposes a **back-office cart-approval override** (in the prototype, a "simulate Finance approving this cart" affordance); once approved, the block is released and the customer can submit.
 
-**FR-O-09 — Over budget/credit → 24h hold *(US-157)*.** When the order exceeds available credit / spending budget, pressing submit opens an **over-limit dialog** explaining the order can be placed but the **stock is held for 24 hours** and released if payment/approval is not received. **Submit & hold 24h** proceeds; **Back to cart** cancels.
+**FR-O-09 — [Removed in v1.2].** The over-credit / over-budget **24-hour stock hold** (US-157) was removed — never a confirmed commercial decision, and unbuildable without a NetSuite inventory/availability service to hold stock against.
 
-**FR-O-10 — Where checks apply.** These checks apply at the point the customer commits an order — i.e. submitting the estimate and again at order confirmation (3.5).
+**FR-O-10 — Where the check applies.** The past-due check applies at the point the customer commits an order — i.e. submitting the estimate and again at order confirmation (3.5).
 
 **AC**
 - **Given** good standing, **when** Submit for Review is pressed, **then** a sales estimate is created (status Submitted, reference issued) and the customer lands on the estimates list.
 - **Given** a past-due account, **when** submit is pressed, **then** the payment-required dialog blocks order creation and offers Finance contact + a back-office override; **when** the override is applied, **then** submission is allowed.
-- **Given** an order over the spending budget, **when** submit is pressed, **then** the over-limit dialog explains the 24-hour hold and only proceeds on confirm.
-- **Given** the check panel, **then** Spending budget, Committed, This order, and Remaining are shown and the status banner matches the standing.
+- **Given** the check panel, **then** the open balance and This order are shown and the status banner matches the standing.
 
 ### 3.3 View, track & inspect sales estimates  *(US-95, US-96 / UC-95, UC-96)*
 
@@ -321,7 +322,7 @@ Once pricing is agreed (PCS accepted the estimate, or the customer accepted a co
 
 **FR-O-18 — Entry.** An Accepted estimate **without** an order shows a **"Confirm & place order"** action (and accepting a counter-offer opens the same step directly). An Accepted estimate **with** an order shows a **"placed as Sales Order {SO-id}"** banner and a **View Sales Order** link instead.
 
-**FR-O-19 — Confirmation dialog contents.** The dialog shows an **order summary** (unit count, line count, total, and per-line totals) and collects: **Fulfilment** — **Delivery** or **Pickup**; **Shipping address** — pre-filled from the account and editable, shown for Delivery (Pickup shows a "pickup at the ordering location" note instead); **Payment terms** — a selector defaulting to the account's terms (e.g. Net 30) with allowed alternatives (Net 60, Prepaid / Wire); and an optional **PO number**. It also shows an **account-standing note** (good standing, or an over-budget 24-hour-hold note).
+**FR-O-19 — Confirmation dialog contents.** The dialog shows an **order summary** (unit count, line count, total, and per-line totals) and collects: **Fulfilment** — **Delivery** or **Pickup**; **Shipping address** — pre-filled from the account and editable, shown for Delivery (Pickup shows a "pickup at the ordering location" note instead); **Payment terms** — a selector defaulting to the account's terms (e.g. Net 30) with allowed alternatives (Net 60, Prepaid / Wire); and an optional **PO number**. It also shows an **account-standing note** (good standing, or the past-due block).
 
 **FR-O-20 — Place order.** **Place sales order** applies the account-standing checks (3.2), then creates the sales order: it is assigned an **SO reference** derived from the estimate, the history records **"Order details confirmed"** (fulfilment · terms) and **"Sales Order created"**, and the estimate keeps status **Accepted** now **linked to the created order**. **Cancel** closes without creating an order.
 
@@ -331,12 +332,11 @@ Once pricing is agreed (PCS accepted the estimate, or the customer accepted a co
 - **Given** an Accepted estimate with no order, **when** "Confirm & place order" is pressed, **then** the confirmation dialog opens pre-filled with the account's shipping address and payment terms.
 - **Given** the dialog, **when** the customer chooses Pickup, **then** the shipping-address editor is replaced by a pickup note; **when** Delivery, **then** the address is editable.
 - **Given** the dialog, **when** Place sales order is pressed, **then** a sales order is created, the estimate shows the "placed as {SO}" banner with a View Sales Order link, and the history records the confirmation and creation.
-- **Given** an over-budget order at confirmation, **then** the 24-hour-hold note is shown before placing.
 
 ### Sales estimate & sales order data objects
 
 **Sales estimate** — reference, created/valid-until dates, status, customer, rep, line items (product, SKU, grade, storage, qty, your price, PCS price), status history (events), and — once confirmed — a linked **order** with its confirmation details.
-**Sales order (created)** — SO reference, source estimate reference, line items + agreed pricing, fulfilment (delivery/pickup), shipping address, payment terms, optional PO, and any 24-hour-hold flag.
+**Sales order (created)** — SO reference, source estimate reference, line items + agreed pricing, fulfilment (delivery/pickup), shipping address, payment terms, and optional PO.
 
 ### Sales-estimate status lifecycle
 
@@ -389,7 +389,7 @@ Carried from the requirements doc and the answers to the catalog open-questions 
 | US-107 / UC-107 (favorites) | FR-C-19 – FR-C-21 |
 | US-108 / UC-108 (grading guide) | FR-G-01 – FR-G-15 |
 | US-93 / UC-93 (custom pricing) | FR-O-01 – FR-O-04 |
-| US-94 / UC-94 (submit) + US-156–158 / UC-156–158 (controls) | FR-O-05 – FR-O-10 |
+| US-94 / UC-94 (submit) + US-156 / UC-156 (past-due control) | FR-O-05, FR-O-07, FR-O-08, FR-O-10 |
 | US-95 / UC-95, US-96 / UC-96 (view/track) | FR-O-11 – FR-O-13 |
 | US-109 / UC-109 (counter-offer) | FR-O-14 – FR-O-17 |
 | US-97 / UC-97, US-159 / UC-159 (confirm & create SO) | FR-O-18 – FR-O-21 |

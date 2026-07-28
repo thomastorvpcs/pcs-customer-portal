@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck, AlertTriangle, CreditCard, Clock } from 'lucide-react'
+import { Search, Smartphone, Tablet, Laptop, Watch, Headphones, Plus, Minus, ShoppingCart, X, Tag, ArrowRight, SlidersHorizontal, Trash2, Check, Heart, Bookmark, BookmarkPlus, Pencil, Lock, MapPin, Package, ShieldCheck, AlertTriangle, CreditCard } from 'lucide-react'
 import { GRADES, GRADE_BY_CODE, gradeBadgeClass } from '@/lib/grades'
-import { ACCOUNT, spendingBudget, usd, checkoutStatus, STOCK_HOLD_HOURS } from '@/lib/account'
+import { ACCOUNT, usd, checkoutStatus } from '@/lib/account'
 
 const OFFER_REASONS = ['Volume commitment', 'Competitor quote', 'Budget constraint', 'Repeat order', 'Other']
 
@@ -167,12 +167,11 @@ export default function CatalogPage() {
   const [pendingLocation, setPendingLocation] = useState(null) // { location, orphaned:[cartItems] } — confirm switch that drops items
   const [addConflict, setAddConflict] = useState(null) // { id, amount, itemLoc } — adding an item not stocked at the order location
 
-  // Checkout / account-standing guardrails (past-due block, credit / spending-budget hold)
+  // Checkout / account-standing guardrail (past-due block)
   const router = useRouter()
-  const [demoStatus, setDemoStatus] = useState('good') // demo control: 'good' | 'past_due' | 'over_limit'
+  const [demoStatus, setDemoStatus] = useState('good') // demo control: 'good' | 'past_due'
   const [cartApproved, setCartApproved] = useState(false) // simulates a PCS Finance / back-office cart override
   const [checkoutBlock, setCheckoutBlock] = useState(false) // past-due block modal
-  const [holdConfirm, setHoldConfirm] = useState(false) // over-limit 24h-hold confirm modal
 
   // Saved searches + favorites (persisted to localStorage)
   const [savedSearches, setSavedSearches] = useState([])
@@ -365,12 +364,6 @@ export default function CatalogPage() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [checkoutBlock])
-  useEffect(() => {
-    if (!holdConfirm) return
-    const onKey = (e) => { if (e.key === 'Escape') setHoldConfirm(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [holdConfirm])
 
   // Releasing the ordering-location lock once the cart is empty.
   useEffect(() => { if (cart.length === 0 && orderLocation !== null) setOrderLocation(null) }, [cart, orderLocation])
@@ -406,24 +399,21 @@ export default function CatalogPage() {
     setCategories([]); setBrands([]); setModels([]); setGrades([]); setStorages([]); setLocations([]); setColors([]); setSimTypes([]); setMaxPrice(DEFAULT_MAX); setSearch('')
   }
 
-  // ── Checkout guardrails ──
+  // ── Checkout guardrail ──
   // The order value the customer would commit at "Submit for Review" is the
-  // pricing-step subtotal. The effective standing is the demo status, unless the
-  // order would breach the remaining spending budget (then it is over-limit).
+  // pricing-step subtotal. The effective standing is the demo status (good or
+  // past due); only a past-due account is blocked from creating an order.
   const orderTotal = subtotal
-  const budget = spendingBudget()
-  const effectiveStatus = checkoutStatus(demoStatus, orderTotal)
+  const effectiveStatus = checkoutStatus(demoStatus)
   const checkoutBlocked = effectiveStatus === 'past_due' && !cartApproved
 
   const proceedToSubmit = () => {
-    setHoldConfirm(false)
     setCartOpen(false)
     router.push('/sales-estimates')
   }
-  // Past due → block and route to Finance; over budget/limit → allow but confirm the 24h hold.
+  // Past due → block and route to Finance; otherwise proceed to submit.
   const attemptCheckout = () => {
     if (effectiveStatus === 'past_due' && !cartApproved) { setCheckoutBlock(true); return }
-    if (effectiveStatus === 'over_limit') { setHoldConfirm(true); return }
     proceedToSubmit()
   }
 
@@ -793,7 +783,7 @@ export default function CatalogPage() {
             <CartLines cart={cart} mode="pricing" lineUnit={lineUnit} changeQty={changeQty} setCustomPrice={setCustomPrice} removeLine={removeLine} pricingCtl={pricingCtl} />
             {cart.length > 0 && (
               <CheckoutAccountCheck
-                status={effectiveStatus} budget={budget} orderTotal={orderTotal}
+                status={effectiveStatus} orderTotal={orderTotal}
                 approved={cartApproved} demoStatus={demoStatus}
                 onDemoChange={(v) => { setDemoStatus(v); setCartApproved(false) }}
               />
@@ -900,29 +890,6 @@ export default function CatalogPage() {
             >
               Demo: simulate Finance approving this cart
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── OVER-LIMIT 24H HOLD ── over the spending budget / credit: allow, but hold stock 24h */}
-      {holdConfirm && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={() => setHoldConfirm(false)}>
-          <div onMouseDown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Order exceeds available credit" className="w-full max-w-md bg-white dark:bg-[#152035] rounded-2xl border border-gray-100 dark:border-white/5 shadow-2xl p-5">
-            <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0">
-                <Clock size={18} className="text-amber-600 dark:text-amber-400" />
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-base font-bold text-gray-900 dark:text-white">Order exceeds your available credit</h3>
-                <p className="text-sm text-gray-500 dark:text-blue-300/60 mt-1 leading-snug">
-                  This <span className="font-medium text-gray-700 dark:text-gray-200">{fmt(orderTotal)}</span> order takes you over your spending budget of <span className="font-medium text-gray-700 dark:text-gray-200">{usd(budget)}</span>. We can still place it and hold the stock for <span className="font-medium text-gray-700 dark:text-gray-200">{STOCK_HOLD_HOURS} hours</span> — if payment or approval isn&apos;t received in that window, the order is released.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2 mt-5">
-              <button onClick={() => setHoldConfirm(false)} className="flex-1 py-2 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Back to cart</button>
-              <button onClick={proceedToSubmit} className="flex-1 py-2 text-sm font-medium bg-[#0b1b3a] text-white rounded-lg hover:bg-[#0d2147]">Submit &amp; hold {STOCK_HOLD_HOURS}h</button>
-            </div>
           </div>
         </div>
       )}
@@ -1263,28 +1230,21 @@ function CartLines({ cart, mode, lineUnit, changeQty, setCustomPrice, removeLine
   )
 }
 
-// Account-standing & spending-budget check shown at the checkout (pricing) step.
-// Surfaces the guardrails confirmed on the commercial side: a past-due account
-// blocks sales-order creation; an order over the spending budget is allowed but
-// its stock is held for 24h. The "Demo" selector simulates each standing.
-function CheckoutAccountCheck({ status, budget, orderTotal, approved, demoStatus, onDemoChange }) {
+// Account-standing check shown at the checkout (pricing) step. The only
+// guardrail is the past-due block: a past-due account cannot create a sales
+// order until PCS Finance approves the cart. The "Demo" selector simulates the
+// standing in the prototype.
+function CheckoutAccountCheck({ status, orderTotal, approved, demoStatus, onDemoChange }) {
   const banner =
     status === 'past_due' && !approved
       ? { cls: 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300', icon: AlertTriangle, text: `Account past due ${usd(ACCOUNT.pastDueAmount)} (${ACCOUNT.pastDueInvoices} invoices). Sales-order creation is blocked until resolved.` }
       : status === 'past_due' && approved
       ? { cls: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300', icon: Check, text: 'PCS Finance approved this cart — you can submit.' }
-      : status === 'over_limit'
-      ? { cls: 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300', icon: Clock, text: `Over your spending budget — order allowed, stock held ${STOCK_HOLD_HOURS}h then released.` }
       : { cls: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300', icon: Check, text: 'Account in good standing — ready to submit.' }
   const BannerIcon = banner.icon
-  // Over-limit means the budget is already fully committed, so this order is entirely over.
-  const committed = status === 'over_limit' ? budget : ACCOUNT.outstanding
-  const remaining = budget - committed - orderTotal
   const rows = [
-    ['Spending budget', usd(budget)],
-    ['Committed (open balance)', usd(committed)],
+    ['Open balance', usd(ACCOUNT.outstanding)],
     ['This order', fmt(orderTotal)],
-    ['Remaining after order', usd(remaining), remaining < 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-white'],
   ]
   return (
     <div className="mb-4 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -1295,7 +1255,6 @@ function CheckoutAccountCheck({ status, budget, orderTotal, approved, demoStatus
           <select value={demoStatus} onChange={(e) => onDemoChange(e.target.value)} className="bg-transparent text-[11px] font-medium text-gray-600 dark:text-gray-300 focus:outline-none cursor-pointer">
             <option value="good">Good standing</option>
             <option value="past_due">Past due</option>
-            <option value="over_limit">Over credit limit</option>
           </select>
         </label>
       </div>

@@ -17,7 +17,7 @@
 This document defines the requirements for three customer-facing feature areas of the PCS Wireless Customer Portal:
 
 - **Catalog** — browse and search inventory, filter/sort, the grading guide, favorites, and saved searches.
-- **Sales Estimates & Sales Orders** — build a cart, propose custom pricing, submit an estimate, negotiate counter-offers, and confirm & place a sales order (including the account-standing controls: past-due block, credit / spending-budget hold).
+- **Sales Estimates & Sales Orders** — build a cart, propose custom pricing, submit an estimate, negotiate counter-offers, and confirm & place a sales order (including the past-due account-standing block).
 - **Reorder** — repeat a previous order.
 
 It is intended for business stakeholder review. Please review each section and indicate:
@@ -77,7 +77,7 @@ Customers can browse available inventory — across all stock locations or focus
 
 **US-109** — As a customer, when PCS returns a counter-offer on my sales estimate, I want to accept it, decline it, or counter it with my own revised pricing so that I can negotiate to an agreed price. Accepting a counter-offer reaches agreement and takes me to the same **order-confirmation step** (US-159) to place the sales order.
 
-**US-159** — As a customer, once pricing is agreed (PCS accepted my estimate, or I accepted a counter-offer), I want an **order-confirmation step** where I confirm the **shipping address**, choose **delivery or pickup**, and confirm the **payment terms** — all pre-filled from my account — and then place the order, so that the sales order is created with the right fulfilment and billing details. The past-due / credit / spending-budget checks (US-156–158) are applied at this point.
+**US-159** — As a customer, once pricing is agreed (PCS accepted my estimate, or I accepted a counter-offer), I want an **order-confirmation step** where I confirm the **shipping address**, choose **delivery or pickup**, and confirm the **payment terms** — all pre-filled from my account — and then place the order, so that the sales order is created with the right fulfilment and billing details. The past-due check (US-156) is applied at this point.
 
 ### Use Cases
 
@@ -92,7 +92,7 @@ Customers can browse available inventory — across all stock locations or focus
 | UC-95 | View sales estimate list | Customer | All sales estimates shown with reference, date, item count, total, and status |
 | UC-96 | View sales estimate detail & history | Customer | Full sales estimate shown with line items, pricing, and a chronological status history |
 | UC-97 | Accepted estimate → order confirmation | Customer / System | When pricing is agreed, the customer is taken to the order-confirmation step (UC-159) with line items and agreed pricing carried over |
-| UC-159 | Confirm & place sales order | Customer / System | Customer confirms shipping address, delivery vs. pickup, and payment terms (pre-filled from the account); on placing the order the sales order is created, subject to the account-standing checks (UC-156–158) |
+| UC-159 | Confirm & place sales order | Customer / System | Customer confirms shipping address, delivery vs. pickup, and payment terms (pre-filled from the account); on placing the order the sales order is created, subject to the past-due account-standing check (UC-156) |
 | UC-98 | View hottest offers | Customer | Dashboard displays a curated set of current deals and featured inventory |
 | UC-99 | View promotional banner | Customer | Full-width promotional banners are displayed on the dashboard and catalog |
 | UC-106 | Save & apply a search | Customer | Customer names and saves the current filter/search combination; saved searches appear as one-click shortcuts and can be applied, renamed, or deleted |
@@ -107,31 +107,26 @@ Customers can browse available inventory — across all stock locations or focus
 - The **cart is limited to one location**. The first item added commits the ordering location; only items stocked there can be added afterwards, and adding an item from another location prompts the customer to start a new cart for it.
 - **Changing the ordering location** with items in the cart warns the customer if any are not stocked at the new location and lists them; on confirm, only those items are removed and the location switches. Emptying the cart releases the location lock.
 
-### Ordering controls — account standing, credit & spending budget
+### Ordering controls — account standing (past-due block)
 
-Sales-order creation is governed by the customer's financial standing. These rules were confirmed on the commercial side and mirror NetSuite's account data (AR balance, past-due aging, credit limit). A customer can always **browse the catalog and build a cart**; the controls apply at **checkout**, when the sales estimate / order is submitted.
+Sales-order creation is governed by the customer's **past-due standing**, which mirrors NetSuite's AR data (open balance, past-due aging). A customer can always **browse the catalog and build a cart**; the control applies at **checkout**, when the order is placed.
+
+> **Removed (July 28, 2026):** an earlier draft added a **spending-budget cap** (US-158 — baseline $500K, or 2× peak monthly sales) and an **over-credit 24-hour stock hold** (US-157). These were never a confirmed commercial decision and had no data source in NetSuite (no trailing/peak-monthly-sales feed, and no inventory service to back a hold), so they have been removed. The only account-standing control is the past-due block (US-156) below.
 
 **US-156** — As a past-due customer, I want to still build a cart, but I understand that I **cannot create a sales order** until my balance is brought current. At checkout I am shown a message asking me to contact the Finance department to post a payment, or to request an **override** if funds are on the way. PCS can **approve a customer's cart for order creation from the back office**, which releases the block.
-
-**US-157** — As a customer whose order would take me **over my available credit / spending budget**, I want the order to still be created, with the **stock held for 24 hours**; if payment or approval is not received within that window, the order is **released**.
-
-**US-158** — As a customer, I want a **spending budget** that caps how much open order value I can hold at any one time. The default baseline is **$500,000**; a customer whose monthly sales reach $500K or more is allowed up to **double their peak monthly sales**.
 
 | Standing | Cart | Checkout / SO creation |
 |----------|------|------------------------|
 | Good standing | Allowed | Sales order created normally |
 | **Past due** | Allowed | **Blocked** — prompt to contact Finance; back-office cart approval / override can release it |
-| **Over credit / spending budget** | Allowed | **Allowed with a 24-hour stock hold** — released if payment/approval is not received |
 
 > **Standing display note:** After a back-office cart approval releases a past-due block, the account is still in the **Past due** standing — the portal simply shows a distinct *"past due — approved"* banner for that released state. It is a display state of the Past-due row, not a fourth account standing.
 
 | ID | Use Case | Actor | Outcome |
 |----|----------|-------|---------|
 | UC-156 | Past-due checkout block | Customer / System | A past-due account can build a cart but cannot submit; the customer is directed to Finance, and PCS can approve the cart from the back office |
-| UC-157 | Over-limit 24h hold | Customer / System | An order over available credit / budget is created with stock held for 24h and released if unpaid/unapproved |
-| UC-158 | Spending-budget cap | System | Open order exposure is capped at the spending budget (baseline $500K, or 2× peak monthly sales for large accounts) |
 
-> **Order-creation note (US-97 / US-109 / US-159):** These checks run at the **order-confirmation step**, when the customer places the order — a past-due account is blocked (Finance notified) and an over-budget order is placed with the 24-hour stock hold.
+> **Order-creation note (US-97 / US-109 / US-159):** This check runs at the **order-confirmation step**, when the customer places the order — a past-due account is blocked (Finance notified).
 
 ### Sales order creation
 
@@ -141,7 +136,7 @@ Once pricing is agreed — PCS accepts the estimate, or the customer accepts a c
 - **Shipping address** is pre-filled from the account's default and can be edited for this order.
 - **Fulfilment** is chosen as **delivery** or **pickup** (pickup uses the ordering location).
 - **Payment terms** default to the account's terms (e.g. Net 30) and can be changed to another allowed term.
-- On **Place order**, the account-standing checks (US-156–158) are applied, then the sales order is created and linked from the sales estimate. The estimate keeps its **Accepted** status with a link to the resulting order.
+- On **Place order**, the past-due account-standing check (US-156) is applied, then the sales order is created and linked from the sales estimate. The estimate keeps its **Accepted** status with a link to the resulting order.
 
 ### Open commercial decisions (pending)
 

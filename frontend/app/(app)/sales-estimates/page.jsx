@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, SlidersHorizontal, Plus, Download, Copy, ShoppingCart, FileText, Check, X, ArrowLeft, ArrowRight, CircleDot, Reply, PackageCheck, MapPin, Truck, Store, CreditCard, Clock } from 'lucide-react'
-import { ACCOUNT, PAYMENT_TERMS, spendingBudget, checkoutStatus, usd, STOCK_HOLD_HOURS } from '@/lib/account'
+import { Search, SlidersHorizontal, Plus, Download, Copy, ShoppingCart, FileText, Check, X, ArrowLeft, ArrowRight, CircleDot, Reply, PackageCheck, MapPin, Truck, Store, CreditCard } from 'lucide-react'
+import { ACCOUNT, PAYMENT_TERMS } from '@/lib/account'
 
 const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2 })
 
@@ -167,8 +167,8 @@ export default function SalesEstimatesPage() {
   const startOrderConfirm = (id) => setOrderConfirmId(id)
 
   // Placing the order from the confirmation step creates the sales order and
-  // links it from the estimate. Standing checks (past due / credit / budget)
-  // are applied here; see the catalog checkout for the blocking behaviour.
+  // links it from the estimate. The past-due check is applied here; see the
+  // catalog checkout for the blocking behaviour.
   const placeOrder = (id, details) => {
     updateEstimate(id, (e) => {
       const orderId = e.id.replace('SE', 'SO')
@@ -636,8 +636,8 @@ function CounterPanel({ estimate, onAccept, onDecline, onSendCounter }) {
 
 // Order-confirmation step (US-159): once pricing is agreed, the customer confirms
 // shipping, delivery vs. pickup, and payment terms — pre-filled from the account —
-// then places the order, which creates the sales order. The account-standing
-// checks (past due / credit / spending budget) apply at this point.
+// then places the order, which creates the sales order. The past-due
+// account-standing check (US-156) applies at this point.
 function OrderConfirmModal({ estimate, onClose, onPlace }) {
   const [method, setMethod] = useState('Delivery')
   const [shipTo, setShipTo] = useState(ACCOUNT.shipTo)
@@ -645,8 +645,6 @@ function OrderConfirmModal({ estimate, onClose, onPlace }) {
   const [po, setPo] = useState('')
 
   const orderTotal = estimateTotal(estimate)
-  const status = checkoutStatus(null, orderTotal) // natural standing from budget headroom
-  const overLimit = status === 'over_limit'
 
   const place = () =>
     onPlace({ method, shipTo: method === 'Pickup' ? 'Pickup at ordering location' : shipTo, terms, po: po.trim() })
@@ -712,16 +710,10 @@ function OrderConfirmModal({ estimate, onClose, onPlace }) {
           <input value={po} onChange={(e) => setPo(e.target.value)} placeholder="Your purchase-order reference" className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e2d45] text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
 
-        {/* Account standing note (US-156–158 apply at order placement) */}
-        {overLimit ? (
-          <div className="mb-4 flex items-start gap-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 px-3 py-2 text-[11px] leading-snug">
-            <Clock size={13} className="flex-shrink-0 mt-0.5" /> This order is over your spending budget ({usd(spendingBudget())}). It will be placed with a {STOCK_HOLD_HOURS}-hour stock hold, released if payment/approval isn&apos;t received.
-          </div>
-        ) : (
-          <div className="mb-4 flex items-start gap-1.5 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-3 py-2 text-[11px] leading-snug">
-            <Check size={13} className="flex-shrink-0 mt-0.5" /> Account in good standing. Past-due / credit / spending-budget checks are applied when the order is placed.
-          </div>
-        )}
+        {/* Account standing note — the past-due check (US-156) applies at order placement */}
+        <div className="mb-4 flex items-start gap-1.5 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-3 py-2 text-[11px] leading-snug">
+          <Check size={13} className="flex-shrink-0 mt-0.5" /> Account in good standing. The past-due check is applied when the order is placed.
+        </div>
 
         <div className="flex gap-2">
           <button onClick={onClose} className="flex-1 py-2.5 text-sm font-medium border border-gray-200 dark:border-gray-600 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2540]">Cancel</button>
